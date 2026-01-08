@@ -1,4 +1,5 @@
 # 🧭 BRÚJULA DE ACCIÓN
-- [x] **SYNC:** Sincronización total de datos y código.
-- [ ] **LOGICA:** Editar GuruStrategy.py para facilitar entradas (Trades > 0).
-- [ ] **RETEST:** Ejecutar Backtest v3 post-ajuste.
+- [x] SYNC: Flujo Termux-GitHub-AWS validado.
+- [x] LOGICA: Ablandar RSI a 45 (Éxito: 56 trades).
+- [ ] OPTIMIZACIÓN: Ajustar StopLoss y ROI para convertir el 64% WinRate en ganancia real.
+- [ ] RETEST: Ejecutar Backtest v4 tras ajuste de salida.
