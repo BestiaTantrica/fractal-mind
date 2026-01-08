@@ -1,4 +1,4 @@
 # 🧭 BRÚJULA DE ACCIÓN
-- [x] **TELEGRAM:** Vinculado con ID 6527908321.
-- [ ] **DATA:** Descargar datos históricos para BTC y ETH.
-- [ ] **BACKTEST:** Validar rentabilidad de GuruStrategy (1 mes).
+- [x] **SYNC:** Sincronización total de datos y código.
+- [ ] **LOGICA:** Editar GuruStrategy.py para facilitar entradas (Trades > 0).
+- [ ] **RETEST:** Ejecutar Backtest v3 post-ajuste.

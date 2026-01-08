@@ -1,4 +1,4 @@
-# 📦 HITO: COMUNICACIÓN ACTIVA (08/01/2026)
-- **Estado:** TELEGRAM VINCULADO / LISTO PARA BACKTEST.
-- **Config:** Token e ID inyectados correctamente.
-- **AWS:** Sincronización pendiente tras validación local.
+# 📦 HITO: ESTRUCTURA VALIDADA (08/01/2026)
+- **Estado:** AWS SINCRONIZADO / 0 TRADES REGISTRADOS.
+- **Acción:** Error de Heartbeat eliminado (sed). Datos históricos cargados.
+- **Git:** Commit f96654f realizado con éxito.
