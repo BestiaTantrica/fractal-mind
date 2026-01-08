@@ -1,5 +1,4 @@
-# 📂 DATA MAESTRA - SESIÓN EXITOSA (08/01/2026)
-- **Estrategia:** GuruStrategy.py (v6).
-- **Lógica:** Entry RSI < 30 | Exit ROI 3% | SL -1.5%.
-- **Status:** AWS Listo para Dry-Run.
-- **IP AWS:** 56.125.187.241
+# 📂 DATA MAESTRA - SESIÓN DE INFRAESTRUCTURA (08/01/2026)
+- **Estrategia:** GuruStrategy.py (v7 - RSI 25).
+- **Ruta PC:** Preparar entorno Windows/Linux para Backtest v8.
+- **Ruta AWS:** IP 56.125.187.241 (Requiere limpieza de disco profunda).

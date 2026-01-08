@@ -1,5 +1,5 @@
 # 🧭 BRÚJULA DE ACCIÓN (ACTUALIZADO 08/01/2026)
-- [x] RENTABILIDAD: +1.85% (Base RSI 30).
-- [ ] PRODUCCIÓN: Dry-Run en AWS (Pendiente validación RSI 25).
-- [x] REFINAMIENTO: Protocolo de comandos "A Fuego" integrado.
-- [!] PRUEBA: Validar RSI 25 para reducir Drawdown 6.63%.
+- [x] ESTRATEGIA: v7 (RSI 25) subida a GitHub.
+- [ ] PC: Instalar Python y Freqtrade para validación local.
+- [ ] ORACLE: Reintentar registro para obtener los 200GB de storage.
+- [ ] AWS: Liberar espacio o migrar cuando la PC valide el RSI 25.
