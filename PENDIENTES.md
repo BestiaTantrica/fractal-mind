@@ -1,5 +1,5 @@
 # 🧭 BRÚJULA DE ACCIÓN
-- [x] **GIT:** Repositorio 'fractal-mind' vinculado y sincronizado.
-- [ ] **ESTRATEGIA:** Analizar GuruStrategy.py para entender sus indicadores.
-- [ ] **TELEGRAM:** Vincular el bot de avisos.
-- [ ] **AUDITORÍA:** Revisar el rendimiento de la simulación tras 12h de vuelo.
+- [x] **LIMPIEZA:** Eliminado ruido de Render en GuruStrategy.py.
+- [ ] **CONFIG:** Ajustar config.json para pares BTC/USDT y ETH/USDT.
+- [ ] **TELEGRAM:** Vincular Bot de avisos para resúmenes de táctica.
+- [ ] **BACKTEST:** Probar la estrategia con datos históricos de 1 mes.
