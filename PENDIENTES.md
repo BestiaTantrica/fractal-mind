@@ -1,4 +1,4 @@
-# 🧭 BRÚJULA DE ACCIÓN
-- [ ] **MONITOREO:** Verificar rentabilidad real en 'pm2 logs'.
-- [ ] **DESARROLLO:** Integrar módulo de 'Emocionalidad y Técnica' en script_fractal.py.
-- [ ] **AUDITORÍA:** Revisar archivos .md huérfanos para reutilización.
+# 🧭 BRÚJULA DE ACCIÓN (PRÓXIMOS PASOS)
+- [ ] **ESTRATEGIA:** Analizar GuruStrategy.py para entender sus indicadores.
+- [ ] **TELEGRAM:** Vincular el bot de avisos para no entrar a AWS a ver logs.
+- [ ] **AUDITORÍA:** Revisar el rendimiento de la simulación tras 12h de vuelo.
