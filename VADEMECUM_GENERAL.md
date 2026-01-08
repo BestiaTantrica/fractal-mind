@@ -14,3 +14,11 @@
 - **AWS Free:** Si falla la instalación con 'Python.h', ejecutar: sudo yum install python3-devel.
 - **Espacio en Disco:** Si sale 'Errno 28', limpiar con: rm -rf ~/.cache/pip y sudo rm -rf /tmp/*.
 - **Arquitectura:** No compilar Freqtrade en Termux (usar tur-repo o simplemente usarlo como editor).
+
+## 🚨 PROTOCOLO DE CRISIS (DISCO LLENO)
+1. **Comando de Diagnóstico:** sudo du -sh /* 2>/dev/null | sort -h
+2. **Limpieza de Emergencia:**
+   - sudo journalctl --vacuum-time=1s
+   - sudo yum clean all
+   - sudo swapoff /swapfile && sudo rm -f /swapfile
+3. **Regla de Oro:** Si el disco llega al 95%, mover operaciones de compilación a la PC.

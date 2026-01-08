@@ -8,3 +8,8 @@
 - **Hito:** Superado el error de compilación de Python.h en AWS instalando python3-devel.
 - **Bloqueo:** El disco EBS de AWS (8GB) se llenó al instalar dependencias.
 - **Aprendizaje:** La persistencia en Termux/Nube tiene un límite físico. La PC es la herramienta de fuerza bruta necesaria ahora.
+
+# 📂 BITÁCORA DE RESILIENCIA (08/01/2026)
+- **Hito:** Superado el error 'Account Locked' en AWS. Se aprendió que con disco al 100% el comando 'sudo' falla.
+- **Aprendizaje:** No se puede compilar Freqtrade en 8GB de disco si el sistema ya ocupa 6GB. 
+- **Decisión:** Reset total o ampliación a 30GB es el único camino en la nube.
