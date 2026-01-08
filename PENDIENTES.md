@@ -1,5 +1,5 @@
 # 🧭 BRÚJULA DE ACCIÓN (ACTUALIZADO 08/01/2026)
-- [x] PC: Nombres de carpetas hermanas confirmados (fractal-mind + bot).
-- [ ] PC: Finalizar Build Tools C++.
-- [ ] PC: Sincronizar 'fractal-mind' con git pull.
-- [ ] PC: Configurar venv en 'freqtrade-bestia'.
+- [x] PC: venv activado.
+- [ ] PC: Instalar dependencias con 'pip install -e .'.
+- [ ] PC: Verificar descarga de datos para Backtest.
+- [ ] PC: Lanzar Backtest v7 (RSI 25).
