@@ -1,5 +1,4 @@
 # 🧭 BRÚJULA DE ACCIÓN
-- [x] **LIMPIEZA:** Eliminado ruido de Render en GuruStrategy.py.
-- [ ] **CONFIG:** Ajustar config.json para pares BTC/USDT y ETH/USDT.
-- [ ] **TELEGRAM:** Vincular Bot de avisos para resúmenes de táctica.
-- [ ] **BACKTEST:** Probar la estrategia con datos históricos de 1 mes.
+- [x] **TELEGRAM:** Vinculado con ID 6527908321.
+- [ ] **DATA:** Descargar datos históricos para BTC y ETH.
+- [ ] **BACKTEST:** Validar rentabilidad de GuruStrategy (1 mes).
