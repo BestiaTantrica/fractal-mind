@@ -1,4 +1,4 @@
-# 📦 HITO: ESTRATEGIA v7 INYECTADA (08/01/2026)
-- **Estado:** GuruStrategy.py v7 creada en PC.
-- **Acción:** Descargando 30 días de datos (Binance 5m).
-- **Ruta:** user_data/strategies/GuruStrategy.py
+# 📦 HITO: ESTRUCTURA USER_DATA CONFIRMADA (08/01/2026)
+- **Estado:** Carpeta user_data pre-existente validada.
+- **Acción:** Inyectando GuruStrategy.py v7 en PC.
+- **Meta:** Lanzar Backtest v7 apenas termine download-data.
