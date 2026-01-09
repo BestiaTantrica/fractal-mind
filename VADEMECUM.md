@@ -11,3 +11,21 @@
 - **Ver logs en vivo:** `screen -r sniper_v15`
 - **Salir de los logs sin apagar:** `CTRL + A` y luego `D`.
 - **Matar proceso si se traba:** `pkill -f freqtrade`
+
+## 🚩 BITÁCORA DE UN DESASTRE TÉCNICO (09-01) - INFORME COMPLETO
+### CONTEXTO: Intento fallido de despliegue v15 Sniper.
+
+#### 1. CRONOLOGÍA DE ERRORES DEL AGENTE:
+- **Incompatibilidad de Base:** Se forzó motor v2026 en Python 3.9 (AWS). Error de diseño inicial.
+- **Confusión de Intérpretes:** El Agente no reseteó PM2 (pm2 kill), causando que Node.js intentara ejecutar Python.
+- **Cascada de Dependencias:** Se intentó 'pip install' manual de: cachetools, arrow, pandas-ta. Todos fallaron por estar fuera de la arquitectura Git.
+- **Corrupción de Repositorio:** El proceso de 'downgrade' borró la carpeta /freqtrade/ en Git, dejando el sistema inoperativo.
+
+#### 2. ESTADO DE DEUDA TÉCNICA:
+- El repositorio 'freqtrade-bestia' en GitHub está DESINCRONIZADO y le faltan archivos del núcleo.
+- La AWS tiene un .venv contaminado y procesos PM2 fantasmas.
+
+#### 3. ACCIÓN REQUERIDA (OBLIGATORIO):
+- Borrar carpeta 'freqtrade-bestia' en AWS: 'rm -rf freqtrade-bestia'.
+- Limpiar PM2: 'pm2 kill && rm -rf ~/.pm2'.
+- Reconstruir en Termux usando la versión 2022.9 pura ANTES de volver a tocar la nube.
