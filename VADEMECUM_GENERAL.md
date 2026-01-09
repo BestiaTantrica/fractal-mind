@@ -1,4 +1,4 @@
-# 🧠 VADEMÉCUM: REGLAS DE ORO ACTUALIZADAS
-1. **Prioridad ROI:** En 5m, el ROI dinámico es mejor que señales de salida fijas.
-2. **Filtro Sniper:** Mantener RSI 10 aunque el volumen sea bajo; la prioridad es CERO pérdidas.
-3. **Escalabilidad:** El sistema soporta 5 monedas; el siguiente paso es ampliar la Whitelist.
+# 🧠 VADEMÉCUM: ARQUITECTURA SAGRADA
+- **Independencia:** 'fractal-mind' es sabiduría (Tomás). 'freqtrade-bestia' es motor (Bot).
+- **Seguridad Git:** El Token (PAT) es la única llave. Windows puede guardar llaves viejas que hay que borrar manualmente.
+- **Resiliencia:** Si el puente (Git) falla, el guerrero usa 'nano' directamente en el servidor.

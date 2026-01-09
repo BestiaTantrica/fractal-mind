@@ -1,4 +1,4 @@
 # 🧭 BRÚJULA DE ACCIÓN
-- [ ] PC: Ejecutar Hyperopt (100 epochs) con los 5 pares.
-- [ ] IA: Analizar la nueva tabla de ROI que genere Hyperopt.
-- [ ] GIT: Subir los resultados del Hyperopt (archivo .json de resultados).
+- [ ] PC: Ejecutar 'git push' tras limpiar el Administrador de Credenciales de Windows.
+- [ ] AWS: Limpiar disco (rm -rf ~/.cache/pip) y actualizar GuruStrategy.py.
+- [ ] AWS: Validar que el Bot inicie en 'Dry Run' con el ROI Sniper (v15).
