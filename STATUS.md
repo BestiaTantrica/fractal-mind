@@ -1,4 +1,4 @@
-# 📦 HITO: LANZAMIENTO DE BACKTEST v7 (08/01/2026)
-- **Estado:** Datos 100% descargados (BTC, ETH, SOL, XRP).
-- **Acción:** Ejecutando Backtest v7 en Windows.
-- **Configuración:** RSI 25 | Stoploss 1.5% | Timeframe 5m.
+# 📦 HITO: RE-CREACIÓN DE CONFIG (08/01/2026)
+- **Estado:** Error 'config.json not found' detectado.
+- **Acción:** Creando configuración base con whitelist de 4 pares.
+- **Meta:** Ejecutar Backtest v7 en PC.
