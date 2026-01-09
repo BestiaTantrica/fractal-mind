@@ -1,5 +1,15 @@
-# 📦 HITO: EXPANSIÓN DE HARDWARE AWS (09/01/2026)
-- **Estado:** DISCO AMPLIADO A 30GB EXITOSAMENTE (23GB Libres).
-- **Acción:** Superado el bloqueo de 8GB mediante modificación de volumen EBS.
-- **Pendiente:** Resolver conflicto de 'numpy' (usar 1.23.5) y 'pycoingecko'.
-- **Norte:** Reinstalar el motor Sniper v15 en el nuevo espacio de 30GB.
+# ⚡ STATUS.md
+# 🎯 HITO: VALIDACIÓN LOCAL COMPLETADA -> OBJETIVO AWS (09/01/2026)
+- **Realidad Actual:** Bot operativo en PC (Windows/Docker). Dependiente de WiFi hogareño (NO VIABLE para producción).
+- **Objetivo Inmediato:** Replicar la arquitectura Docker en AWS para lograr autonomía 24/7.
+- **Estrategia:** `GuruStrategy` (Multipares/Futuros) lista en el repo `freqtrade-bestia`.
+- **Infraestructura:**
+  - Desarrollo: PC Local.
+  - Producción: AWS (Pendiente migrar a Docker).
+
+# ⚡ PENDIENTES.md
+# 🧭 BRÚJULA DE ACCIÓN
+- [ ] AWS: Instalar Docker en el servidor (Amazon Linux 2023).
+- [ ] AWS: Clonar `freqtrade-bestia` limpio (borrar basura vieja).
+- [ ] AWS: Transferir `config.json` con claves reales (scp o nano seguro).
+- [ ] MEMORIA: Refactorizar el sistema para que lance "Warnings" antes de ejecutar, no post-mortem.

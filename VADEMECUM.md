@@ -29,3 +29,20 @@
 - Borrar carpeta 'freqtrade-bestia' en AWS: 'rm -rf freqtrade-bestia'.
 - Limpiar PM2: 'pm2 kill && rm -rf ~/.pm2'.
 - Reconstruir en Termux usando la versión 2022.9 pura ANTES de volver a tocar la nube.
+
+## 🔄 FLUJO DE TRABAJO DEFINITIVO (CELULAR -> NUBE)
+**Pregunta:** ¿Cómo configuro el bot si está en Docker?
+**Respuesta:**
+1. **Termux:** Editás archivos en `~/freqtrade-bestia`.
+2. **Termux:** `git add . && git commit -m "ajuste" && git push`.
+3. **AWS (SSH):** Entrás al servidor.
+   - `cd freqtrade-bestia`
+   - `git pull`
+   - `docker compose restart`
+   
+**Nota:** Docker lee los archivos actualizados al reiniciar. No hace falta "reinstalar" nada.
+
+## ⚠️ PROHIBICIONES (NUEVAS REGLAS DE MEMORIA)
+1. **PROHIBIDO** editar código en caliente en AWS con `nano`. Solo se edita en local/Termux y se sube.
+2. **PROHIBIDO** cantar victoria si el bot corre en "localhost". Solo vale si corre en IP 56.x.x.x (AWS).
+3. **PROHIBIDO** iniciar instalaciones sin verificar si existe una imagen Docker oficial.
