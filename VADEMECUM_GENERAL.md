@@ -1,4 +1,4 @@
-# 🧠 VADEMÉCUM: MANEJO DE GRANDES VOLÚMENES
-- **HTTP 408:** Error de timeout por push pesado. Se mitiga con 'http.postBuffer'.
-- **Git Reset Hard:** Comando definitivo en AWS para eliminar basura y forzar la v15.
-- **Soberanía:** La persistencia ante el error de red permitió no romper la regla de "No Parches Manuales".
+# 🧠 VADEMÉCUM: AWS Y EMERGENCIAS
+- **Expansión:** En Amazon Linux 2023, tras ampliar el volumen en la web, usar 'sudo xfs_growfs -d /'.
+- **Librerías:** Python 3.9 requiere 'numpy==1.23.5' para evitar el error de 'NAN'.
+- **Termux:** Si el scroll falla, cerrar sesiones de screen con 'exit'.

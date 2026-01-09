@@ -1,5 +1,5 @@
-# 📦 HITO: VICTORIA SOBRE EL HISTORIAL PESADO (09/01/2026)
-- **Estado:** DESPLIEGUE v15 COMPLETADO EN AWS.
-- **Logro:** Superado Error HTTP 408 (600MB) mediante 'git push --force'.
-- **Evolución:** El motor ~/guru-engine en AWS ya es un espejo exacto de la PC.
-- **Sincronización:** Rama 'main' consolidada como la única fuente de verdad.
+# 📦 HITO: EXPANSIÓN DE HARDWARE AWS (09/01/2026)
+- **Estado:** DISCO AMPLIADO A 30GB EXITOSAMENTE (23GB Libres).
+- **Acción:** Superado el bloqueo de 8GB mediante modificación de volumen EBS.
+- **Pendiente:** Resolver conflicto de 'numpy' (usar 1.23.5) y 'pycoingecko'.
+- **Norte:** Reinstalar el motor Sniper v15 en el nuevo espacio de 30GB.
