@@ -1,4 +1,4 @@
-# 📦 HITO: CORRECCIÓN DE ENTORNO (08/01/2026)
-- **Estado:** Limpiando fantasmas de venv en PowerShell.
-- **Acción:** Deactivate -> Activate (Nuevo) -> Pip install.
-- **Ruta:** C:\Users\Usuario\Desktop\TradingLab\freqtrade-bestia
+# 📦 HITO: ESTRATEGIA v7 INYECTADA (08/01/2026)
+- **Estado:** GuruStrategy.py v7 creada en PC.
+- **Acción:** Descargando 30 días de datos (Binance 5m).
+- **Ruta:** user_data/strategies/GuruStrategy.py
