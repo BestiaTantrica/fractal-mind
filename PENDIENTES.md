@@ -1,4 +1,4 @@
 # 🧭 BRÚJULA DE ACCIÓN
-- [ ] AWS: Ejecutar 'git pull origin stable' (Ahora que el Token tiene permiso 'workflow').
-- [ ] AWS: Iniciar Bot en 'screen -S sniper_v15'.
-- [ ] IA: Monitorear si el RSI 10 es demasiado lento para la rentabilidad diaria.
+- [ ] AWS: Ejecutar 'git reset --hard origin/main' para igualar el motor.
+- [ ] AWS: Lanzar el Sniper v15 en sesión 'screen'.
+- [ ] IA: Monitorear el WinRate real frente al 100% del Backtest.
