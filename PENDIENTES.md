@@ -1,4 +1,4 @@
 # 🧭 BRÚJULA DE ACCIÓN
-- [ ] PC: Ejecutar 'git push' tras limpiar el Administrador de Credenciales de Windows.
-- [ ] AWS: Limpiar disco (rm -rf ~/.cache/pip) y actualizar GuruStrategy.py.
-- [ ] AWS: Validar que el Bot inicie en 'Dry Run' con el ROI Sniper (v15).
+- [ ] AWS: Ejecutar 'git pull origin stable' (Ahora que el Token tiene permiso 'workflow').
+- [ ] AWS: Iniciar Bot en 'screen -S sniper_v15'.
+- [ ] IA: Monitorear si el RSI 10 es demasiado lento para la rentabilidad diaria.
