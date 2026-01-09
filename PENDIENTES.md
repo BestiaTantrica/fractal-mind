@@ -1,5 +1,5 @@
 # 🧭 BRÚJULA DE ACCIÓN (ACTUALIZADO 08/01/2026)
-- [x] PC: Datos descargados.
-- [x] PC: GuruStrategy.py inyectada.
-- [x] PC: Config.json restaurada.
-- [ ] PC: Reportar resultados del Backtest (Profit/Loss).
+- [x] PC: GuruStrategy.py v7 lista.
+- [x] PC: Config.json corregida con pairlists.
+- [ ] PC: Ejecutar Backtest v7 (RSI 25).
+- [ ] IA: Analizar tabla de resultados final.
