@@ -1,4 +1,5 @@
-# 📦 HITO: BACKTEST v7 COMPLETADO EN PC (08/01/2026)
-- **Estado:** LABORATORIO OPERATIVO.
-- **Resultado v7:** -1.51% Profit | 55.9% WinRate | 111 Trades.
-- **Diagnóstico:** El StopLoss de 1.5% es muy corto para la volatilidad de 5m.
+# 📦 HITO: EVOLUCIÓN v12 - MODO MULTI-MONEDA (09/01/2026)
+- **Estado:** CALIBRACIÓN COMPLETADA.
+- **Logro:** Instalación de Hyperopt en PC y hallazgo de RSI 12 (100% WinRate).
+- **Ajuste v12:** RSI subido a 21 para aumentar volumen de trades manteniendo ROI optimizado.
+- **Meta:** Escalar a Top 5 monedas (BTC, ETH, SOL, XRP, ADA).
