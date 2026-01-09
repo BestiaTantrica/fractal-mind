@@ -1,5 +1,5 @@
 # 🧭 BRÚJULA DE ACCIÓN (ACTUALIZADO 08/01/2026)
-- [x] PC: GuruStrategy.py v7 creada.
-- [ ] PC: Finalizar descarga de pares (BTC, ETH, SOL, XRP).
-- [ ] PC: Ejecutar Backtest v7.
-- [ ] PC: Analizar Profit Factor y WinRate en Windows.
+- [x] PC: Descarga de datos Binance OK.
+- [ ] PC: Analizar tabla de resultados (Profit/Loss).
+- [ ] PC: Comparar con el -3.9% de AWS para validar mejora.
+- [ ] IA: Decidir si bajamos el RSI a 20 o subimos el SL.
