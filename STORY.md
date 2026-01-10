@@ -38,3 +38,5 @@
 - [2026-01-10] NOTA: El bot está ejecutando la estrategia con el escudo 0.99 y VolumePairList.
 - [2026-01-10] ERROR: KeyError 'exit_pricing' detectado en AWS. Estructura de config.json incompleta.
 - [2026-01-10] ACCIÓN: Inyección manual de parámetros de pricing (entry/exit) vía cat en AWS.
+- [2026-01-10] DECISIÓN: Corrección de 'exit_pricing' vía repositorio para mantener integridad.
+- [2026-01-10] ACCIÓN: Actualización de config.json en Windows y re-despliegue hacia AWS.
