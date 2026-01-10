@@ -36,3 +36,5 @@
 - [2026-01-10] HITO: Sincronización forzada (Reset Hard) exitosa en AWS.
 - [2026-01-10] STATUS: Sniper V4 operando en segundo plano bajo sesión 'sniper_v4'.
 - [2026-01-10] NOTA: El bot está ejecutando la estrategia con el escudo 0.99 y VolumePairList.
+- [2026-01-10] ERROR: KeyError 'exit_pricing' detectado en AWS. Estructura de config.json incompleta.
+- [2026-01-10] ACCIÓN: Inyección manual de parámetros de pricing (entry/exit) vía cat en AWS.
