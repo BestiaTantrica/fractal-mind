@@ -59,3 +59,4 @@
 - **Estructura Crítica:** Los archivos deben vivir en 'user_data/'. Si no, Docker no los ve.
 - **Comando de Oro:** 'docker-compose up -d' es el que arranca la Bestia.
 - **Gestión de Errores:** Si hay conflicto de Telegram, 'sudo docker rm -f $(sudo docker ps -aq)'.
+- [2026-01-10] ESTRUCTURA: Confirmado que config.json reside en user_data/.
