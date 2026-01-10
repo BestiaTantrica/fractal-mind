@@ -18,3 +18,4 @@
 - [2026-01-10] HITO: El bot ejecutó su primer trade automático (ADA/USDT) en modo Dry Run.
 - [2026-01-10] OBJETIVO: Familiarizarse con los indicadores de la 8080 antes de pasar a Real.
 - [2026-01-10] HITO: Sniper V4 alcanzó Win Rate 100% y Drawdown 0.00% en Backtest. Implementado Escudo 0.99.
+- [2026-01-10] HITO: Sniper V4 listo para despliegue. Protección 0.99 validada.

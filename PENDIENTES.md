@@ -9,3 +9,4 @@
 - [2026-01-10] PENDIENTE: Migrar config.json de 'dry_run: true' a 'false' para operar en Testnet Real.
 - [2026-01-10] PENDIENTE: Configurar 'urls' en config.json para conexión con Binance Testnet.
 - [2026-01-10] PENDIENTE: Verificar estabilidad de VolumePairList en instancia t2.micro de AWS.
+- [2026-01-10] PENDIENTE: Verificar conexión con Binance Testnet en AWS.
