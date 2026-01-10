@@ -29,3 +29,5 @@
 - [2026-01-10] HITO: Ruptura de bloqueo .gitignore detectado; archivos core forzados con git add -f.
 - [2026-01-10] TÉCNICO: Conversión CRLF a LF (Windows a Linux) completada con éxito.
 - [2026-01-10] STATUS: Sniper V4 cargado en GitHub rama 'produccion_limpia' y sincronizado con AWS.
+- [2026-01-10] HITO: Localización real en AWS confirmada en '~/freqtrade-bestia'.
+- [2026-01-10] ACCIÓN: Despliegue de Sniper V4 mediante acceso directo sin carpeta intermedia.
