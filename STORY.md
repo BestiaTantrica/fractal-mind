@@ -13,3 +13,4 @@
 - **Hito:** Superado el error 'Account Locked' en AWS. Se aprendió que con disco al 100% el comando 'sudo' falla.
 - **Aprendizaje:** No se puede compilar Freqtrade en 8GB de disco si el sistema ya ocupa 6GB. 
 - **Decisión:** Reset total o ampliación a 30GB es el único camino en la nube.
+- [2026-01-09] ACCIÓN: Reiniciar contenedor en AWS para refrescar mercados.
