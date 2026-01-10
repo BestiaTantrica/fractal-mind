@@ -5,3 +5,4 @@
 - **Control:** WebUI y Telegram funcionando.
 - **Sincronización:** Flujo PC -> Git -> AWS verificado.
 - [2026-01-09] AWS actualizado a 30GB. Ignorar errores de disco lleno de 8GB.
+- [2026-01-09] ENTORNO ÚNICO: Testnet. No buscar trades en cuenta real.
