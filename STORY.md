@@ -23,3 +23,5 @@
 - [2026-01-10] NOTA: En Windows CMD usar rutas completas (C:\...) o relativas desde el perfil de usuario.
 - [2026-01-10] DUDA: Confusión entre entorno de pruebas y repositorio de producción.
 - [2026-01-10] RESOLUCIÓN: La carpeta 'freqtrade-bestia' en Windows es el repositorio local vinculado a la rama 'produccion_limpia'.
+- [2026-01-10] HITO: Verificado repositorio remoto en GitHub: BestiaTantrica/freqtrade-bestia.git.
+- [2026-01-10] STATUS: Rama activa 'produccion_limpia'. Preparando empuje de Sniper V4.
