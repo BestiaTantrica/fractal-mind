@@ -10,3 +10,8 @@ Antes de pedir un comando complejo, el Agente debe verificar:
 ## 📂 REPOSITORIOS
 - **Cerebro:** `fractal-mind` (Documentación y Estrategia).
 - **Cuerpo:** `freqtrade-bestia` (Código del Bot y Configuración).
+
+## 🤖 PROTOCOLO DE AUDITORÍA DEL AGENTE
+- El Agente DEBE escanear STATUS.md y PENDIENTES.md al inicio de cada respuesta.
+- Si una instrucción técnica contradice el estado actual (ej. pedir instalar algo ya instalado), el Agente debe corregirse INMEDIATAMENTE.
+- Toda mejora en AWS debe replicarse en el repositorio 'freqtrade-bestia' de la PC para mantener la simetría.

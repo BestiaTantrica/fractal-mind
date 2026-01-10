@@ -1,0 +1,1 @@
+- [2026-01-09] Protocolo de respuesta: Priorizar listas y negritas para facilitar lectura (Dislexia Friendly).
