@@ -1,13 +1,5 @@
-# 🧭 BRÚJULA DE ACCIÓN
-- [ ] IA: Analizar por qué BTC/USDT entra en 'Lock' (candado).
-- [ ] IA: Monitorear el WinRate real en el panel Web de AWS.
-- [ ] PC: Ajustar GuruStrategy si el mercado cambia mucho.
-- [2026-01-09] Confirmado: Estrategia MULTIPAR activa.
-- [2026-01-09] Prioridad: Verificar logs en AWS para confirmar que el bot 've' el saldo de la Testnet.
-- [2026-01-09] ERROR: Telegram reporta 'Symbol does not exist' en Testnet.
-- [2026-01-10] PENDIENTE: Cambiar de 'Dry Run' a 'Live Testnet' para ver órdenes en la web de Binance.
-- [2026-01-10] PENDIENTE: Migrar config.json de 'dry_run: true' a 'false' para operar en Testnet Real.
-- [2026-01-10] PENDIENTE: Configurar 'urls' en config.json para conexión con Binance Testnet.
-- [2026-01-10] PENDIENTE: Verificar estabilidad de VolumePairList en instancia t2.micro de AWS.
-- [2026-01-10] PENDIENTE: Verificar conexión con Binance Testnet en AWS.
-- [2026-01-10] PENDIENTE: Ejecutar pkill -f freqtrade en AWS y lanzar Sniper V4 en modo screen.
+# 🧭 BRÚJULA DE ACCIÓN (V4)
+- [ ] IA: Monitorear WinRate de SniperVolStrategy en FreqUI.
+- [ ] SEGURIDAD: Definir password temática para la Bóveda.
+- [ ] ESTRATEGIA: Validar comportamiento del Trailing Stoploss (6%).
+- [2026-01-10] COMPLETO: Despliegue en Docker y enlace con Telegram.
