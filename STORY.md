@@ -31,3 +31,5 @@
 - [2026-01-10] STATUS: Sniper V4 cargado en GitHub rama 'produccion_limpia' y sincronizado con AWS.
 - [2026-01-10] HITO: Localización real en AWS confirmada en '~/freqtrade-bestia'.
 - [2026-01-10] ACCIÓN: Despliegue de Sniper V4 mediante acceso directo sin carpeta intermedia.
+- [2026-01-10] BLOQUEO: Divergencia de ramas detectada en AWS durante el pull.
+- [2026-01-10] ACCIÓN: Ejecución de 'git reset --hard' para forzar la paridad con la Bóveda V4.
