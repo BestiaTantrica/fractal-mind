@@ -19,3 +19,5 @@
 - [2026-01-10] OBJETIVO: Familiarizarse con los indicadores de la 8080 antes de pasar a Real.
 - [2026-01-10] HITO: Sniper V4 alcanzó Win Rate 100% y Drawdown 0.00% en Backtest. Implementado Escudo 0.99.
 - [2026-01-10] HITO: Sniper V4 listo para despliegue. Protección 0.99 validada.
+- [2026-01-10] ERROR: Intento de uso de rutas Unix (~) en CMD de Windows detectado.
+- [2026-01-10] NOTA: En Windows CMD usar rutas completas (C:\...) o relativas desde el perfil de usuario.
