@@ -8,3 +8,4 @@
 - [2026-01-09] ENTORNO ÚNICO: Testnet. No buscar trades en cuenta real.
 - [2026-01-10] INFRA: AWS limpiado de procesos duplicados satisfactoriamente.
 - [2026-01-10] CONFIG: Forcebuy activado manualmente en el archivo de AWS.
+- [2026-01-10] OBSERVACIÓN: El bot está en modo DRY RUN. Por eso se ve en la WebUI 8080 pero no en Binance.

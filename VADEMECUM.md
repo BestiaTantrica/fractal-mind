@@ -60,3 +60,4 @@
 - **Comando de Oro:** 'docker-compose up -d' es el que arranca la Bestia.
 - **Gestión de Errores:** Si hay conflicto de Telegram, 'sudo docker rm -f $(sudo docker ps -aq)'.
 - [2026-01-10] ESTRUCTURA: Confirmado que config.json reside en user_data/.
+- [2026-01-10] INFO: El comando forcebuy sigue bloqueado por sintaxis en el config.
