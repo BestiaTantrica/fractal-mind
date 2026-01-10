@@ -61,3 +61,4 @@
 - **Gestión de Errores:** Si hay conflicto de Telegram, 'sudo docker rm -f $(sudo docker ps -aq)'.
 - [2026-01-10] ESTRUCTURA: Confirmado que config.json reside en user_data/.
 - [2026-01-10] INFO: El comando forcebuy sigue bloqueado por sintaxis en el config.
+- [2026-01-10] REGLA: No intentar ver trades en Binance.com mientras estemos en Dry Run.

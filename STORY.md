@@ -16,3 +16,4 @@
 - [2026-01-09] ACCIÓN: Reiniciar contenedor en AWS para refrescar mercados.
 - [2026-01-10] TEST: Ejecutando forcebuy tras limpieza de Telegram Conflict.
 - [2026-01-10] HITO: El bot ejecutó su primer trade automático (ADA/USDT) en modo Dry Run.
+- [2026-01-10] OBJETIVO: Familiarizarse con los indicadores de la 8080 antes de pasar a Real.
