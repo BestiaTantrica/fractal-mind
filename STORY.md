@@ -52,3 +52,13 @@
 - [2026-01-10] ESTATUS: Docker operativo y RUNNING en AWS.
 - [2026-01-10] ACCIÓN: Modificación de comando en docker-compose.yml para activar SniperVolStrategy.
 - [2026-01-10] ÉXITO FINAL: Sniper V4 Bóveda operando estable en AWS. 18 pares validados.
+- [2026-01-10] CONFIG: Habilitada FreqUI (API Server) en puerto 8080.
+- [2026-01-10] TÉCNICO: listen_ip cambiado a 0.0.0.0 para acceso remoto desde celular.
+- [2026-01-10] ÉXITO: Puerto 8080 confirmado en LISTEN y acceso web validado.
+- [2026-01-10] HITO: Creado bot de Telegram @Tomy_Sniper_V4_bot.
+- [2026-01-10] ERROR: Fallo inicial de respuesta en Telegram /start corregido.
+- [2026-01-10] ACCIÓN: Re-inyección de parámetros Telegram vía script Python en AWS.
+- [2026-01-10] ENLACE: ID 6527908321 vinculado exitosamente al bot.
+- [2026-01-10] ÉXITO TOTAL: Sniper V4 reportando en tiempo real vía Telegram.
+- [2026-01-10] PRIMERA SANGRE: Trade #1 detectado automáticamente (FORM/USDT).
+- [2026-01-10] DISEÑO: Pendiente personalización de password temática para la Bóveda.
