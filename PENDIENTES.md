@@ -10,3 +10,4 @@
 - [2026-01-10] PENDIENTE: Configurar 'urls' en config.json para conexión con Binance Testnet.
 - [2026-01-10] PENDIENTE: Verificar estabilidad de VolumePairList en instancia t2.micro de AWS.
 - [2026-01-10] PENDIENTE: Verificar conexión con Binance Testnet en AWS.
+- [2026-01-10] PENDIENTE: Ejecutar pkill -f freqtrade en AWS y lanzar Sniper V4 en modo screen.

@@ -25,3 +25,7 @@
 - [2026-01-10] RESOLUCIÓN: La carpeta 'freqtrade-bestia' en Windows es el repositorio local vinculado a la rama 'produccion_limpia'.
 - [2026-01-10] HITO: Verificado repositorio remoto en GitHub: BestiaTantrica/freqtrade-bestia.git.
 - [2026-01-10] STATUS: Rama activa 'produccion_limpia'. Preparando empuje de Sniper V4.
+- [2026-01-10] CAMBIO: Se unificó config_test.json en config.json. Versión moderada eliminada.
+- [2026-01-10] HITO: Ruptura de bloqueo .gitignore detectado; archivos core forzados con git add -f.
+- [2026-01-10] TÉCNICO: Conversión CRLF a LF (Windows a Linux) completada con éxito.
+- [2026-01-10] STATUS: Sniper V4 cargado en GitHub rama 'produccion_limpia' y sincronizado con AWS.
