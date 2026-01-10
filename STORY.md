@@ -43,3 +43,12 @@
 - [2026-01-10] CRÍTICO: Reconstrucción total de config.json en repositorio local.
 - [2026-01-10] TÉCNICO: Inclusión de bloques mandatorios 'entry_pricing' y 'exit_pricing'.
 - [2026-01-10] ACCIÓN: Sincronización Windows -> GitHub -> AWS para integridad absoluta.
+- [2026-01-10] ÉXITO: Push crítico completado (commit ff07b35). Configuración V4 íntegra en GitHub.
+- [2026-01-10] ACCIÓN: Sincronización final en AWS mediante 'reset --hard' para eliminar residuos.
+- [2026-01-10] HITO: Infraestructura AWS identificada como Docker Compose.
+- [2026-01-10] ACCIÓN: Despliegue de Sniper V4 mediante 'docker compose up -d'.
+- [2026-01-10] NOTA: Se descarta el uso de screen/venv en favor de contenedores.
+- [2026-01-10] ERROR: Sintaxis incorrecta en comando Docker corregida (docker-compose).
+- [2026-01-10] ESTATUS: Docker operativo y RUNNING en AWS.
+- [2026-01-10] ACCIÓN: Modificación de comando en docker-compose.yml para activar SniperVolStrategy.
+- [2026-01-10] ÉXITO FINAL: Sniper V4 Bóveda operando estable en AWS. 18 pares validados.
