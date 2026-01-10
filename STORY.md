@@ -33,3 +33,6 @@
 - [2026-01-10] ACCIÓN: Despliegue de Sniper V4 mediante acceso directo sin carpeta intermedia.
 - [2026-01-10] BLOQUEO: Divergencia de ramas detectada en AWS durante el pull.
 - [2026-01-10] ACCIÓN: Ejecución de 'git reset --hard' para forzar la paridad con la Bóveda V4.
+- [2026-01-10] HITO: Sincronización forzada (Reset Hard) exitosa en AWS.
+- [2026-01-10] STATUS: Sniper V4 operando en segundo plano bajo sesión 'sniper_v4'.
+- [2026-01-10] NOTA: El bot está ejecutando la estrategia con el escudo 0.99 y VolumePairList.
