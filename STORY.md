@@ -21,3 +21,5 @@
 - [2026-01-10] HITO: Sniper V4 listo para despliegue. Protección 0.99 validada.
 - [2026-01-10] ERROR: Intento de uso de rutas Unix (~) en CMD de Windows detectado.
 - [2026-01-10] NOTA: En Windows CMD usar rutas completas (C:\...) o relativas desde el perfil de usuario.
+- [2026-01-10] DUDA: Confusión entre entorno de pruebas y repositorio de producción.
+- [2026-01-10] RESOLUCIÓN: La carpeta 'freqtrade-bestia' en Windows es el repositorio local vinculado a la rama 'produccion_limpia'.
