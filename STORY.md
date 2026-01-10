@@ -40,3 +40,6 @@
 - [2026-01-10] ACCIÓN: Inyección manual de parámetros de pricing (entry/exit) vía cat en AWS.
 - [2026-01-10] DECISIÓN: Corrección de 'exit_pricing' vía repositorio para mantener integridad.
 - [2026-01-10] ACCIÓN: Actualización de config.json en Windows y re-despliegue hacia AWS.
+- [2026-01-10] CRÍTICO: Reconstrucción total de config.json en repositorio local.
+- [2026-01-10] TÉCNICO: Inclusión de bloques mandatorios 'entry_pricing' y 'exit_pricing'.
+- [2026-01-10] ACCIÓN: Sincronización Windows -> GitHub -> AWS para integridad absoluta.
