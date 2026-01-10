@@ -7,3 +7,5 @@
 - [2026-01-09] ERROR: Telegram reporta 'Symbol does not exist' en Testnet.
 - [2026-01-10] PENDIENTE: Cambiar de 'Dry Run' a 'Live Testnet' para ver órdenes en la web de Binance.
 - [2026-01-10] PENDIENTE: Migrar config.json de 'dry_run: true' a 'false' para operar en Testnet Real.
+- [2026-01-10] PENDIENTE: Configurar 'urls' en config.json para conexión con Binance Testnet.
+- [2026-01-10] PENDIENTE: Verificar estabilidad de VolumePairList en instancia t2.micro de AWS.
