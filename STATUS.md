@@ -10,3 +10,4 @@
 - [2026-01-10] CONFIG: Forcebuy activado manualmente en el archivo de AWS.
 - [2026-01-10] OBSERVACIÓN: El bot está en modo DRY RUN. Por eso se ve en la WebUI 8080 pero no en Binance.
 - [2026-01-10] DECISIÓN: Se mantiene modo DRY RUN para priorizar dominio de la WebUI 8080.
+- [2026-01-11] HITO: Hyperopt lanzado sobre 66 pares con motor ProfitDrawDownHyperOptLoss.

@@ -64,3 +64,5 @@
 - [2026-01-10] DISEÑO: Pendiente personalización de password temática para la Bóveda.
 - [2026-01-10] CIERRE: Prompt Maestro V4 validado y condensado.
 - [2026-01-10] INFO: Primera operación automática iniciada: FORM/USDT.
+- [2026-01-11] DECISIÓN: Migración de infraestructura a V4 Futures para habilitar Shorting y cobertura total.
+- [2026-01-11] ACCIÓN: Purga de residuos de Spot y descarga exitosa de 66 contratos perpetuos (fapi/v1).
