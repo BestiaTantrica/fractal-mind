@@ -66,3 +66,4 @@
 - [2026-01-10] INFO: Primera operación automática iniciada: FORM/USDT.
 - [2026-01-11] DECISIÓN: Migración de infraestructura a V4 Futures para habilitar Shorting y cobertura total.
 - [2026-01-11] ACCIÓN: Purga de residuos de Spot y descarga exitosa de 66 contratos perpetuos (fapi/v1).
+- [2026-01-11] HITO: Despliegue exitoso de Sniper_V5_Dynamic en AWS. Bot operativo.
