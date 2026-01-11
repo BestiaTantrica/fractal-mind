@@ -12,3 +12,4 @@
 - [2026-01-10] DECISIÓN: Se mantiene modo DRY RUN para priorizar dominio de la WebUI 8080.
 - [2026-01-11] HITO: Hyperopt lanzado sobre 66 pares con motor ProfitDrawDownHyperOptLoss.
 - [2026-01-11] STATUS: Sistema en Dry Run, monitoreando 80 pares en Binance Futuros con imagen Stable.
+- [2026-01-11] STATUS: Monitoreando señales en tiempo real desde el navegador.
