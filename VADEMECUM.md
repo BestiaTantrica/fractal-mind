@@ -7,3 +7,4 @@
 - [2026-01-11] ESTRUCTURA: SniperLab.py actualizado con 'can_short: True' y lógica de euforia/resistencia.
 - [2026-01-11] OBSERVACIÓN: Resolución de conflictos de Python 3.13 y errores de validación de config.json (exit_pricing).
 - [2026-01-11] OBSERVACIÓN: Credenciales validadas (freqtrader/SuperPassword123).
+- [2026-01-11] TÉCNICO: Priorizar VolumePairlist por 'quoteVolume' para evitar activos de baja liquidez.

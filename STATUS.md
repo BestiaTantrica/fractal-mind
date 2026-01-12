@@ -13,3 +13,4 @@
 - [2026-01-11] HITO: Hyperopt lanzado sobre 66 pares con motor ProfitDrawDownHyperOptLoss.
 - [2026-01-11] STATUS: Sistema en Dry Run, monitoreando 80 pares en Binance Futuros con imagen Stable.
 - [2026-01-11] STATUS: Monitoreando señales en tiempo real desde el navegador.
+- [2026-01-11] OBSERVACIÓN: Confirmada viabilidad de liquidez en Binance Real; el Dry Run actual es un espejo fiel del mercado.
