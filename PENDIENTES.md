@@ -10,3 +10,4 @@
 - [2026-01-12] MARKETING: Definición de reporte diario 'Sniper V5' para Telegram/WhatsApp/X.
 - [2026-01-12] MARKETING: Uso de Telegram nativo para reportes. La gestión de afiliados será manual/estática por ahora.
 - [2026-01-12] ESTRATEGIA: Lanzamiento de 'Préstamo Tecnológico' para amigos/conocidos.
+- [2026-01-12] OBJETIVO: Recaudar 000 USD para validación real de 5 semanas.
