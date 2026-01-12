@@ -15,3 +15,4 @@
 - [2026-01-12] TÉCNICO: El bot de Telegram actual es el canal oficial de comunicación del Pool.
 - [2026-01-12] PROTOCOLO: No se promete rentabilidad fija, sino devolución de capital + bono de testeo.
 - [2026-01-12] CONFIG: Stake amount para real se mantendrá en 120 USDT (12% del total) para gestionar 8 trades simultáneos con seguridad.
+- [2026-01-12] REGLA: Reparto 50/50 de utilidades tras la devolución del capital inicial.
