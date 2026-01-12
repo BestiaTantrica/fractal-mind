@@ -8,3 +8,4 @@
 - [2026-01-11] OBSERVACIÓN: Resolución de conflictos de Python 3.13 y errores de validación de config.json (exit_pricing).
 - [2026-01-11] OBSERVACIÓN: Credenciales validadas (freqtrader/SuperPassword123).
 - [2026-01-11] TÉCNICO: Priorizar VolumePairlist por 'quoteVolume' para evitar activos de baja liquidez.
+- [2026-01-12] REGLA DE ORO: El Agente es responsable de conocer la configuración actual antes de proponer cambios técnicos.

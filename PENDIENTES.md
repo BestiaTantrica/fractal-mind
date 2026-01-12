@@ -4,3 +4,4 @@
 - [ ] ESTRATEGIA: Validar comportamiento del Trailing Stoploss (6%).
 - [2026-01-10] COMPLETO: Despliegue en Docker y enlace con Telegram.
 - [2026-01-11] ESTRATEGIA: Evaluación de Pool de Inversión vía Telegram con gestión de comisiones automatizada.
+- [2026-01-12] PROTOCOLO: La Memoria Fractal debe incluir snapshots técnicos de config.json y estrategias activas para evitar redundancia en las consultas.
