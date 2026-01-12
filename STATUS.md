@@ -14,3 +14,4 @@
 - [2026-01-11] STATUS: Sistema en Dry Run, monitoreando 80 pares en Binance Futuros con imagen Stable.
 - [2026-01-11] STATUS: Monitoreando señales en tiempo real desde el navegador.
 - [2026-01-11] OBSERVACIÓN: Confirmada viabilidad de liquidez en Binance Real; el Dry Run actual es un espejo fiel del mercado.
+- [2026-01-12] SNAPSHOT: Config Sniper_V5_Dynamic integrado. 80 pares, Stoploss 33.8%, Trailing Offset 25%.
