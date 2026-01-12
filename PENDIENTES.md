@@ -7,3 +7,4 @@
 - [2026-01-12] PROTOCOLO: La Memoria Fractal debe incluir snapshots técnicos de config.json y estrategias activas para evitar redundancia en las consultas.
 - [2026-01-12] PENDIENTE: Evaluar impacto de Stoploss del 33% en modo Futures Real vs Liquidation Price.
 - [2026-01-12] VIGILANCIA: Monitorear si el Trailing Offset de 25.1% es demasiado ambicioso en mercado real vs Backtest.
+- [2026-01-12] MARKETING: Definición de reporte diario 'Sniper V5' para Telegram/WhatsApp/X.

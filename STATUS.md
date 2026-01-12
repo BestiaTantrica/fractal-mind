@@ -16,3 +16,4 @@
 - [2026-01-11] OBSERVACIÓN: Confirmada viabilidad de liquidez en Binance Real; el Dry Run actual es un espejo fiel del mercado.
 - [2026-01-12] SNAPSHOT: Config Sniper_V5_Dynamic integrado. 80 pares, Stoploss 33.8%, Trailing Offset 25%.
 - [2026-01-12] STATUS: Sniper_V5 operando con lógica de 'Caza Mayor' (High Reward).
+- [2026-01-12] ESTRATEGIA: Uso de X y Discord como embudos de captación para el Pool de inversión.
