@@ -18,3 +18,4 @@
 - [2026-01-12] STATUS: Sniper_V5 operando con lógica de 'Caza Mayor' (High Reward).
 - [2026-01-12] ESTRATEGIA: Uso de X y Discord como embudos de captación para el Pool de inversión.
 - [2026-01-12] ESTRATEGIA: Fomentar 'FOMO' (miedo a quedarse fuera) vía Estados de WhatsApp e Instagram.
+- [2026-01-12] DOCTRINA: Transparencia total sobre el estado de 'Prueba Real'. El capital se usa para validar latencia y ejecución.

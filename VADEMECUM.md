@@ -13,3 +13,4 @@
 - [2026-01-12] DOCTRINA: Se respetan los valores de Hyperopt para SniperLab.py. No modificar sin 100 trades de muestra.
 - [2026-01-12] TÉCNICO: Diseñar script de extracción de SQL para automatizar reportes de profit neto.
 - [2026-01-12] TÉCNICO: El bot de Telegram actual es el canal oficial de comunicación del Pool.
+- [2026-01-12] PROTOCOLO: No se promete rentabilidad fija, sino devolución de capital + bono de testeo.

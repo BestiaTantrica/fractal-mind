@@ -9,3 +9,4 @@
 - [2026-01-12] VIGILANCIA: Monitorear si el Trailing Offset de 25.1% es demasiado ambicioso en mercado real vs Backtest.
 - [2026-01-12] MARKETING: Definición de reporte diario 'Sniper V5' para Telegram/WhatsApp/X.
 - [2026-01-12] MARKETING: Uso de Telegram nativo para reportes. La gestión de afiliados será manual/estática por ahora.
+- [2026-01-12] ESTRATEGIA: Lanzamiento de 'Préstamo Tecnológico' para amigos/conocidos.
