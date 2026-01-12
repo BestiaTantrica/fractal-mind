@@ -10,3 +10,4 @@
 - [2026-01-11] TÉCNICO: Priorizar VolumePairlist por 'quoteVolume' para evitar activos de baja liquidez.
 - [2026-01-12] REGLA DE ORO: El Agente es responsable de conocer la configuración actual antes de proponer cambios técnicos.
 - [2026-01-12] ARQUITECTURA: SniperLab.py utiliza RSI y ADX con soporte/resistencia macro de 500 periodos.
+- [2026-01-12] DOCTRINA: Se respetan los valores de Hyperopt para SniperLab.py. No modificar sin 100 trades de muestra.
