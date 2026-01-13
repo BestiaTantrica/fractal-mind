@@ -13,3 +13,5 @@
 - [2026-01-12] OBJETIVO: Recaudar 000 USD para validación real de 5 semanas.
 - [2026-01-12] ESTRATEGIA: Testear escalabilidad de 'max_open_trades' (Comparar 5 vs 10 posiciones).
 - [2026-01-12] RIESGO: Evaluar impacto de diversificación en el Drawdown con capital de 400 USD.
+- [2026-01-12] SEGURIDAD: Limitar apalancamiento máximo a 3x-5x para la fase de 400 USD.
+- [2026-01-12] TÉCNICO: Investigar protección de 'Liquidation Price' en la API de Binance para Sniper V5.
