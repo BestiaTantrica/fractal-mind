@@ -11,3 +11,5 @@
 - [2026-01-12] MARKETING: Uso de Telegram nativo para reportes. La gestión de afiliados será manual/estática por ahora.
 - [2026-01-12] ESTRATEGIA: Lanzamiento de 'Préstamo Tecnológico' para amigos/conocidos.
 - [2026-01-12] OBJETIVO: Recaudar 000 USD para validación real de 5 semanas.
+- [2026-01-12] ESTRATEGIA: Testear escalabilidad de 'max_open_trades' (Comparar 5 vs 10 posiciones).
+- [2026-01-12] RIESGO: Evaluar impacto de diversificación en el Drawdown con capital de 400 USD.
