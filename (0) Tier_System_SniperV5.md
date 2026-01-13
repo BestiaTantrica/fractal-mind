@@ -1,16 +1,15 @@
-# 📊 Tier System Sniper V5 (Lógica de Volumen y Tiempo)
+# 📊 Tier System Sniper V5 (Matemática y Backtest)
 
-## 🧱 FILTROS DE EJECUCIÓN (MIRA AJUSTADA)
-- **Time-Out Exit (Tier 3):** Si el trade no es positivo en 20 min, cerrar por mercado.
-- **No Reverse (Flip):** Prohibido revertir posición en capas volátiles para evitar el doble slippage.
-- **Trigger de Volumen:** Entrar solo si $V_{actual} > 2.5 \times V_{promedio\_4h}$.
+## 🧮 LÓGICA MATEMÁTICA DE RANGOS (REAL)
+- **Tier 1:** Volumen 24h > $1B USD. (Foco: Tendencia).
+- **Tier 2:** $100M < Vol 24h < $1B USD. (Foco: Reversión).
+- **Tier 3:** Vol 24h < $100M USD. (Foco: Momentum/Scalp).
 
-## 🧱 CATEGORIZACIÓN DE PARES
-### 🔵 TIER 1 (Alta Cap): BTC, ETH, SOL, BNB.
-- Estrategia: Trend Following. Stoploss 33.8%.
+## 🧪 PROTOCOLO HYPEROPT (Fase de Prueba)
+1. **Optimización Tier 1:** Priorizar 'Profit Factor' sobre cantidad de trades.
+2. **Optimización Tier 3:** Priorizar 'Max Drawdown' y 'Recovery Factor'.
+3. **Validación:** Comparar 'Exit Reason' de AWS real vs sugerencias de Hyperopt.
 
-### 🟡 TIER 2 (Media Cap): LINK, ADA, DOT, MATIC, XRP.
-- Estrategia: Mean Reversion. Stoploss 20%.
-
-### 🔴 TIER 3 (Baja Cap): Resto de los 80 pares.
-- Estrategia: Momentum Scalping. Stake mínimo.
+## 📉 AUDITORÍA DE AWS (REAL)
+- Analizar Slippage en pares Tier 3.
+- Verificar si el Stoploss del 33% es eficiente o un lastre en bajas capitalizaciones.
