@@ -1,0 +1,1 @@
+- [2026-01-13] REGLA DE ORO: La simetría fractal exige que el entorno de pruebas (PC) sea Dockerizado para igualar producción (AWS).
