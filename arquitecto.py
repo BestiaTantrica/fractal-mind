@@ -1,58 +1,74 @@
 import os
-import subprocess
+import time
+import shutil
 
-# Configuración de rutas
-src = "/data/data/com.termux/files/home/fractal-mind/"
+src = os.path.expanduser("~/fractal-mind/")
 out = "/sdcard/Download/SUBIR_A_IA.md"
 
-def obtener_ubicacion_real():
-    try:
-        return subprocess.check_output("pwd", shell=True).decode().strip()
-    except:
-        return "Desconocida"
+# CONFIGURACIÓN DE TIEMPOS (en segundos)
+TRES_DIAS = 3 * 24 * 60 * 60
+SIETE_DIAS = 7 * 24 * 60 * 60
 
-def analizar_pulso(texto):
-    tormenta = any(p in texto.lower() for p in ["mierda", "carajo", "harto", "puto", "violento", "boludo"])
-    magia = any(p in texto.lower() for p in ["cangrejo", "magia", "metafora", "tarot", "astrologia"])
-    
-    if tormenta:
-        return "PULSO: TORMENTA. Tomás necesita pragmatismo puro. Cero sermones. Soluciones directas. Empatía silenciosa."
-    if magia:
-        return "PULSO: MAGIA/SINCRONICIDAD. Fase creativa/existencial. Usa metáforas y profundidad."
-    return "PULSO: ESTABLE. Ciber-Arquitecto operativo."
+def gestionar_ciclo_vida():
+    now = time.time()
+    capas_dirs = {
+        "1": os.path.join(src, "(1) reciente"),
+        "2": os.path.join(src, "(2) doctrina"),
+        "3": os.path.join(src, "(3) archivo"),
+        "4": os.path.join(src, "(4) pausa")
+    }
+    for d in capas_dirs.values(): os.makedirs(d, exist_ok=True)
+
+    # DEGRADACIÓN AUTOMÁTICA
+    for f in os.listdir(src):
+        f_path = os.path.join(src, f)
+        if f.endswith('.md') and f not in ["PENDIENTES.md", "STATUS.md", "PROMPT_IA.md"]:
+            # De Raíz a (1) reciente tras 3 días de inactividad
+            if (now - os.path.getmtime(f_path)) > TRES_DIAS:
+                shutil.move(f_path, os.path.join(capas_dirs["1"], f))
+                print(f"📉 Moviendo a Reciente: {f}")
+
+def definir_agente(texto):
+    t = texto.lower()
+    if any(k in t for k in ["backtest", "rsi", "profit", "v5"]): return "ESTRATEGA ALGORÍTMICO"
+    if any(k in t for k in ["docker", "aws", "ssh"]): return "INGENIERO INFRAESTRUCTURA"
+    return "AGENTE FULL STACK"
+
+def resumir(lineas, capa):
+    if capa == "0": return "".join(lineas)
+    if capa == "1": return "".join(lineas[:max(1, len(lineas) // 2)])
+    if capa == "2": return " | ".join([l.strip() for l in lineas if any(k in l.lower() for k in ["regla", "config", "v5"])])
+    return " | ".join([l.strip() for l in lineas if "[" in l][:5])
 
 def generate():
+    gestionar_ciclo_vida()
     files = [f for f in os.listdir(src) if f.endswith('.md')]
-    ubi = obtener_ubicacion_real()
     
-    # 1. CAPTURA DEL PULSO
-    texto_base = ""
-    for f in ["STATUS.md", "PENDIENTES.md"]:
-        if f in files:
-            with open(os.path.join(src, f), "r") as arch:
-                texto_base += arch.read()
+    # Captura contexto para definir Agente
+    contexto_c0 = ""
+    for f in files:
+        with open(os.path.join(src, f), "r") as arch: contexto_c0 += arch.read()
     
-    pulso = analizar_pulso(texto_base)
-    
-    content = f"# 📐 ARQUITECTO PROCESO\n"
-    content += f"## 🔗 ENCLAVE DE SESIÓN\n> {pulso}\n"
-    content += f"> UBICACIÓN ACTUAL: {ubi}\n\n"
-    
-    content += "## 🗺️ MAPA FIJO\n- Cerebro: ~/fractal-mind\n- Bot: ~/freqtrade-bestia\n- Servidor: AWS 30GB\n\n"
+    agente = definir_agente(contexto_c0)
+    content = f"# 📐 SISTEMA FRACTAL - ROL: {agente}\n\n"
+    content += "## 🛠️ COMANDOS: git pull origin main | memo\n\n"
 
-    for fname in files:
-        if fname == "SUBIR_A_IA.md": continue
-        with open(os.path.join(src, fname), "r") as f:
-            lines = f.readlines()
-            full_text = "".join(lines)
-            if "::MAGIA::" in full_text:
-                content += f"## 📂 {fname} (INTEGRO)\n{full_text}\n\n"
-            else:
-                content += f"## 📂 {fname} (EXTRACTO)\n" + "".join(lines[:20]) + "\n\n"
+    # Procesar Capa 0
+    content += "## 🎯 CAPA (0) - PRESENTE\n"
+    for f in sorted(files):
+        with open(os.path.join(src, f), "r") as arch:
+            content += f"### 📂 {f}\n{arch.read()}\n\n"
 
-    with open(out, "w") as f_out:
-        f_out.write(content)
-    print(f"✅ Arquitecto listo. Ubicación capturada: {ubi}")
+    # Procesar Historial
+    for c in ["1", "2", "3", "4"]:
+        path = os.path.join(src, ["", "(1) reciente", "(2) doctrina", "(3) archivo", "(4) pausa"][int(c)])
+        if not os.path.exists(path): continue
+        for fname in os.listdir(path):
+            with open(os.path.join(path, fname), "r") as f:
+                content += f"#### 📂 {fname} (Capa {c})\n{resumir(f.readlines(), c)}\n\n"
+
+    with open(out, "w") as f_out: f_out.write(content)
+    print(f"✅ Ejecutado como {agente}. Archivo listo en Downloads.")
 
 if __name__ == "__main__":
     generate()
