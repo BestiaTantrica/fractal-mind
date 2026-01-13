@@ -17,3 +17,5 @@
 - [2026-01-12] TÉCNICO: Investigar protección de 'Liquidation Price' en la API de Binance para Sniper V5.
 - [2026-01-12] ARQUITECTURA: Priorizar lógica bi-direccional (Long/Short) sobre Hedging simultáneo.
 - [2026-01-19] SIMULACIÓN: Ejecutar 'Stress Test' de Flash Crash vs 'Golden Run' en PC.
+- [2026-01-12] TÉCNICO: Implementar 'Tiered Stake Amount' basado en Market Cap/Volumen.
+- [2026-01-12] ESTRATEGIA: Definir 3 niveles de riesgo para diversificar los 15 trades simultáneos.
