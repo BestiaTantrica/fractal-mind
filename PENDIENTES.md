@@ -25,3 +25,5 @@
 - [2026-01-13] ESTRATEGIA: Crear lógica de 'Capas' (Tiered System). Aplicar porcentajes de riesgo y condiciones especiales para monedas de Baja Capitalización vs Top Tier.
 - [2026-01-13] INNOVACIÓN: Investigar/Definir sistema de 'News Sentiment' para anticipar movimientos de ballenas e institucionales antes del impacto en el gráfico.
 - [2026-01-13] ACCIÓN: Ejecutar Backtests intensivos enfocados exclusivamente en validar la lógica de Capas y Noticias.
+- [2026-01-12] TÉCNICO: Implementar 'Tiered Stake Amount' basado en Market Cap/Volumen.
+- [2026-01-12] ESTRATEGIA: Definir 3 niveles de riesgo para diversificar los 15 trades simultáneos.
