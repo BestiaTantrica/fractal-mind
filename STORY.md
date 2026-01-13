@@ -68,3 +68,14 @@
 - [2026-01-11] ACCIÓN: Purga de residuos de Spot y descarga exitosa de 66 contratos perpetuos (fapi/v1).
 - [2026-01-11] HITO: Despliegue exitoso de Sniper_V5_Dynamic en AWS. Bot operativo.
 - [2026-01-11] HITO: Acceso exitoso a la UI. Sistema visual operativo.
+- [2026-01-11] ESTRATEGIA: Evaluación de Pool de Inversión vía Telegram con gestión de comisiones automatizada.
+- [2026-01-12] MARKETING: Definición de reporte diario 'Sniper V5' para Telegram/WhatsApp/X.
+- [2026-01-12] MARKETING: Uso de Telegram nativo para reportes. La gestión de afiliados será manual/estática por ahora.
+- [2026-01-12] ESTRATEGIA: Lanzamiento de 'Préstamo Tecnológico' para amigos/conocidos.
+# 🎯 HITO: AWS DOCKER OPERATIVO (09/01/2026)
+- **Servidor:** AWS Activo 24/7.
+- **Sincronización:** Flujo PC -> Git -> AWS verificado.
+- [2026-01-09] AWS actualizado a 30GB. Ignorar errores de disco lleno de 8GB.
+- [2026-01-10] INFRA: AWS limpiado de procesos duplicados satisfactoriamente.
+- [2026-01-10] CONFIG: Forcebuy activado manualmente en el archivo de AWS.
+- [2026-01-12] ESTRATEGIA: Uso de X y Discord como embudos de captación para el Pool de inversión.
