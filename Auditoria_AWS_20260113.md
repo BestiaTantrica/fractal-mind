@@ -1,0 +1,1 @@
+- [2026-01-13] Sincronía Termux: Éxito en Bypass de Rust/Pydantic. Mitigación de PF 0.99 en proceso vía Tier System V5.

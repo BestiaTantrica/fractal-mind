@@ -1,0 +1,1 @@
+- [2026-01-13] Operación: Descarga exitosa de 4585 velas (5m) BTC/ETH/SOL/AAVE en entorno móvil. Protocolo Anti-Rust estable.
