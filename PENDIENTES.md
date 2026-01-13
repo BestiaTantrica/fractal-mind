@@ -15,3 +15,5 @@
 - [2026-01-12] RIESGO: Evaluar impacto de diversificación en el Drawdown con capital de 400 USD.
 - [2026-01-12] SEGURIDAD: Limitar apalancamiento máximo a 3x-5x para la fase de 400 USD.
 - [2026-01-12] TÉCNICO: Investigar protección de 'Liquidation Price' en la API de Binance para Sniper V5.
+- [2026-01-12] ARQUITECTURA: Priorizar lógica bi-direccional (Long/Short) sobre Hedging simultáneo.
+- [2026-01-19] SIMULACIÓN: Ejecutar 'Stress Test' de Flash Crash vs 'Golden Run' en PC.
