@@ -19,5 +19,5 @@ Antes de pedir un comando complejo, el Agente debe verificar:
 ## 🧪 HIPÓTESIS DE VALIDACIÓN (Semana 19/01/2026)
 - **Capital Real:** 300-400 USD (Preservación Absoluta).
 - **Prueba 1 (Stake Dinámico):** Validar si el bot ajusta % de entrada correctamente ante rachas negativas.
-- **Prueba 2 (Filtro de Volumen):** Confirmar que no hay entradas en pares con volumen < 1M USDT/24h.
+- **Prueba 2 (Filtro de Volumen):** Ajuste Proporcional: El tamaño de la entrada debe escalar según el volumen del par (Stake vs Liquidez).
 - **Prueba 3 (Estrés 1 Año):** Backtest total en PC para detectar "Drawdown de Ruina".
