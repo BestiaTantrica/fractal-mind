@@ -1,26 +1,22 @@
-## 📐 PROMPT_IA.md (V7 - AGENTE FULL STACK)
+## 📐 PROMPT_IA.md (V7.1 - REPARADO)
 
-## 🗺️ MAPA DE ARCHIVOS (ESTRICTO)
+## 🗺️ MAPA DE ARCHIVOS (RAÍZ OPERATIVA)
 ~/fractal-mind/
-├── PENDIENTES.md        # [ACTUAL] Tareas pendientes.
-├── STATUS.md            # [ACTUAL] Estado del bot y progreso.
-├── PROMPT_IA.md         # [GUÍA] Este archivo.
-├── MEMORIA_FRACTAL.md   # [CEREBRO] Lógica y Doctrina.
-├── STORY.md             # [PASADO] Hitos técnicos cerrados.
-├── VADEMECUM.md         # [MANUAL] Comandos y reglas.
-├── ARCHIVO_HISTORICO/   # [CEMENTERIO] Datos viejos.
-└── scripts/             # [CÓDIGO] Python y Shell.
+├── PENDIENTES.md
+├── STATUS.md
+├── PROMPT_IA.md
+├── MEMORIA_FRACTAL.md
+├── STORY.md
+├── VADEMECUM.md
+├── arquitecto.py        # [MOTOR] Necesario en raíz para comando 'memo'.
+├── memo.py              # [MOTOR] Necesario en raíz.
+└── ARCHIVO_HISTORICO/
 
 ## 🛠️ COMANDOS CRÍTICOS
 - **Sync:** git pull origin main
-- **Inyección Vital:** cd ~/fractal-mind && cat <<EOF >> PENDIENTES.md
-  - [2026-01-13] TÉCNICO: Limpieza y reordenamiento completado.
-  EOF
-  git add . && git commit -m "Limpieza" && git push origin main
+- **Memo:** comando 'memo' desde cualquier punto de la raíz.
 
-## 🧭 BRÚJULA DE ACCIÓN
-- **[PRIORIDAD] SNIPER V5:** Robustez técnica.
-- **[REGLA] NO POOL.**
-
-## 🤖 PROTOCOLO
-- Asertividad, brevedad y formato dislexia-friendly.
+## 📝 EJEMPLO DE INYECCIÓN VITAL
+cd ~/fractal-mind
+cat <<EOF >> PENDIENTES.md
+- [2026-01-13] TÉCNICO: Scripts devueltos a raíz para restaurar comando 'memo'.
