@@ -16,3 +16,4 @@
 - [2026-01-12] PROTOCOLO: No se promete rentabilidad fija, sino devolución de capital + bono de testeo.
 - [2026-01-12] CONFIG: Stake amount para real se mantendrá en 120 USDT (12% del total) para gestionar 8 trades simultáneos con seguridad.
 - [2026-01-12] REGLA: Reparto 50/50 de utilidades tras la devolución del capital inicial.
+- [2026-01-13] REGLA: Priorizar pruebas de robustez en Backtest sobre cualquier métrica de 'Profit' inmediato.

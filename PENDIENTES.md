@@ -19,3 +19,9 @@
 - [2026-01-19] SIMULACIÓN: Ejecutar 'Stress Test' de Flash Crash vs 'Golden Run' en PC.
 - [2026-01-12] TÉCNICO: Implementar 'Tiered Stake Amount' basado en Market Cap/Volumen.
 - [2026-01-12] ESTRATEGIA: Definir 3 niveles de riesgo para diversificar los 15 trades simultáneos.
+- [2026-01-13] ESTRATEGIA: Implementar condiciones porcentuales dinámicas según 'Capa' (Market Cap). Diferenciar Low Cap vs Top Tier.
+- [2026-01-13] INVESTIGACIÓN: Diseñar sistema de ingesta de noticias para anticipar movimientos de ballenas e institucionales.
+- [2026-01-13] ACCIÓN: Ejecutar batería masiva de Backtests integrando variables de Capa y Noticias antes de cualquier despliegue.
+- [2026-01-13] ESTRATEGIA: Crear lógica de 'Capas' (Tiered System). Aplicar porcentajes de riesgo y condiciones especiales para monedas de Baja Capitalización vs Top Tier.
+- [2026-01-13] INNOVACIÓN: Investigar/Definir sistema de 'News Sentiment' para anticipar movimientos de ballenas e institucionales antes del impacto en el gráfico.
+- [2026-01-13] ACCIÓN: Ejecutar Backtests intensivos enfocados exclusivamente en validar la lógica de Capas y Noticias.
