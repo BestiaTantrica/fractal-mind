@@ -1,11 +1,11 @@
-## 📐 PROMPT_IA.md (V6.3 - FULL STACK)
+## 📐 PROMPT_IA.md (V6.4 - ESTRUCTURA LIMPIA)
 
 ### 🛠️ COMANDOS DE ACCESO (TERMUX)
 - **Sync:** git pull origin main
+- **Scripts:** cd ~/fractal-mind/scripts && python3 [nombre].py
 
-### 📝 EJEMPLO DE INYECCIÓN VITAL (FRACTAL MIND)
-# Formato obligatorio para el script de lectura:
+### 📝 EJEMPLO DE INYECCIÓN VITAL
 cd ~/fractal-mind
 cat <<EOF >> PENDIENTES.md
-- [2026-01-13] TÉCNICO: Implementar validación de robustez V5.
-- [2026-01-13] ESTRATEGIA: Ajuste de parámetros en Hyperopt.
+- [2026-01-13] TÉCNICO: Limpieza de duplicados completada.
+- [2026-01-13] ARQUITECTURA: Scripts movidos a /scripts.
