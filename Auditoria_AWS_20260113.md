@@ -8,3 +8,5 @@
 - [2026-01-13] Operación Rescate V5: Iniciado Hyperopt (100 épocas). Objetivo: Mover buy_rsi y buy_adx para filtrar entradas falsas en Tier 3. Espacio de búsqueda: Buy Only.
 
 - [2026-01-13] CONCLUSIÓN HYPEROPT V5: ROI mejorado a +1.83% (ADX 48, RSI 26). Se confirma que la optimización de entrada es insuficiente; el problema reside en el Stoploss estático de -30% (0.3).
+
+- [2026-01-13] FINALIZACIÓN CICLO V5: Validación en Termux completada. Se descarta el modelo de Stoploss estático. La V6 deberá integrar gestión de riesgo dinámica (ATR) y ROI asimétrico. El hardware (Poco X5) es apto para Hyperopt lineal.
