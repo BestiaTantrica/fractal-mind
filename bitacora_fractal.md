@@ -10,3 +10,8 @@
 - **Acción**: Sellado de config_live.json (Commit c6f5926).
 - **Ajuste**: Capital 200 USD, Whitelist Tier 1 (Blue Chips).
 - **IA**: Código de conducta "Arquitecto" inyectado y activo.
+
+## [2026-01-15] LECCIONES TÉCNICAS - DESPLIEGUE V8
+1. **Validación de Tipos (Telegram)**: El 'chat_id' DEBE ser string ("12345"), no integer. Freqtrade 2025.12 rechaza números puros en el validador de esquema.
+2. **Integridad de Bloques**: Al inyectar config vía terminal AWS, bloques largos se mutilan. Usar inyecciones directas (cat <<EOF) para evitar pérdida de llaves finales (exit_pricing).
+3. **Filtro de Supervivencia**: Se purga Tier 3. La 'fuga de capital' de versiones anteriores se mitiga operando solo Top 10 Market Cap (Tier 1) hasta validar V6.
