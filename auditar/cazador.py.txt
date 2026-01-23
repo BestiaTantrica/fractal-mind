@@ -1,0 +1,39 @@
+mejora este comando para celu en termux: cat << 'EOF' > ~/cazar.sh
+#!/bin/bash
+COMP_ID="ocid1.tenancy.oc1..aaaaaaaa7xczcsz7xf3qa22n3c6zmn2iy76xkfnqe45yix532hlgyovi3c3a"
+SUBNET_ID="ocid1.subnet.oc1.iad.aaaaaaaarb6fimofi7xhg7egxqenl2g5mkc6g3ndyq7wxctbjqajeopewuaq"
+IMAGE_ID="ocid1.image.oc1.iad.aaaaaaaa5lh4ly5pkbwb6rnvgrc6v7zspxp4hrffzrawxrzowlemfrsbdv6a"
+LLAVE="/home/ubuntu/llave_bot.pub"
+
+# Verificamos llave
+if [ ! -f "$LLAVE" ]; then ssh-keygen -t rsa -b 2048 -f ~/llave_bot -N "" -q; fi
+
+echo "--- CAZADOR V4 (ESCAPE FIX) ---"
+
+while true; do
+  # AQUI ESTA EL ARREGLO: "{\"ocpus\":4...}"
+  OUTPUT=$(oci compute instance launch \
+    --availability-domain "Uocm:US-ASHBURN-AD-1" \
+    --compartment-id "$COMP_ID" \
+    --shape "VM.Standard.A1.Flex" \
+    --shape-config "{\"ocpus\":4,\"memoryInGBs\":24}" \
+    --subnet-id "$SUBNET_ID" \
+    --image-id "$IMAGE_ID" \
+    --assign-public-ip true \
+    --display-name "Cazador-Exito" \
+    --ssh-authorized-keys-file "$LLAVE" 2>&1)
+
+  if [[ "$OUTPUT" == *"Out of host capacity"* ]]; then
+      echo "[$(date '+%H:%M:%S')] Sin capacidad (OK - Script funcionando)"
+  elif [[ "$OUTPUT" == *"provisioning"* ]]; then
+      echo "¡¡¡ÉXITO!!! REVISÁ ORACLE" > ~/EXITO_CAZADOR.txt
+      exit 0
+  else
+      echo "[$(date '+%H:%M:%S')] $OUTPUT"
+  fi
+  sleep $((30 + RANDOM % 20))
+done
+EOF
+
+chmod +x ~/cazar.sh
+tmux new -s caceria ./cazar.sh
