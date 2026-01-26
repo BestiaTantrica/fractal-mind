@@ -1,12 +1,15 @@
-# ⚡ STATUS.md
-# 🎯 HITO: AWS DOCKER OPERATIVO (09/01/2026)
+# 🎯 HITO: CONSOLIDACIÓN CEREBRO FRACTAL (24/01/2026)
+
+- **Estrategia:** `fractal-mind` consolidado como Cerebro Estratégico (Nivel Superior).
+- **Infra:** `/infra` aislada y protegida: Llaves y accesos seguros.
+- **Limpieza:** "Cuerpo" operativo eliminado; solo queda estrategia y cimientos.
+- **Sistema:** `arquitecto.py` optimizado para detección de entorno (PC/Termux).
+- **Próximo:** Sincronización final con Oráculo y despliegue de prompts.
+
+# 🎯 HITO: AWS INFRA OPERATIVA (09/01/2026)
+
 - **Servidor:** AWS Activo 24/7.
-- **Bot:** Freqtrade en Docker (Running).
-- **Control:** WebUI y Telegram funcionando.
-- **Sincronización:** Flujo PC -> Git -> AWS verificado.
-- [2026-01-09] AWS actualizado a 30GB. Ignorar errores de disco lleno de 8GB.
-- [2026-01-09] ENTORNO ÚNICO: Testnet. No buscar trades en cuenta real.
-- [2026-01-10] INFRA: AWS limpiado de procesos duplicados satisfactoriamente.
-- [2026-01-10] CONFIG: Forcebuy activado manualmente en el archivo de AWS.
-- [2026-01-10] OBSERVACIÓN: El bot está en modo DRY RUN. Por eso se ve en la WebUI 8080 pero no en Binance.
-- [2026-01-10] DECISIÓN: Se mantiene modo DRY RUN para priorizar dominio de la WebUI 8080.
+- **Capacidad:** Actualizado a 30GB para estabilidad.
+- **Sincronización:** Flujo PC -> Git -> Cloud verificado.
+- [2026-01-10] INFRA: AWS limpiado de procesos duplicados.
+- [2026-01-10] DECISIÓN: Este repositorio se mantiene como centro de mando estratégico.

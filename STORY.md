@@ -1,19 +1,18 @@
+# 📂 HITOS DE CONSOLIDACIÓN (24/01/2026)
+
+- **Hito:** Independencia del Cerebro (`fractal-mind`).
+- **Evolución:** Separación total de la lógica operativa (Cuerpo) y la lógica estratégica (Cerebro).
+- **Decisión:** `fractal-mind` es ahora el Oráculo central. El Arquitecto detecta el entorno automáticamente para mantener la simetría móvil-PC.
+- **Estado:** Purgados archivos basura y optimizada la memoria para escalabilidad.
+
 # 📂 HITOS DE RENTABILIDAD (08/01/2026)
-- **Hito:** De Profit Negativo (-3.9%) a Positivo (+1.85%).
-- **Evolución:** Se realizaron 6 iteraciones de Backtest.
-- **Clave:** La reducción del RSI de entrada a 30 y el ajuste estricto de Stoploss a 1.5%.
-- **Resultado Final:** 53 trades | WinRate 37.7% | Profit Factor 1.12.
 
-# 📂 BITÁCORA DE RESILIENCIA (08/01/2026)
-- **Hito:** Superado el error de compilación de Python.h en AWS instalando python3-devel.
-- **Bloqueo:** El disco EBS de AWS (8GB) se llenó al instalar dependencias.
-- **Aprendizaje:** La persistencia en Termux/Nube tiene un límite físico. La PC es la herramienta de fuerza bruta necesaria ahora.
+...
 
-# 📂 BITÁCORA DE RESILIENCIA (08/01/2026)
-- **Hito:** Superado el error 'Account Locked' en AWS. Se aprendió que con disco al 100% el comando 'sudo' falla.
-- **Aprendizaje:** No se puede compilar Freqtrade en 8GB de disco si el sistema ya ocupa 6GB. 
-- **Decisión:** Reset total o ampliación a 30GB es el único camino en la nube.
-- [2026-01-09] ACCIÓN: Reiniciar contenedor en AWS para refrescar mercados.
-- [2026-01-10] TEST: Ejecutando forcebuy tras limpieza de Telegram Conflict.
-- [2026-01-10] HITO: El bot ejecutó su primer trade automático (ADA/USDT) en modo Dry Run.
-- [2026-01-10] OBJETIVO: Familiarizarse con los indicadores de la 8080 antes de pasar a Real.
+# 📂 BITÁCORA DE ARQUITECTURA (08/01/2026)
+
+- **Hito:** Independencia total del sistema.
+- **Aprendizaje:** La persistencia en la nube requiere una base sólida. La PC es el motor de fuerza, el servidor es el ejecutor.
+- [2026-01-09] ACCIÓN: Expansión de almacenamiento en AWS completada.
+- [2026-01-10] HITO: Sistema de comunicación verificado.
+- [2026-01-10] OBJETIVO: Priorizar la claridad de los prompts estratégicos antes de escalar.

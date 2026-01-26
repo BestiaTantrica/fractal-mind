@@ -1,0 +1,4 @@
+# Ignorar todo en esta carpeta excepto este archivo y la estructura
+*
+!.gitignore
+!README.md (opcional)

@@ -1,9 +1,15 @@
-# 🧭 BRÚJULA DE ACCIÓN
-- [ ] IA: Analizar por qué BTC/USDT entra en 'Lock' (candado).
-- [ ] IA: Monitorear el WinRate real en el panel Web de AWS.
-- [ ] PC: Ajustar GuruStrategy si el mercado cambia mucho.
-- [2026-01-09] Confirmado: Estrategia MULTIPAR activa.
-- [2026-01-09] Prioridad: Verificar logs en AWS para confirmar que el bot 've' el saldo de la Testnet.
-- [2026-01-09] ERROR: Telegram reporta 'Symbol does not exist' en Testnet.
-- [2026-01-10] PENDIENTE: Cambiar de 'Dry Run' a 'Live Testnet' para ver órdenes en la web de Binance.
-- [2026-01-10] PENDIENTE: Migrar config.json de 'dry_run: true' a 'false' para operar en Testnet Real.
+# 🧭 BRÚJULA DE ACCIÓN (ESTRATÉGICA)
+
+## 🧠 Evolución del Cerebro
+
+- [ ] IA: Refinar el flujo de "Vómito de Ideas" desde móvil para que sea auto-organizable.
+- [/] IA: Evaluar la creación de un sistema de "Niveles de Conciencia" en el reporte del Arquitecto.
+- [ ] PC/Móvil: Sincronizar prompts maestros en el nuevo Oráculo.
+
+## 🤖 Supervisión de Infraestructura (Oráculo)
+
+- [ ] Monitorear estabilidad de la instancia AWS (30GB).
+- [ ] Optimizar la respuesta del Oráculo en Oracle Cloud.
+
+> [!NOTE]
+> Este repositorio es el **Cerebro Estratégico**. La ejecución operativa se delega, aquí solo reside la brújula y el mapa de infraestructura.
