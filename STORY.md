@@ -1,1 +1,0 @@
-- [2026-01-13] Hito: Caída del Muro de Rust. Primer flujo de datos de Binance estabilizado en Android sin compilación nativa.
