@@ -1,4 +1,7 @@
 import os
+from dotenv import load_dotenv
+load_dotenv()
+import os
 
 src = "/data/data/com.termux/files/home/fractal-mind/"
 out = "/sdcard/Download/SUBIR_A_IA.md"
