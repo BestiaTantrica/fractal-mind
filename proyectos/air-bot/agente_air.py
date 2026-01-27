@@ -326,14 +326,23 @@ async def editar_imagen_confirmada(update: Update, context: ContextTypes.DEFAULT
             caption=f"✅ Imagen editada\n\n📊 Cuota: {nueva_cuota}/{QUOTA_LIMIT_IMAGES}"
         )
 
-        # Registrar en log
-        log_manager.registrar_interaccion(
+        # Registrar en log y obtener path
+        saved_path = log_manager.registrar_interaccion(
             user_id=user_id,
             tipo="IMAGEN_EDICION",
             input_texto=caption,
             output_info={"caption": "Imagen editada"},
             cuota_actual=nueva_cuota
         )
+        
+        # FAILSAFE: Enviar archivo de log
+        if saved_path and os.path.exists(saved_path):
+            with open(saved_path, 'rb') as f:
+                 await context.bot.send_document(
+                    chat_id=query.message.chat_id,
+                    document=f,
+                    caption="📂 Backup de Log (Inbox)"
+                )
         
         # Limpiar
         context.user_data.clear()
@@ -522,13 +531,22 @@ Fin de semana: {resultado.get('horario_optimo', {}).get('fin_semana', 'N/A')}
         await context.bot.send_message(chat_id=query.message.chat_id, text=mensaje_resultado, parse_mode='Markdown')
         
         # Registrar en log
-        log_manager.registrar_interaccion(
+        saved_path = log_manager.registrar_interaccion(
             user_id=user_id,
             tipo="VIDEO_GENERACION",
             input_texto=texto,
             output_info=resultado,
             cuota_actual=nueva_cuota
         )
+        
+        # FAILSAFE: Enviar backup
+        if saved_path and os.path.exists(saved_path):
+             with open(saved_path, 'rb') as f:
+                 await context.bot.send_document(
+                    chat_id=query.message.chat_id,
+                    document=f,
+                    caption="📂 Backup de Log (Inbox)"
+                )
         
         if resultado.get('video_bytes'):
             await context.bot.send_video(

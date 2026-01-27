@@ -72,10 +72,15 @@ def handle(m):
         txt = res.text
         
         # Guardar en inbox
+        file_path = None
         try:
-            save_to_inbox(txt)
+            file_path = save_to_inbox(txt)
+            # FAILSAFE: Enviar también el archivo generado por Telegram
+            if file_path and os.path.exists(file_path):
+                with open(file_path, 'rb') as doc:
+                    bot.send_document(m.chat.id, doc, caption="📂 Copia de seguridad del archivo generado")
         except Exception as e:
-            print(f"Error guardando en inbox: {e}")
+            print(f"Error guardando/enviando: {e}")
         
         # Paginación para Telegram
         for i in range(0, len(txt), 4000):

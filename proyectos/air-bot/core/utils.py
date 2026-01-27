@@ -181,10 +181,12 @@ class LogManager:
             
             # Guardar también en inbox para sincronización (VERSIÓN LEAN)
             resumen_inbox = f"### {timestamp}\n- User: {user_id}\n- Tipo: {tipo}\n- Input: {input_texto[:50]}...\n- Status: OK\n---"
-            self.save_to_inbox(resumen_inbox)
+            saved_path = self.save_to_inbox(resumen_inbox)
+            return saved_path
             
         except Exception as e:
             logger.error(f"Error escribiendo log: {e}")
+            return None
 
     def save_to_inbox(self, content: str):
         """
@@ -219,8 +221,11 @@ class LogManager:
             # Usamos abs_path para asegurar que el cd funcione siempre
             os.system(f"cd \"{abs_path}\" && git add \"{file_path}\" && git commit -m 'Auto-save (AIR-Bot lean): {file_name}' && git push origin main &")
             
+            return file_path
+            
         except Exception as e:
             logger.error(f"Error guardando en inbox: {e}")
+            return None
 
     def _get_tipo_nombre(self, tipo: str) -> str:
         """Convierte el tipo a nombre legible"""
