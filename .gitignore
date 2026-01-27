@@ -1,7 +1,4 @@
+.env
 venv/
 __pycache__/
-*.log
 *.pyc
-SUBIR_A_IA.md
-.env
-ssh-key-*.key
