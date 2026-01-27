@@ -1,16 +1,27 @@
 nohup: ignoring input
-/home/ec2-user/fractal-mind/venv/lib64/python3.9/site-packages/google/api_core/_python_version_support.py:246: FutureWarning: You are using a non-supported Python version (3.9.25). Google will not post any further updates to google.api_core supporting this Python version. Please upgrade to the latest Python version, or at least Python 3.10, and then update google.api_core.
-  warnings.warn(message, FutureWarning)
-/home/ec2-user/fractal-mind/venv/lib64/python3.9/site-packages/google/auth/__init__.py:54: FutureWarning: You are using a Python version 3.9 past its end of life. Google will update google-auth with critical bug fixes on a best-effort basis, but not with any other fixes or features. Please upgrade your Python version, and then update google-auth.
-  warnings.warn(eol_message.format("3.9"), FutureWarning)
-/home/ec2-user/fractal-mind/venv/lib64/python3.9/site-packages/google/oauth2/__init__.py:40: FutureWarning: You are using a Python version 3.9 past its end of life. Google will update google-auth with critical bug fixes on a best-effort basis, but not with any other fixes or features. Please upgrade your Python version, and then update google-auth.
-  warnings.warn(eol_message.format("3.9"), FutureWarning)
-/home/ec2-user/fractal-mind/scripts/agente_mente.py:3: FutureWarning: 
-
-All support for the `google.generativeai` package has ended. It will no longer be receiving 
-updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
-See README for more details:
-
-https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
-
-  import google.generativeai as genai
+2026-01-26 07:00:44,954 (__init__.py:1241 MainThread) ERROR - TeleBot: "Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running"
+2026-01-26 07:00:44,956 (__init__.py:1243 MainThread) ERROR - TeleBot: "Exception traceback:
+Traceback (most recent call last):
+  File "/home/ec2-user/fractal-mind/venv/lib64/python3.11/site-packages/telebot/__init__.py", line 1234, in __threaded_polling
+    polling_thread.raise_exceptions()
+  File "/home/ec2-user/fractal-mind/venv/lib64/python3.11/site-packages/telebot/util.py", line 115, in raise_exceptions
+    raise self.exception_info
+  File "/home/ec2-user/fractal-mind/venv/lib64/python3.11/site-packages/telebot/util.py", line 97, in run
+    task(*args, **kwargs)
+  File "/home/ec2-user/fractal-mind/venv/lib64/python3.11/site-packages/telebot/__init__.py", line 688, in __retrieve_updates
+    updates = self.get_updates(offset=(self.last_update_id + 1),
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ec2-user/fractal-mind/venv/lib64/python3.11/site-packages/telebot/__init__.py", line 660, in get_updates
+    json_updates = apihelper.get_updates(
+                   ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ec2-user/fractal-mind/venv/lib64/python3.11/site-packages/telebot/apihelper.py", line 339, in get_updates
+    return _make_request(token, method_url, params=payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ec2-user/fractal-mind/venv/lib64/python3.11/site-packages/telebot/apihelper.py", line 168, in _make_request
+    json_result = _check_result(method_name, result)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ec2-user/fractal-mind/venv/lib64/python3.11/site-packages/telebot/apihelper.py", line 197, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 409. Description: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+"
+Mente Activa con SDK Google-GenAI v1...

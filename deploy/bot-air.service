@@ -1,0 +1,22 @@
+[Unit]
+Description=Bot AIR - Videos (agente_air.py)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=ec2-user
+WorkingDirectory=/home/ec2-user/fractal-mind
+EnvironmentFile=/home/ec2-user/fractal-mind/.env
+ExecStart=/home/ec2-user/fractal-mind/venv/bin/python3 /home/ec2-user/fractal-mind/proyectos/air-bot/agente_air.py
+Restart=always
+RestartSec=10
+StartLimitInterval=0
+StartLimitBurst=0
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=bot-air
+
+[Install]
+WantedBy=multi-user.target
