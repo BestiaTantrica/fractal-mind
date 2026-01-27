@@ -47,7 +47,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Variables de configuración
-TELEGRAM_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+# Usamos TELEGRAM_TOKEN para consistencia con Agente Mente en el .env del servidor
+TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN') or os.getenv('TELEGRAM_BOT_TOKEN')
 GOOGLE_API_KEY = os.getenv('GOOGLE_AI_API_KEY')
 QUOTA_LIMIT_IMAGES = int(os.getenv('QUOTA_LIMIT_IMAGES', '100'))
 QUOTA_LIMIT_VIDEOS = int(os.getenv('QUOTA_LIMIT_VIDEOS', '50'))
