@@ -21,9 +21,8 @@ def save_to_inbox(content):
     if not os.path.exists(inbox_dir):
         os.makedirs(inbox_dir)
     
-    # LEAN STORAGE: Solo guardamos un resumen para no llenar el disco
-    resumen = content[:200] + "..." if len(content) > 200 else content
-    lean_content = f"--- RESUMEN ---\n{resumen}\n\n[Full content handled by bot]"
+    # FULL STORAGE: Guardamos todo el contenido como pidió el usuario
+    lean_content = content
     
     # Buscar el siguiente número disponible
     existing_files = [f for f in os.listdir(inbox_dir) if f.startswith("idea_") and f.endswith(".md")]
