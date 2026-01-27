@@ -172,6 +172,25 @@ Las cuotas se resetean diariamente a medianoche UTC.
         await update.message.reply_text("❌ Error al obtener información de cuotas.")
 
 
+async def update_server_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Admin-only command to update and restart the server"""
+    user_id = str(update.effective_user.id)
+    if not ADMIN_USER_ID or user_id != str(ADMIN_USER_ID):
+        logger.warning(f"Intento de update no autorizado de {user_id}")
+        return
+        
+    await update.message.reply_text("🚀 Iniciando actualización automática del servidor...")
+    
+    try:
+        # /home/ec2-user/fractal-mind/proyectos/air-bot/agente_air.py
+        base_dir = Path(__file__).parent.parent.parent
+        cmd = f"cd \"{base_dir}\" && git pull && sudo systemctl restart bot-fractal bot-air"
+        os.system(f"{cmd} &")
+        await update.message.reply_text("✅ Comando enviado. El servidor se reiniciará en breve.")
+    except Exception as e:
+        await update.message.reply_text(f"❌ Error: {e}")
+
+
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Maneja las interacciones con botones inline"""
     query = update.callback_query
@@ -301,6 +320,15 @@ async def editar_imagen_confirmada(update: Update, context: ContextTypes.DEFAULT
             chat_id=query.message.chat_id,
             photo=BytesIO(imagen_editada),
             caption=f"✅ Imagen editada\n\n📊 Cuota: {nueva_cuota}/{QUOTA_LIMIT_IMAGES}"
+        )
+
+        # Registrar en log
+        log_manager.registrar_interaccion(
+            user_id=user_id,
+            tipo="IMAGEN_EDICION",
+            input_texto=caption,
+            output_info={"caption": "Imagen editada"},
+            cuota_actual=nueva_cuota
         )
         
         # Limpiar
@@ -489,6 +517,15 @@ Fin de semana: {resultado.get('horario_optimo', {}).get('fin_semana', 'N/A')}
 """
         await context.bot.send_message(chat_id=query.message.chat_id, text=mensaje_resultado, parse_mode='Markdown')
         
+        # Registrar en log
+        log_manager.registrar_interaccion(
+            user_id=user_id,
+            tipo="VIDEO_GENERACION",
+            input_texto=texto,
+            output_info=resultado,
+            cuota_actual=nueva_cuota
+        )
+        
         if resultado.get('video_bytes'):
             await context.bot.send_video(
                 chat_id=query.message.chat_id,
@@ -594,6 +631,7 @@ def main():
     application.add_handler(CommandHandler("start", start_command))
     application.add_handler(CommandHandler("ayuda", ayuda_command))
     application.add_handler(CommandHandler("cuota", cuota_command))
+    application.add_handler(CommandHandler("update_server", update_server_command))
     
     # Callback Query Handler
     application.add_handler(CallbackQueryHandler(button_callback))
