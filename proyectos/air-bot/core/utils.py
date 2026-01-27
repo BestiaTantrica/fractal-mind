@@ -94,7 +94,10 @@ class QuotaManager:
         tiene_cuota = usado < limite
         logger.info(f"Cuota {tipo}: {usado}/{limite} (restante: {restante})")
         
-        return tiene_cuota, restante
+        # COSTO FIJO (1 crédito por acción)
+        costo = 1
+        
+        return tiene_cuota, restante, costo
     
     def incrementar_cuota(self, tipo: str = "imagen"):
         """

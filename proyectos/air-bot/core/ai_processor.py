@@ -49,21 +49,17 @@ class AIProcessor:
         Edita una imagen usando IA (Imagen 3)
         """
         try:
-            logger.info(f"Editando imagen con instrucción: {instruccion}")
+            # 1. MEJORAR PROMPT "PRO"
+            instruccion_pro = self.mejorar_prompt_marketing(instruccion, "imagen")
+            logger.info(f"Editando imagen con instrucción PRO: {instruccion_pro}")
             
-            # Convertir bytes a PIL para asegurar formato valido si fuera necesario
-            # Pero la SDK acepta bytes directamente en muchos casos.
             imagen = Image.open(BytesIO(imagen_bytes))
-            
-            # TODO: Implementar edit_image real cuando se soporte plenamente en la versión estable
-            # Por ahora, usamos generate_images con prompt basado en la descripción para simular el resultado visual
-            # O si edit_image está disponible (vimos que sí en inspect), lo usamos.
             
             # Intentar usar edit_image
             try:
                 response = self.client.models.edit_image(
                     model=self.image_model_name,
-                    prompt=instruccion,
+                    prompt=instruccion_pro,
                     image=imagen,
                     config=types.EditImageConfig(
                         number_of_images=1,
@@ -76,8 +72,9 @@ class AIProcessor:
             except Exception as e:
                 logger.warning(f"Error en edit_image: {e}. Intentando generación desde cero...")
             
-            # Fallback: Generar imagen nueva basada en el prompt
-            prompt_completo = f"Create an image based on this description: {instruccion}. High quality, photorealistic."
+            # Fallback: Generar imagen nueva basada en el prompt mejorado
+            # Agregamos keywords por si acaso el prompt mejorado perdió fuerza
+            prompt_completo = f"{instruccion_pro}. 8k, photorealistic, cinematic lighting, masterpiece."
             
             response = self.client.models.generate_images(
                 model=self.image_model_name,
@@ -105,13 +102,16 @@ class AIProcessor:
             if red_social == "tiktok" and "instagram" in prompt_usuario.lower():
                 red_social = detectar_red_social(prompt_usuario)
             
-            # Prompt optimizado
-            prompt_optimizado = self._optimizar_prompt_video(prompt_usuario, red_social)
+            # 1. MEJORAR PROMPT VIDEO
+            prompt_pro = self.mejorar_prompt_marketing(prompt_usuario, "video")
+            
+            # Prompt optimizado (con estilo técnico)
+            prompt_optimizado = self._optimizar_prompt_video(prompt_pro, red_social)
             
             logger.info(f"Generando video ({self.video_model_name}): {prompt_optimizado[:50]}...")
             
             # Generar Metadata
-            metadata = self._generar_metadata_completo(prompt_usuario, red_social)
+            metadata = self._generar_metadata_completo(prompt_pro, red_social)
             
             # LLAMADA REAL A VEO
             try:
