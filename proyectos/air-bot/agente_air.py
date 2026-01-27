@@ -47,17 +47,20 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Variables de configuración
-# Usamos TELEGRAM_TOKEN para consistencia con Agente Mente en el .env del servidor
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN') or os.getenv('TELEGRAM_BOT_TOKEN')
-GOOGLE_API_KEY = os.getenv('GOOGLE_AI_API_KEY')
+GOOGLE_API_KEY = os.getenv('GEMINI_API_KEY') or os.getenv('GOOGLE_AI_API_KEY')
 QUOTA_LIMIT_IMAGES = int(os.getenv('QUOTA_LIMIT_IMAGES', '100'))
 QUOTA_LIMIT_VIDEOS = int(os.getenv('QUOTA_LIMIT_VIDEOS', '50'))
-ADMIN_USER_ID = os.getenv('ADMIN_USER_ID')
+ADMIN_USER_ID = os.getenv('MY_USER_ID') or os.getenv('ADMIN_USER_ID')
 
 # Inicializar procesador de IA
 try:
-    ai_processor = crear_ai_processor(GOOGLE_API_KEY)
-    logger.info("Procesador de IA inicializado correctamente")
+    if GOOGLE_API_KEY:
+        ai_processor = crear_ai_processor(GOOGLE_API_KEY)
+        logger.info("Procesador de IA inicializado correctamente")
+    else:
+        logger.error("GOOGLE_AI_API_KEY / GEMINI_API_KEY no configurado")
+        ai_processor = None
 except Exception as e:
     logger.error(f"Error inicializando procesador de IA: {e}")
     ai_processor = None
@@ -616,11 +619,11 @@ def main():
     
     # Verificar configuración
     if not TELEGRAM_TOKEN:
-        logger.error("TELEGRAM_BOT_TOKEN no configurado")
+        logger.error("TELEGRAM_TOKEN / TELEGRAM_BOT_TOKEN no configurado")
         sys.exit(1)
     
     if not GOOGLE_API_KEY:
-        logger.error("GOOGLE_AI_API_KEY no configurado")
+        logger.error("GEMINI_API_KEY / GOOGLE_AI_API_KEY no configurado")
         sys.exit(1)
     
     # Crear aplicación
