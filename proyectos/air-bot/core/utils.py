@@ -137,13 +137,6 @@ class LogManager:
     ):
         """
         Registra una interacción en el archivo del usuario
-        
-        Args:
-            user_id: ID de Telegram del usuario
-            tipo: Tipo de interacción (IMAGEN_EDICION, VIDEO_GENERACION, GUION_GENERACION)
-            input_texto: Texto original del usuario
-            output_info: Diccionario con info de salida (caption, hashtags, etc.)
-            cuota_actual: Cuota actual después de la operación
         """
         user_file = self.clientes_path / f"{user_id}.md"
         timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
@@ -170,7 +163,7 @@ class LogManager:
             log_entry += f"**Red Social:** {output_info.get('red_social', 'N/A')}\n"
         
         log_entry += f"**Link al Resultado:** [Ver resultado](https://t.me/...)\n"
-        log_entry += "---\n"
+        log_entry += "-----"
         
         # Escribir al archivo
         try:
@@ -185,9 +178,50 @@ class LogManager:
                 f.write(log_entry)
             
             logger.info(f"Log registrado para usuario {user_id}")
+            
+            # Guardar también en inbox para sincronización (VERSIÓN LEAN)
+            resumen_inbox = f"### {timestamp}\n- User: {user_id}\n- Tipo: {tipo}\n- Input: {input_texto[:50]}...\n- Status: OK\n---"
+            self.save_to_inbox(resumen_inbox)
+            
         except Exception as e:
             logger.error(f"Error escribiendo log: {e}")
-    
+
+    def save_to_inbox(self, content: str):
+        """
+        Guarda el contenido en la carpeta inbox del proyecto raíz
+        """
+        try:
+            # Aseguramos que fractal_path sea absoluto para el comando cd
+            abs_path = self.fractal_path.absolute()
+            inbox_dir = abs_path / "inbox"
+            inbox_dir.mkdir(parents=True, exist_ok=True)
+            
+            # Buscar el siguiente número disponible
+            existing_files = [f for f in os.listdir(inbox_dir) if f.startswith("idea_") and f.endswith(".md")]
+            numbers = []
+            for f in existing_files:
+                try:
+                    num = int(f.replace("idea_", "").replace(".md", ""))
+                    numbers.append(num)
+                except ValueError:
+                    continue
+            
+            next_num = max(numbers) + 1 if numbers else 1
+            file_name = f"idea_{next_num}.md"
+            file_path = inbox_dir / file_name
+            
+            with open(file_path, "w", encoding="utf-8") as f:
+                f.write(content)
+            
+            logger.info(f"Guardado en inbox: {file_name}")
+            
+            # Sincronización automática (Git Push) - NO BLOQUEANTE y con rutas citadas
+            # Usamos abs_path para asegurar que el cd funcione siempre
+            os.system(f"cd \"{abs_path}\" && git add \"{file_path}\" && git commit -m 'Auto-save (AIR-Bot lean): {file_name}' && git push origin main &")
+            
+        except Exception as e:
+            logger.error(f"Error guardando en inbox: {e}")
+
     def _get_tipo_nombre(self, tipo: str) -> str:
         """Convierte el tipo a nombre legible"""
         nombres = {
