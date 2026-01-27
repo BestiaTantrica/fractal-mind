@@ -147,7 +147,9 @@ def definir_agente(texto):
 def resumir(lineas, capa):
     if capa == "0":
         return "".join(lineas[:10])  # Limitar para el resumen de capas
-    return " | ".join([l.strip() for l in lineas if "[" in l or "Hito:" in l][:10])
+    return " | ".join(
+        [linea.strip() for linea in lineas if "[" in linea or "Hito:" in linea][:10]
+    )
 
 
 def generate():

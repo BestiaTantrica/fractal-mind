@@ -5,7 +5,7 @@
 - **Decisión:** `fractal-mind` es ahora el Oráculo central. El Arquitecto detecta el entorno automáticamente para mantener la simetría móvil-PC.
 - **Estado:** Purgados archivos basura y optimizada la memoria para escalabilidad.
 
-# 📂 HITOS DE RENTABILIDAD Y EVOLUCIÓN
+## 📂 HITOS DE RENTABILIDAD Y EVOLUCIÓN
 
 - [2026-01-13] **Hito:** Caída del Muro de Rust. Primer flujo de datos de Binance estabilizado en Android sin compilación nativa. (Reestructuración Servidor-Celu).
 - [2026-01-09] **Acción:** Expansión de almacenamiento en AWS completada.
