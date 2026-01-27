@@ -10,7 +10,7 @@ load_dotenv(os.path.join(base_dir, ".env"))
 
 # Configuración
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-bot = telebot.TeleBot(os.getenv("TELEGRAM_TOKEN"))
+bot = telebot.TeleBot(os.getenv("TELEGRAM_TOKEN_FRACTAL"))
 USER_ID = int(os.getenv("MY_USER_ID"))
 
 # Usamos el nombre exacto de tu lista
