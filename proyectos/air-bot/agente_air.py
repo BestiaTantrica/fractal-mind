@@ -229,7 +229,7 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         caption = update.message.caption or "Edita esta imagen"
         
         # Verificar cuota
-        tiene_cuota, restante = quota_manager.verificar_cuota("imagen", QUOTA_LIMIT_IMAGES, QUOTA_LIMIT_VIDEOS)
+        tiene_cuota, restante, costo = quota_manager.verificar_cuota("imagen", QUOTA_LIMIT_IMAGES, QUOTA_LIMIT_VIDEOS)
         
         if not tiene_cuota:
             await update.message.reply_text(
@@ -246,16 +246,17 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # Crear teclado de confirmación
         keyboard = [
             [
-                InlineKeyboardButton("✅ Confirmar Edición (Costará 1 cuota)", callback_data="confirm_imagen"),
+                InlineKeyboardButton("✅ Confirmar Edición (PRO)", callback_data="confirm_imagen"),
                 InlineKeyboardButton("❌ Cancelar", callback_data="cancel")
             ]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         
         await update.message.reply_text(
-            f"🖼️ **Solicitud de Edición**\n\n"
+            f"🖼️ **Solicitud de Edición (PRO)**\n\n"
             f"📝 Instrucción: {caption}\n"
-            f"💰 Costo: ~0.04 USD (si es pago) / 1 Cuota\n\n"
+            f"💰 Precio: {costo} crédito(s)\n"
+            f"💳 Saldo restante hoy: {restante} imágenes\n\n"
             f"¿Deseas proceder?",
             reply_markup=reply_markup,
             parse_mode='Markdown'
@@ -316,7 +317,7 @@ async def editar_imagen_confirmada(update: Update, context: ContextTypes.DEFAULT
             
         # Incrementar cuota
         quota_manager.incrementar_cuota("imagen")
-        _, restante = quota_manager.verificar_cuota("imagen", QUOTA_LIMIT_IMAGES, QUOTA_LIMIT_VIDEOS)
+        _, restante, _ = quota_manager.verificar_cuota("imagen", QUOTA_LIMIT_IMAGES, QUOTA_LIMIT_VIDEOS)
         nueva_cuota = QUOTA_LIMIT_IMAGES - restante
         
         # Enviar
@@ -377,7 +378,7 @@ async def handle_video_request(update: Update, context: ContextTypes.DEFAULT_TYP
         user_id = update.effective_user.id
         
         # Verificar cuota
-        tiene_cuota, restante = quota_manager.verificar_cuota("video", QUOTA_LIMIT_IMAGES, QUOTA_LIMIT_VIDEOS)
+        tiene_cuota, restante, costo = quota_manager.verificar_cuota("video", QUOTA_LIMIT_IMAGES, QUOTA_LIMIT_VIDEOS)
         
         if not tiene_cuota:
             await update.message.reply_text(
@@ -400,10 +401,11 @@ async def handle_video_request(update: Update, context: ContextTypes.DEFAULT_TYP
         reply_markup = InlineKeyboardMarkup(keyboard)
         
         await update.message.reply_text(
-            f"🎬 **Solicitud de Video**\n\n"
+            f"🎬 **Solicitud de Video (PRO)**\n\n"
             f"📝 Idea: {texto}\n"
-            f"💰 Modelo: Veo 3.1 (Preview)\n"
-            f"⚠️ **Nota:** El costo puede variar según duración.\n\n"
+            f"💰 Modelo: Veo 3.1 (High Quality)\n"
+            f"🏷️ Precio: {costo} crédito(s)\n"
+            f"💳 Saldo restante hoy: {restante} videos\n\n"
             f"¿Deseas generar?",
             reply_markup=reply_markup,
             parse_mode='Markdown'
