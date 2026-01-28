@@ -1,10 +1,8 @@
 ---
-description: 🔥 MEMORIA PERMANENTE - PROYECTO AIR BOT
+description: 
 ---
 
-
-Review
-
+🔥 MEMORIA PERMANENTE - PROYECTO AIR BOT
 DOCUMENTO CRÍTICO PARA EL DESARROLLADOR
 LEER SIEMPRE ANTES DE TOCAR CÓDIGO
 Este documento contiene las reglas, configuraciones y contexto del proyecto AIR que NO SE PUEDEN OLVIDAR. incluso hilos anteriores al actual para mayor contexto cuando te diga segui o continua para contexto.
@@ -92,7 +90,7 @@ fractal-mind/
 .env del AIR Bot
 TELEGRAM_BOT_TOKEN=8501297372:AAHMF_LeuEl5gs_gZ9AB9fZ5gKrZlGJoyuc
 ADMIN_USER_ID=6527908321
-GOOGLE_AI_API_KEY=AIzaSyDtna9ODRGwEq4h8EHSiVKtfUOb05b_WU8
+GOOGLE_AI_API_KEY=AIzaSyCL2dBhoXm0odGpWM2bCwImFrBRyYKB6Os
 # MODELOS GRATUITOS (FREE TIER)
 IMAGE_MODEL=imagen-3.0-generate-001
 VIDEO_MODEL=veo-3.1-generate-preview

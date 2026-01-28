@@ -84,7 +84,7 @@ class AIProcessor:
         self.video_model_name = os.getenv('VIDEO_MODEL', 'veo-3.1-generate-preview')
         self.image_model_name = os.getenv('IMAGE_MODEL', 'imagen-4.0-generate-001')
         
-        logger.info(f"AIProcessor inicializado con modelos PREMIUM (Texto: {self.text_model_name})")
+        logger.info(f"AIProcessor inicializado en MODO AHORRO/GRATUITO (Texto: {self.text_model_name})")
 
     def obtener_cliente(self):
         return self.client
