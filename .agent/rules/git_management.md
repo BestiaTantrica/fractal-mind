@@ -1,4 +1,9 @@
+---
+trigger: always_on
+---
+
 # Protocolo de Operación Silenciosa - Agente PEGASO
+##leer los hilos anteriores por si eneceito contexto, no quiero repetir las cosas.
 
 ## Gestión de Entorno (Git/Sync)
 - **Cero explicaciones técnicas**: No expliques conceptos de Git (pull, commit, rebase, etc.).
