@@ -369,7 +369,8 @@ class AIProcessor:
         # Por brevedad, simplificamos:
         try:
             p = f"Generate JSON metadata for a {red_social} video about '{prompt}': caption, description, cta."
-            res = self.client.models.generate_content(model=self.text_model_name, contents=p)
+            # Usamos Flash para ahorrar costos en metadata
+            res = self.client.models.generate_content(model="gemini-1.5-flash", contents=p)
             # Parsear JSON idealmente, aqui simulamos:
             return {
                 "caption": f"Video sobre {prompt} ✨",
