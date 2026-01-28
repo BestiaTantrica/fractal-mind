@@ -17,15 +17,14 @@ AIR-Bot es un bot de Telegram para generación de contenido viral con IA de Goog
 ✍️ Creación de guiones y sugerencias para redes sociales
 Cliente: El usuario tiene GOOGLE AI STUDIO PRO (cuenta con billing habilitada).
 
-💳 CONFIRMACIÓN DE PLAN PRO
-✅ EL USUARIO TIENE PLAN PRO DE GOOGLE AI
-NUNCA asumir que no tiene billing.
-SIEMPRE usar modelos PREMIUM:
+💳 CONFIRMACIÓN DE PLAN GRATUITO / FREE TIER
+✅ EL USUARIO PREFIERE MODELOS GRATUITOS (Ahorro de créditos)
+SIEMPRE usar modelos FREE/LOW-COST:
 
-Imagen 4.0: imagen-4.0-generate-001
-Veo 3.1: veo-3.1-generate-preview
-Gemini 2.0 Flash Exp: gemini-2.0-flash-exp
-NO DEGRADAR A MODELOS GRATUITOS SIN CONFIRMAR CON EL USUARIO.
+Imagen 3.0: imagen-3.0-generate-001
+Veo 3.1: veo-3.1-generate-preview (sujeto a cuota free)
+Gemini 1.5 Flash: gemini-1.5-flash
+EVITAR MODELOS PREMIUM QUE CONSUMAN CRÉDITOS SIN AVISAR.
 
 siempre automatiza o encargate de los git y de tener todo al dia en el server y la pc y git.
 🔑 LLAVES DE ACCESO SSH
@@ -94,12 +93,12 @@ fractal-mind/
 TELEGRAM_BOT_TOKEN=8501297372:AAHMF_LeuEl5gs_gZ9AB9fZ5gKrZlGJoyuc
 ADMIN_USER_ID=6527908321
 GOOGLE_AI_API_KEY=AIzaSyDtna9ODRGwEq4h8EHSiVKtfUOb05b_WU8
-# MODELOS PREMIUM (PLAN PRO)
-IMAGE_MODEL=imagen-4.0-generate-001
+# MODELOS GRATUITOS (FREE TIER)
+IMAGE_MODEL=imagen-3.0-generate-001
 VIDEO_MODEL=veo-3.1-generate-preview
-TEXT_MODEL=gemini-2.0-flash-exp
-QUOTA_LIMIT_IMAGES=100
-QUOTA_LIMIT_VIDEOS=10
+TEXT_MODEL=gemini-1.5-flash
+QUOTA_LIMIT_IMAGES=50
+QUOTA_LIMIT_VIDEOS=2
 API de Google GenAI (SDK v1)
 from google import genai
 from google.genai import types
@@ -125,27 +124,20 @@ Verificar que los servicios arranquen bien
 Revisar inbox/ para ver qué generó el bot
 📝 MEMORIA DINÁMICA
 RECUERDA ESTO (Espacio para notas del usuario):
-[FECHA: 2026-01-28]
-TEMA: Plan PRO confirmado
+[FECHA: 2026-01-28 - CAMBIO DE RUMBO]
+TEMA: Pivote a Plan GRATUITO
 
-NOTA: El usuario TIENE Google AI Studio PRO. NUNCA degradar a modelos gratuitos.
-ACCIÓN: Siempre usar Imagen 4.0 y Veo 3.1.
-[FECHA: 2026-01-28 - SESIÓN 03:57]
-TEMA: Fix de generación de imágenes y videos
-
-PROBLEMA ENCONTRADO:
-Imagen 4.0 fallaba por safety_filter_level incorrecto
-Veo 3.1 no funcionaba porque devuelve operaciones asíncronas, no el video directamente
-SOLUCIONES APLICADAS:
-Imagen 4.0: Usar safety_filter_level="block_low_and_above" y person_generation="allow_adult"
-Veo 3.1: Implementar polling de operación asíncrona con timeout de 5 minutos (puede tardar 3-5 min en generar)
-Veo 3.1: NO usar person_generation en videos (solo funciona en imágenes)
+NOTA: El usuario EXPLICITAMENTE pide usar solo modelos gratuitos.
+ACCIÓN: Degradado a Imagen 3.0 y Gemini 1.5 Flash. Veo 3.1 se mantiene en cuota base.
+[FECHA: 2026-01-28 - SESIÓN 14:50]
+TEMA: Reversión de modelos PREMIUM
 STATUS:
-✅ Imagen 4.0 FUNCIONA (confirmado generando 1.2MB)
-⏳ Veo 3.1 requiere 3-5 minutos por video (normal para el modelo)
+✅ Configurado Imagen 3.0
+✅ Configurado Gemini 1.5 Flash
+⏳ Veo 3.1 se mantiene por ser la única opción estable de video pero limitada por cuota free.
 ARCHIVOS MODIFICADOS:
-proyectos/air-bot/core/ai_processor.py
 proyectos/air-bot/.env
+.agent/workflows/air.md
 (Agregar más notas cuando el usuario diga "recuerda esto")
 
 🛠️ DEBUGGING DEL BOT
