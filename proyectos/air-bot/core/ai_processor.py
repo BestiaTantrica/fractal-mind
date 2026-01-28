@@ -24,6 +24,20 @@ from .utils import detectar_red_social, calcular_horario_optimo
 
 logger = logging.getLogger(__name__)
 
+# CONFIGURACIÓN DE EXPERTOS (SocialBoost Premium)
+PROMPT_SISTEMA_CREATIVO = """Eres un Director Creativo Senior y Estratega de Marketing Viral. 
+Tu misión es transformar ideas básicas en contenido de alto impacto ("SocialBoost").
+
+REGLAS DE ORO:
+1. NADA DE CONTENIDO GENÉRICO: Evita frases trilladas como "No te rindas" o "Sé constante". 
+2. ESTRUCTURA PSICOLÓGICA: Cada pieza debe tener un HOOK (gancho <3s), CUERPO de valor intrínseco y CTA (llamado a la acción) específico.
+3. ADAPTACIÓN DE CANAL:
+   - TikTok/Reels: Dinámico, lenguaje visual, hooks de curiosidad, tendencias rápidas.
+   - LinkedIn: Autoridad, datos, profesionalismo moderno, "thought leadership".
+   - Twitter/X: Concisión, controversia sana o hilos de valor.
+4. TONO: Humano, directo, persuasivo y estético.
+"""
+
 
 class AIProcessor:
     """Procesador principal de IA usando Google GenAI SDK"""
@@ -44,9 +58,38 @@ class AIProcessor:
         
         logger.info(f"AIProcessor inicializado. Video: {self.video_model_name}")
 
+    def obtener_cliente(self):
+        return self.client
+
+    def mejorar_prompt_marketing(self, instruccion_basica: str, tipo: str = "imagen") -> str:
+        """
+        Transforma una instrucción simple en una descripción técnica de alta calidad
+        """
+        try:
+            prompt_mejora = f"""
+            {PROMPT_SISTEMA_CREATIVO}
+            Transforma esta instrucción básica para un modelo de {tipo} en una descripción técnica detallada (PROMPT) que genere un resultado PROFESIONAL y CINEMÁTICO.
+            
+            ENTRADA: {instruccion_basica}
+            
+            REGLAS TÉCNICAS:
+            - Estética: Evita el estilo de "stock photo" o "memes motivacionales básicos". Busca algo premium, editorial y vibrante.
+            - Detalles: Describe iluminación (cinematic lighting), profundidad de campo, textura, estilo (vintage, tech, minimal).
+            - Idioma: Responde con el prompt optimizado en INGLÉS para máxima compatibilidad con el modelo subyacente.
+            """
+            
+            response = self.client.models.generate_content(
+                model=self.text_model_name,
+                contents=prompt_mejora
+            )
+            return response.text.strip()
+        except Exception as e:
+            logger.error(f"Error mejorando prompt: {e}")
+            return instruccion_basica # Fallback
+
     def editar_imagen(self, imagen_bytes: bytes, instruccion: str) -> bytes:
         """
-        Edita una imagen usando IA (Imagen 3)
+        Edita una imagen usando IA (Imagen 4.0)
         """
         try:
             # 1. MEJORAR PROMPT "PRO"
@@ -73,7 +116,6 @@ class AIProcessor:
                 logger.warning(f"Error en edit_image: {e}. Intentando generación desde cero...")
             
             # Fallback: Generar imagen nueva basada en el prompt mejorado
-            # Agregamos keywords por si acaso el prompt mejorado perdió fuerza
             prompt_completo = f"{instruccion_pro}. 8k, photorealistic, cinematic lighting, masterpiece."
             
             response = self.client.models.generate_images(
@@ -189,47 +231,56 @@ class AIProcessor:
 
     def generar_guiones(self, tema: str, red_social: str = "tiktok") -> Dict:
         """
-        Genera guiones usando generate_content
+        Genera guiones profesionales usando estructuras de persuasión (AIDA/PAS)
         """
         try:
-            prompt = self._crear_prompt_guiones(tema, red_social)
+            prompt_auditoria = f"""
+            {PROMPT_SISTEMA_CREATIVO}
+            
+            TAREA: Genera 3 guiones premium para {red_social} sobre el tema: {tema}.
+            
+            CADA GUION DEBE INCLUIR:
+            - TITULO: Que capture la atención.
+            - ESTRUCTURA: [HOOK] -> [VALOR/CUERPO] -> [CTA].
+            - NOTAS DE PRODUCCIÓN: Música sugerida o tipo de toma visual.
+            - DURACIÓN: Estimada en segundos.
+            
+            Formato: Prolijo y profesional en Markdown. No generes contenido básico motivacional de una sola frase; profundiza en el valor.
+            """
             
             response = self.client.models.generate_content(
                 model=self.text_model_name,
-                contents=prompt
+                contents=prompt_auditoria
             )
             
             texto_generado = response.text
             
-            guiones = self._parsear_guiones(texto_generado)
-            hashtags = self.generar_hashtags(tema, red_social)
+            guiones = self._parsear_guiones_pro(texto_generado)
+            hashtags = self.generar_hashtags_expertos(tema, red_social)
             horario = calcular_horario_optimo(red_social)
             
-            resultado = {
+            return {
                 "guiones": guiones,
                 "hashtags": hashtags,
                 "horario_optimo": horario,
                 "red_social": red_social,
-                "sugerencia_portada": self._generar_sugerencia_portada(tema)
+                "sugerencia_portada": self._generar_sugerencia_portada_pro(tema)
             }
             
-            return resultado
-            
         except Exception as e:
-            logger.error(f"Error generando guiones: {e}")
+            logger.error(f"Error en auditoría de guiones: {e}")
             raise
 
-    def generar_hashtags(self, tema: str, red_social: str = "tiktok") -> List[str]:
+    def generar_hashtags_expertos(self, tema: str, red_social: str = "tiktok") -> List[str]:
         try:
-            prompt = f"Generate 10 hashtags for {red_social} about {tema}. Return only hashtags separated by spaces."
+            prompt = f"{PROMPT_SISTEMA_CREATIVO}\nSelecciona 10 hashtags estratégicos (mezcla de volumen alto y nicho) para {red_social} sobre: {tema}. Devuelve solo los hashtags."
             response = self.client.models.generate_content(
                 model=self.text_model_name,
                 contents=prompt
             )
-            texto = response.text
-            return [h for h in texto.split() if h.startswith('#')][:10]
+            return [h for h in response.text.split() if h.startswith('#')][:10]
         except:
-            return ["#Viral", f"#{red_social}"]
+            return ["#SocialBoost", f"#{red_social}"]
 
     def _optimizar_prompt_video(self, prompt_usuario: str, red_social: str) -> str:
         estilos = {
@@ -271,12 +322,13 @@ class AIProcessor:
     def _crear_prompt_guiones(self, tema: str, red_social: str) -> str:
         return f"Escribe 3 guiones cortos para {red_social} sobre: {tema}"
 
-    def _parsear_guiones(self, texto: str) -> List[Dict]:
-        # Implementación simple
-        return [{"titulo": "Guión Generado", "script": texto[:500], "duracion_estimada": "30s"}]
+    def _parsear_guiones_pro(self, texto: str) -> List[Dict]:
+        """Envuelve el texto generado en una estructura legible"""
+        # Por ahora devolvemos el texto completo como un solo bloque prolijo
+        return [{"titulo": "Estrategia de Contenido SocialBoost", "script": texto, "duracion_estimada": "Auditado"}]
 
-    def _generar_sugerencia_portada(self, tema: str) -> str:
-        return f"Imagen colorida sobre {tema}"
+    def _generar_sugerencia_portada_pro(self, tema: str) -> str:
+        return self.mejorar_prompt_marketing(f"Una portada impactante para redes sociales sobre {tema}", "imagen")
 
 def crear_ai_processor(api_key: str) -> AIProcessor:
     return AIProcessor(api_key)
