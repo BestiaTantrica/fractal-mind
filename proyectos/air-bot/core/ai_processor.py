@@ -77,15 +77,15 @@ class AIProcessor:
         self.client = genai.Client(api_key=api_key)
         
         # Configurar modelos
-        # Configurar modelos
-        # Modelo validado: gemini-flash-latest (1.5 estable)
-        self.text_model_name = os.getenv('TEXT_MODEL', 'gemini-flash-latest')
-        # Video e Imagen estables
-        # Plan PRO - Modelos premium
+        # Configuración de Modelos (Optimizado para Nivel Gratuito / Eficiencia)
+        # Forzamos 1.5-flash para todo lo que es texto/guiones para asegurar estabilidad y costo cero/bajo
+        self.text_model_name = "gemini-1.5-flash"
+        
+        # Modelos Multimedia (Solo se activan bajo confirmación de usuario)
         self.video_model_name = os.getenv('VIDEO_MODEL', 'veo-3.1-generate-preview')
         self.image_model_name = os.getenv('IMAGE_MODEL', 'imagen-4.0-generate-001')
         
-        logger.info(f"AIProcessor inicializado. Texto: {self.text_model_name}")
+        logger.info(f"AIProcessor inicializado en MODO EFICIENTE (Texto: {self.text_model_name})")
 
     def obtener_cliente(self):
         return self.client
@@ -321,11 +321,19 @@ class AIProcessor:
             Formato: Prolijo y profesional en Markdown.
             """
             
-            response = self.client.models.generate_content(
-                model=self.text_model_name,
-                contents=prompt_auditoria
-            )
+            try:
+                response = self.client.models.generate_content(
+                    model=self.text_model_name,
+                    contents=prompt_auditoria
+                )
+            except Exception as api_err:
+                logger.error(f"Error directo de Google API en guiones: {api_err}")
+                raise Exception(f"Error de comunicación con IA: {str(api_err)[:50]}...")
             
+            if not response or not response.text:
+                logger.error("La IA devolvió una respuesta vacía en guiones")
+                raise Exception("La IA no devolvió texto. Revisa filtros de seguridad.")
+
             texto_generado = response.text
             
             guiones = self._parsear_guiones_pro(texto_generado)
