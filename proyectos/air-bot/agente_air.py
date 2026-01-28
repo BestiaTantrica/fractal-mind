@@ -88,31 +88,17 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     mensaje_bienvenida = """
 🤖 ¡Hola! Soy **AIR-Bot** - tu Agente Integral para Redes Sociales
 
-🎯 **¿Qué puedo hacer por ti?**
+ 🎯 **¿Qué puedo hacer por ti?**
 
 🖼️ **1. EDITAR IMÁGENES**
-Envíame una imagen con texto describiendo los cambios
-Ejemplo: [foto] + "Hazla más profesional y dramática"
+Envíame una imagen con lo que quieres cambiar.
 
-🎬 **2. GENERAR VIDEOS COMPLETOS**
-Escribe la palabra "video" + descripción
-Ejemplo: "Video de café para TikTok"
-Ejemplo: "Video de gimnasio para Instagram Reels"
+🎬 **2. GENERAR VIDEOS PREMIUM**
+Escribe "video" + descripción (Ej: "Video de zumba para TikTok").
+⏱️ *Espera:* ~10 minutos.
 
 ✍️ **3. CREAR GUIONES**
-Envíame un tema o idea
-Ejemplo: "Ideas para Reels de zapatillas"
-
-📱 **Redes soportadas:**
-TikTok • Instagram • YouTube Shorts • Facebook • WhatsApp
-
-💡 **Recibirás el PAQUETE COMPLETO:**
-✅ Video/Imagen optimizada
-✅ Caption pegadiza
-✅ Descripción SEO
-✅ Hashtags con tendencias
-✅ Mejor horario para publicar
-✅ Call-to-Action recomendado
+Escribe un tema y te daré ideas virales.
 
 ¡Pruébame ahora! 🚀
 """
@@ -469,8 +455,7 @@ async def handle_video_request(update: Update, context: ContextTypes.DEFAULT_TYP
             f"🎬 **PREPARANDO VIDEO PREMIUM**\n\n"
             f"📝 **Idea:** {texto}\n"
             f"💰 **Costo:** 1 Crédito (Te quedan {restante} hoy)\n"
-            f"⏱️ **Espera estimada:** 3-5 minutos (Modelo Veo 3.1)\n"
-            f"📱 **Formato:** {detectar_red_social(texto).upper()}\n\n"
+            f"⏱️ **Espera estimada:** 5-10 minutos (Veo 3.1)\n\n"
             f"¿Confirmo la generación?",
             reply_markup=reply_markup,
             parse_mode='Markdown'
@@ -558,7 +543,7 @@ async def generar_video_confirmado(update: Update, context: ContextTypes.DEFAULT
         await query.edit_message_text(
             "🎬 **Generando Video Premium...**\n\n"
             "El modelo Veo 3.1 está creando tu video pixel por pixel.\n"
-            "Esto tomará entre **3 y 5 minutos**. \n\n"
+            "Esto tomará entre **5 y 10 minutos**. \n\n"
             "⚠️ No cierres el chat, te avisaré cuando esté listo. ⏳"
         )
         
@@ -585,30 +570,34 @@ async def generar_video_confirmado(update: Update, context: ContextTypes.DEFAULT
              mensaje_resultado = None
         else:
             # Enviar resultado solo si no hubo error
+            import html
+            caption = html.escape(resultado.get('caption', 'Sin caption'))
+            desc = html.escape(resultado.get('descripcion', 'Sin descripción'))
+            cta = html.escape(resultado.get('cta', 'Sin CTA'))
+            tags = html.escape(' '.join(resultado.get('hashtags', [])))
+            
             mensaje_resultado = f"""
-✅ **VIDEO GENERADO** - {red_social.upper()}
+<b>✅ VIDEO GENERADO - {red_social.upper()}</b>
 
-📝 **Caption:**
-{resultado.get('caption', 'Sin caption')}
+📝 <b>Caption:</b>
+{caption}
 
-📄 **Descripción:**
-{resultado.get('descripcion', 'Sin descripción')}
+📄 <b>Descripción:</b>
+{desc}
 
-🏷️ **Hashtags:**
-{' '.join(resultado.get('hashtags', []))}
+🏷️ <b>Hashtags:</b>
+{tags}
 
-⏰ **Mejor horario:**
+⏰ <b>Mejor horario:</b>
 Lunes-Viernes: {resultado.get('horario_optimo', {}).get('dias_semana', 'N/A')}
 Fin de semana: {resultado.get('horario_optimo', {}).get('fin_semana', 'N/A')}
 
-👆 **CTA:**
-{resultado.get('cta', 'Sin CTA')}
+👆 <b>CTA:</b>
+{cta}
 
 📊 Cuota: {nueva_cuota}/{QUOTA_LIMIT_VIDEOS}
-
-📱 Formato: {resultado.get('formato', 'N/A')} • Duración: {resultado.get('duracion', 'N/A')}s
 """
-            await context.bot.send_message(chat_id=query.message.chat_id, text=mensaje_resultado, parse_mode='Markdown')
+            await context.bot.send_message(chat_id=query.message.chat_id, text=mensaje_resultado, parse_mode='HTML')
         
         # Registrar en log
         saved_path = log_manager.registrar_interaccion(
@@ -660,14 +649,29 @@ Fin de semana: {resultado.get('horario_optimo', {}).get('fin_semana', 'N/A')}
 
         if not enviado:
              if video_url:
-                 await context.bot.send_message(
-                     chat_id=query.message.chat_id, 
-                     text=f"🎬 **Video Listo**\n\nNo pude enviarlo directo, pero aquí tienes el enlace:\n{video_url}",
-                     parse_mode='Markdown'
-                 )
-             elif not resultado.get('error'): # Solo si NO fue un error ya reportado
-                 msg_error = resultado.get('error', 'No se pudo generar el video.')
-                 await context.bot.send_message(chat_id=query.message.chat_id, text=f"⚠️ {msg_error}")
+                 try:
+                     import requests
+                     logger.info(f"Descargando video para envío manual: {video_url}")
+                     resp = requests.get(video_url, timeout=60)
+                     if resp.status_code == 200:
+                         await context.bot.send_video(
+                             chat_id=query.message.chat_id,
+                             video=BytesIO(resp.content),
+                             caption=caption_text
+                         )
+                         enviado = True
+                 except Exception as download_err:
+                     logger.error(f"Error descargando video: {download_err}")
+
+             if not enviado:
+                 if video_url:
+                     await context.bot.send_message(
+                         chat_id=query.message.chat_id, 
+                         text=f"🎬 **Video Listo**\n\nNo pude procesar el archivo directo en Telegram, pero puedes descargarlo aquí:\n{video_url}"
+                     )
+                 elif not resultado.get('error'): 
+                     msg_error = resultado.get('error', 'No se pudo generar el video.')
+                     await context.bot.send_message(chat_id=query.message.chat_id, text=f"⚠️ {msg_error}")
 
         # Limpiar
         context.user_data.clear()
