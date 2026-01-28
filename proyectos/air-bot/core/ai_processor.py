@@ -10,6 +10,7 @@ import logging
 import requests
 import json
 import re
+import random
 from io import BytesIO
 from typing import Dict, List, Optional, Union
 from PIL import Image
@@ -32,11 +33,15 @@ PROMPT_SISTEMA_CREATIVO = """
 ## AGENTE AIR v2.0
 Eres AIR, experto en marketing. 
 
+Instrucciones:
+- Si el usuario quiere varias imágenes, usa "tipo": "secuencia" y fija "cantidad".
+- Genera prompts en inglés detallados en "prompt_ia".
+
 Responde SIEMPRE en este formato JSON:
 {
   "tipo": "chat" | "imagen" | "video" | "secuencia",
   "respuesta": "Texto para el usuario",
-  "prompt_ia": "Prompt descriptivo en inglés",
+  "prompt_ia": "Detailed English prompt for AI",
   "cantidad": 1-5
 }
 """
@@ -60,14 +65,18 @@ class AIProcessor:
     async def procesar_intencion(self, historial: List[Dict], mensaje_actual: str) -> Dict:
         """Usa Gemini para entender qué quiere hacer el usuario realmente"""
         try:
-            # ATAQUE DIRECTO: Si el usuario dice "imagen" o similares, no preguntamos a Gemini
+            # Limpiar el mensaje de basura técnica previa
+            mensaje_limpio = re.sub(r'✅|❌|📊|🎨|🎬|Prompt:.*|Cuota:.*', '', mensaje_actual).strip()
+
             shortcut_words = ["imagen", "foto", "crea", "genera", "dibuj", "secuencia"]
-            if any(w in mensaje_actual.lower() for w in shortcut_words):
-                cantidad = 3 if "secuencia" in mensaje_actual.lower() or " 3 " in mensaje_actual or " tres " in mensaje_actual.lower() else 1
+            if any(w in mensaje_limpio.lower() for w in shortcut_words):
+                # Extraer cantidad si existe
+                nums = re.findall(r'\d+', mensaje_limpio)
+                cantidad = int(nums[0]) if nums and int(nums[0]) <= 5 else (3 if "secuencia" in mensaje_limpio.lower() else 1)
                 return {
                     "tipo": "imagen" if cantidad == 1 else "secuencia",
-                    "respuesta": f"¡Entendido! Marchando {'esa secuencia' if cantidad > 1 else 'esa imagen'}. 🎨",
-                    "prompt_ia": mensaje_actual,
+                    "respuesta": f"¡Entendido! Preparando {'esa secuencia de ' + str(cantidad) + ' imágenes' if cantidad > 1 else 'tu imagen'}. 🚀",
+                    "prompt_ia": mensaje_limpio,
                     "cantidad": cantidad
                 }
 
@@ -76,7 +85,7 @@ class AIProcessor:
                 role = "user" if h['role'] == "user" else "model"
                 contents.append({"role": role, "parts": [{"text": h['content']}]})
             
-            contents.append({"role": "user", "parts": [{"text": mensaje_actual}]})
+            contents.append({"role": "user", "parts": [{"text": mensaje_limpio}]})
             
             loop = asyncio.get_event_loop()
             response = await loop.run_in_executor(
@@ -90,25 +99,22 @@ class AIProcessor:
                 )
             )
             
-            # Limpieza robusta de JSON
             raw_text = response.text.strip()
             clean_text = re.sub(r'```json\s*|\s*```', '', raw_text)
             
             try:
-                data = json.loads(clean_text)
-                return data
+                return json.loads(clean_text)
             except:
-                return {"tipo": "chat", "respuesta": raw_text, "prompt_ia": mensaje_actual, "cantidad": 1}
+                return {"tipo": "chat", "respuesta": raw_text, "prompt_ia": mensaje_limpio, "cantidad": 1}
                 
         except Exception as e:
             logger.error(f"Error procesando intención: {e}")
-            # Si falla Gemini, intentamos adivinar por palabras clave
-            return {"tipo": "chat", "respuesta": f"Tuve un pequeño error (IA: {str(e)[:50]}), pero seguí intentando.", "prompt_ia": mensaje_actual, "cantidad": 1}
+            return {"tipo": "chat", "respuesta": "Sigo aquí, ¿qué quieres hacer?", "prompt_ia": mensaje_actual, "cantidad": 1}
 
     async def mejorar_prompt_marketing(self, instruccion_basica: str, tipo: str = "imagen") -> str:
         """Mejora prompts usando Gemini (ASÍNCRONO)"""
         try:
-            prompt_mejora = f"Transform this into a high-impact English prompt for {tipo}: {instruccion_basica}"
+            prompt_mejora = f"Transform this into a hyper-realistic, high-impact English prompt for {tipo}: {instruccion_basica}"
             loop = asyncio.get_event_loop()
             response = await loop.run_in_executor(
                 None, 
@@ -119,29 +125,39 @@ class AIProcessor:
             logger.error(f"Error mejorando prompt: {e}")
             return instruccion_basica
 
-    async def generar_imagen_free(self, prompt: str, red_social: str = "tiktok") -> bytes:
-        """Genera imagen gratis via Pollinations.ai"""
+    async def generar_imagen_free(self, prompt: str, red_social: str = "tiktok", seed: Optional[int] = None) -> bytes:
+        """Genera imagen gratis via Pollinations.ai con Retries y mayor Timeout"""
         try:
-            # Asegurar prompt decente
-            prompt_pro = prompt
-            if len(prompt) < 15:
-                prompt_pro = await self.mejorar_prompt_marketing(prompt, "imagen")
+            # Limpiar prompt
+            prompt_clean = re.sub(r'✅|❌|📊|🎨|🎬', '', prompt).strip()
+            
+            if len(prompt_clean) < 15:
+                prompt_pro = await self.mejorar_prompt_marketing(prompt_clean, "imagen")
+            else:
+                prompt_pro = prompt_clean
                 
             width, height = 1080, 1080
             if red_social in ["tiktok", "instagram", "youtube"]:
                 width, height = 1080, 1920
                 
-            seed = int(time.time() * 1000) % 1000000
+            final_seed = seed if seed is not None else random.randint(1, 1000000)
             prompt_encoded = requests.utils.quote(prompt_pro)
-            url = f"https://image.pollinations.ai/prompt/{prompt_encoded}?width={width}&height={height}&seed={seed}&nologo=true&model=flux"
+            url = f"https://image.pollinations.ai/prompt/{prompt_encoded}?width={width}&height={height}&seed={final_seed}&nologo=true&model=flux"
             
             loop = asyncio.get_event_loop()
-            response = await loop.run_in_executor(None, lambda: requests.get(url, timeout=30))
             
-            if response.status_code == 200:
-                return response.content
-            else:
-                raise Exception(f"Error servidor imagen ({response.status_code})")
+            for intento in range(2): # Reintento automático
+                try:
+                    response = await loop.run_in_executor(None, lambda: requests.get(url, timeout=60)) # Timeout de 60s
+                    if response.status_code == 200:
+                        return response.content
+                    logger.warning(f"Intento {intento+1} fallido ({response.status_code})")
+                except Exception as e:
+                    logger.warning(f"Intento {intento+1} error: {e}")
+                
+                if intento == 0: await asyncio.sleepEx(2) # Esperar antes de reintentar
+            
+            raise Exception("El servidor de imágenes está muy lento ahora. Prueba en un minuto.")
         except Exception as e:
             logger.error(f"Error en generar_imagen_free: {e}")
             raise e
