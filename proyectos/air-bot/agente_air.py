@@ -450,47 +450,59 @@ async def generar_imagen_free_confirmada(update: Update, context: ContextTypes.D
 
 
 async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Handler para mensajes de texto con memoria conversacional"""
+    """Handler inteligente con procesamiento de intención"""
     try:
         user_id = update.effective_user.id
         texto = update.message.text
         
-        # 1. Gestionar Historial
         if user_id not in USER_HISTORY:
             USER_HISTORY[user_id] = []
         
-        # Detectar solicitudes directas
-        texto_low = texto.lower()
-        es_video = any(p in texto_low for p in ['video', 'genera video', 'crea un video'])
-        es_imagen = any(p in texto_low for p in ['imagen', 'foto', 'genera imagen', 'quiero una imagen'])
+        # 1. ANALIZAR INTENCIÓN CON GEMINI
+        msg_procesando = await update.message.reply_text("🤖 Analizando tu solicitud...")
+        intencion = await ai_processor.procesar_intencion(USER_HISTORY[user_id], texto)
         
-        # 2. Si es una solicitud nueva, ignoramos historial para ser directos
-        if es_video:
-            USER_HISTORY[user_id] = [] # Reset para nueva tarea
-            await handle_video_request(update, context, texto)
-        elif es_imagen:
-            USER_HISTORY[user_id] = [] # Reset para nueva tarea
-            await handle_imagen_free_request(update, context, texto)
-        else:
-            # 3. CONVERSACIÓN LIBRE (Usa memoria)
-            # Si el texto es corto o parece una modificación, usamos chat_libre
-            msg_procesando = await update.message.reply_text("🤖 Pensando...")
-            
-            respuesta = await ai_processor.chat_libre(USER_HISTORY[user_id], texto)
-            
-            # Guardar en historial
-            USER_HISTORY[user_id].append({"role": "user", "content": texto})
-            USER_HISTORY[user_id].append({"role": "assistant", "content": respuesta})
-            
-            # Limitar historial a 6 mensajes para no saturar tokens
-            if len(USER_HISTORY[user_id]) > 6:
-                USER_HISTORY[user_id] = USER_HISTORY[user_id][-6:]
-                
+        tipo = intencion.get("tipo", "chat")
+        respuesta = intencion.get("respuesta", "Entendido, ¿qué más necesitas?")
+        prompt_ia = intencion.get("prompt_ia", texto)
+        cantidad = int(intencion.get("cantidad", 1))
+
+        # 2. ACTUAR SEGÚN INTENCIÓN
+        if tipo == "chat":
             await msg_procesando.edit_text(respuesta)
             
+        elif tipo == "imagen" or tipo == "secuencia":
+            await msg_procesando.edit_text(f"{respuesta}\n\n🎨 Generando {cantidad} imagen(es) gratis... ⏳")
+            
+            for i in range(cantidad):
+                try:
+                    # Si es más de una, variamos un poco el prompt para que no sean iguales
+                    prompt_var = f"{prompt_ia}, variation {i+1}" if cantidad > 1 else prompt_ia
+                    red_social = detectar_red_social(texto)
+                    imagen_bytes = await ai_processor.generar_imagen_free(prompt_var, red_social)
+                    
+                    await context.bot.send_photo(
+                        chat_id=update.effective_chat.id,
+                        photo=BytesIO(imagen_bytes),
+                        caption=f"✅ Imagen {i+1}/{cantidad} (FREE)\n\n¿Quieres cambiar algo de esta?" if cantidad > 1 else "✅ Imagen Generada (FREE)"
+                    )
+                except Exception as img_err:
+                    logger.error(f"Error en imagen {i+1}: {img_err}")
+                    await update.message.reply_text(f"❌ Error en la imagen {i+1}: {str(img_err)}")
+
+        elif tipo == "video":
+            await msg_procesando.delete()
+            await handle_video_request(update, context, texto)
+
+        # 3. ACTUALIZAR HISTORIAL
+        USER_HISTORY[user_id].append({"role": "user", "content": texto})
+        USER_HISTORY[user_id].append({"role": "model", "content": respuesta})
+        if len(USER_HISTORY[user_id]) > 8:
+            USER_HISTORY[user_id] = USER_HISTORY[user_id][-8:]
+            
     except Exception as e:
-        logger.error(f"Error procesando texto: {e}")
-        await update.message.reply_text("❌ Lo siento, tuve un problema técnico. ¿Podemos intentar de nuevo?")
+        logger.error(f"Error en handle_text inteligente: {e}")
+        await update.message.reply_text("❌ Tuve un problema al procesar tu mensaje. ¿Podemos intentarlo otra vez?")
 
 async def handle_guion_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handler para el comando explícito /guion"""
