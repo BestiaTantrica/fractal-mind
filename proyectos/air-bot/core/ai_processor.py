@@ -108,16 +108,22 @@ class AIProcessor:
         Transforma una instrucción simple en una descripción técnica de alta calidad
         """
         try:
+            # Detectar si es logo
+            es_logo = "logo" in instruccion_basica.lower()
+            
             prompt_mejora = f"""
             {PROMPT_SISTEMA_CREATIVO}
-            Transforma esta instrucción básica para un modelo de {tipo} en una descripción técnica detallada (PROMPT) que genere un resultado PROFESIONAL y CINEMÁTICO.
+            Transforma esta instrucción básica para un modelo de {tipo} en una descripción técnica detallada (PROMPT).
             
-            ENTRADA: {instruccion_basica}
+            ENTRADA: "{instruccion_basica}"
             
-            REGLAS TÉCNICAS:
-            - Estética: Evita el estilo de "stock photo" o "memes motivacionales básicos". Busca algo premium, editorial y vibrante.
-            - Detalles: Describe iluminación (cinematic lighting), profundidad de campo, textura, estilo (vintage, tech, minimal).
-            - Idioma: Responde con el prompt optimizado en INGLÉS para máxima compatibilidad con el modelo subyacente.
+            REGLAS CRÍTICAS:
+            1. FIDELIDAD: No inventes elementos que no están en la entrada. Si es "taza de café", es solo eso.
+            2. ESTILO: 
+               - Si es VIDEO: Cinematic, 8k, highly detailed, slow motion if appropriate.
+               - Si es LOGO: Vector style, minimal, clean lines, professional branding, white background default.
+               - Si es FOTO: Editorial, photorealistic, cinematic lighting.
+            3. IDIOMA: Respondo SOLO con el prompt en INGLÉS.
             """
             
             response = self.client.models.generate_content(
@@ -304,18 +310,28 @@ class AIProcessor:
         Genera guiones profesionales usando estructuras de persuasión (AIDA/PAS)
         """
         try:
+            # Definir duración según red social
+            if red_social in ["tiktok", "instagram", "youtube"]: # Shorts/Reels
+                duracion_instruccion = "DURACIÓN: MAXIMO 15-30 SEGUNDOS. (Estilo rápido y dinámico)."
+            else:
+                duracion_instruccion = "DURACIÓN: MAXIMO 45-60 SEGUNDOS."
+
             prompt_auditoria = f"""
             {PROMPT_SISTEMA_CREATIVO}
             
             TAREA: Genera 3 guiones premium para {red_social} sobre el tema: {tema}.
             
-            CADA GUION DEBE INCLUIR:
-            - TITULO: Que capture la atención.
-            - ESTRUCTURA: [HOOK] -> [VALOR/CUERPO] -> [CTA].
-            - NOTAS DE PRODUCCIÓN: Música sugerida o tipo de toma visual.
-            - DURACIÓN: Estimada en segundos.
+            REGLAS DE FORMATO (CRÍTICAS):
+            1. {duracion_instruccion}
+            2. ESTRUCTURA: [HOOK (1-3s)] -> [VALOR (Rápido)] -> [CTA (Directo)].
+            3. Estilo: "Pithy", directo, sin relleno. Cada palabra cuenta.
             
-            Formato: Prolijo y profesional en Markdown. No generes contenido básico motivacional de una sola frase; profundiza en el valor.
+            CADA GUION DEBE INCLUIR:
+            - TITULO
+            - SCRIPT (Con indicaciones visuales entre paréntesis)
+            - DURACIÓN ESTIMADA
+            
+            Formato: Prolijo y profesional en Markdown.
             """
             
             response = self.client.models.generate_content(

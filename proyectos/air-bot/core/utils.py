@@ -340,6 +340,8 @@ def detectar_red_social(texto: str) -> str:
         return "facebook"
     elif "whatsapp" in texto_lower or "wa" in texto_lower:
         return "whatsapp"
+    elif "logo" in texto_lower or "branding" in texto_lower:
+        return "logo" # Tratamiento especial para logos
     
     return "tiktok"  # Por defecto
 
