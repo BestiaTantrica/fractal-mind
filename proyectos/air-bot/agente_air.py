@@ -459,19 +459,19 @@ async def handle_video_request(update: Update, context: ContextTypes.DEFAULT_TYP
         # Crear teclado
         keyboard = [
             [
-                InlineKeyboardButton("✅ Confirmar Video", callback_data="confirm_video"),
+                InlineKeyboardButton("🚀 Generar Video (1 Crédito)", callback_data="confirm_video"),
                 InlineKeyboardButton("❌ Cancelar", callback_data="cancel")
             ]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         
         await update.message.reply_text(
-            f"🎬 **Solicitud de Video (PRO)**\n\n"
-            f"📝 Idea: {texto}\n"
-            f"💰 Modelo: Veo 3.1 (High Quality)\n"
-            f"🏷️ Precio: {costo} crédito(s)\n"
-            f"💳 Saldo restante hoy: {restante} videos\n\n"
-            f"¿Deseas generar?",
+            f"🎬 **PREPARANDO VIDEO PREMIUM**\n\n"
+            f"📝 **Idea:** {texto}\n"
+            f"💰 **Costo:** 1 Crédito (Te quedan {restante} hoy)\n"
+            f"⏱️ **Espera estimada:** 3-5 minutos (Modelo Veo 3.1)\n"
+            f"📱 **Formato:** {detectar_red_social(texto).upper()}\n\n"
+            f"¿Confirmo la generación?",
             reply_markup=reply_markup,
             parse_mode='Markdown'
         )
@@ -556,8 +556,10 @@ async def generar_video_confirmado(update: Update, context: ContextTypes.DEFAULT
             return
 
         await query.edit_message_text(
-            "🎬 Generando video con Veo 3.1...\n"
-            "Esto puede tomar 30-60 segundos. ¡Paciencia! ⏳"
+            "🎬 **Generando Video Premium...**\n\n"
+            "El modelo Veo 3.1 está creando tu video pixel por pixel.\n"
+            "Esto tomará entre **3 y 5 minutos**. \n\n"
+            "⚠️ No cierres el chat, te avisaré cuando esté listo. ⏳"
         )
         
         # Detectar red social
@@ -568,7 +570,8 @@ async def generar_video_confirmado(update: Update, context: ContextTypes.DEFAULT
         
         # Incrementar cuota
         quota_manager.incrementar_cuota("video")
-        _, restante = quota_manager.verificar_cuota("video", QUOTA_LIMIT_IMAGES, QUOTA_LIMIT_VIDEOS)
+        # FIX: unpacking 3 values
+        _, restante, _ = quota_manager.verificar_cuota("video", QUOTA_LIMIT_IMAGES, QUOTA_LIMIT_VIDEOS)
         nueva_cuota = QUOTA_LIMIT_VIDEOS - restante
 
         # Enviar resultado
