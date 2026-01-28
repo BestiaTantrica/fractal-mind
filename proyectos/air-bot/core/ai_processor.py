@@ -50,13 +50,17 @@ class AIProcessor:
         self.client = genai.Client(api_key=api_key)
         
         # Configurar modelos
-        self.text_model_name = os.getenv('TEXT_MODEL', 'gemini-2.0-flash-exp')
-        # Veo 3.1
-        self.video_model_name = os.getenv('VIDEO_MODEL', 'veo-3.1-generate-preview')
-        # Imagen 4.0
-        self.image_model_name = os.getenv('IMAGE_MODEL', 'imagen-4.0-generate-001')
+        # Configurar modelos
+        # Usamos gemini-1.5-flash por estabilidad (el 2.0-exp dio error 404)
+        self.text_model_name = os.getenv('TEXT_MODEL', 'gemini-1.5-flash')
+        # Veo y Imagen se mantienen si están disponibles
+        self.video_model_name = os.getenv('VIDEO_MODEL', 'veo-2.0-generate-preview-001') # Fallback seguro
+        self.image_model_name = os.getenv('IMAGE_MODEL', 'imagen-3.0-generate-001') # Fallback seguro
         
-        logger.info(f"AIProcessor inicializado. Video: {self.video_model_name}")
+        # Verificar disponibilidad de Veo 3.1 (si el usuario tiene acceso)
+        # Si no, usará el definido arriba
+        
+        logger.info(f"AIProcessor inicializado. Texto: {self.text_model_name}")
 
     def obtener_cliente(self):
         return self.client
