@@ -29,8 +29,8 @@ logger = logging.getLogger(__name__)
 
 # CONFIGURACIÓN DE EXPERTOS
 PROMPT_SISTEMA_CREATIVO = """
-## AGENTE AIR v2.0 | SOCIO ESTRATÉGICO
-Eres AIR, experto en marketing. Tu misión es entender qué necesita el usuario.
+## AGENTE AIR v2.0
+Eres AIR, experto en marketing. 
 
 Responde SIEMPRE en este formato JSON:
 {
@@ -60,6 +60,17 @@ class AIProcessor:
     async def procesar_intencion(self, historial: List[Dict], mensaje_actual: str) -> Dict:
         """Usa Gemini para entender qué quiere hacer el usuario realmente"""
         try:
+            # ATAQUE DIRECTO: Si el usuario dice "imagen" o similares, no preguntamos a Gemini
+            shortcut_words = ["imagen", "foto", "crea", "genera", "dibuj", "secuencia"]
+            if any(w in mensaje_actual.lower() for w in shortcut_words):
+                cantidad = 3 if "secuencia" in mensaje_actual.lower() or " 3 " in mensaje_actual or " tres " in mensaje_actual.lower() else 1
+                return {
+                    "tipo": "imagen" if cantidad == 1 else "secuencia",
+                    "respuesta": f"¡Entendido! Marchando {'esa secuencia' if cantidad > 1 else 'esa imagen'}. 🎨",
+                    "prompt_ia": mensaje_actual,
+                    "cantidad": cantidad
+                }
+
             contents = []
             for h in historial:
                 role = "user" if h['role'] == "user" else "model"
@@ -81,22 +92,18 @@ class AIProcessor:
             
             # Limpieza robusta de JSON
             raw_text = response.text.strip()
-            # Eliminar bloques de código markdown si existen
             clean_text = re.sub(r'```json\s*|\s*```', '', raw_text)
             
             try:
                 data = json.loads(clean_text)
+                return data
             except:
-                # Fallback: Detección manual de tipo
-                tipo = "chat"
-                if any(x in mensaje_actual.lower() for x in ["imagen", "foto", "secuencia"]):
-                    tipo = "imagen"
-                data = {"tipo": tipo, "respuesta": raw_text, "prompt_ia": mensaje_actual, "cantidad": 1}
+                return {"tipo": "chat", "respuesta": raw_text, "prompt_ia": mensaje_actual, "cantidad": 1}
                 
-            return data
         except Exception as e:
             logger.error(f"Error procesando intención: {e}")
-            return {"tipo": "chat", "respuesta": "Sigo aquí, ¿qué quieres hacer?", "prompt_ia": mensaje_actual, "cantidad": 1}
+            # Si falla Gemini, intentamos adivinar por palabras clave
+            return {"tipo": "chat", "respuesta": f"Tuve un pequeño error (IA: {str(e)[:50]}), pero seguí intentando.", "prompt_ia": mensaje_actual, "cantidad": 1}
 
     async def mejorar_prompt_marketing(self, instruccion_basica: str, tipo: str = "imagen") -> str:
         """Mejora prompts usando Gemini (ASÍNCRONO)"""
@@ -115,18 +122,16 @@ class AIProcessor:
     async def generar_imagen_free(self, prompt: str, red_social: str = "tiktok") -> bytes:
         """Genera imagen gratis via Pollinations.ai"""
         try:
-            # Asegurar que el prompt esté en inglés y sea descriptivo
-            if len(prompt) < 10 or not any(x in prompt.lower() for x in ["the", "in", "a"]):
+            # Asegurar prompt decente
+            prompt_pro = prompt
+            if len(prompt) < 15:
                 prompt_pro = await self.mejorar_prompt_marketing(prompt, "imagen")
-            else:
-                prompt_pro = prompt
                 
             width, height = 1080, 1080
             if red_social in ["tiktok", "instagram", "youtube"]:
                 width, height = 1080, 1920
                 
-            seed = int(time.time())
-            # Encodear caracteres especiales en la URL
+            seed = int(time.time() * 1000) % 1000000
             prompt_encoded = requests.utils.quote(prompt_pro)
             url = f"https://image.pollinations.ai/prompt/{prompt_encoded}?width={width}&height={height}&seed={seed}&nologo=true&model=flux"
             
@@ -136,7 +141,7 @@ class AIProcessor:
             if response.status_code == 200:
                 return response.content
             else:
-                raise Exception(f"Pollinations error: {response.status_code}")
+                raise Exception(f"Error servidor imagen ({response.status_code})")
         except Exception as e:
             logger.error(f"Error en generar_imagen_free: {e}")
             raise e
@@ -165,7 +170,7 @@ class AIProcessor:
             if response.generated_images:
                 return response.generated_images[0].image.image_bytes
             else:
-                raise Exception("Sin respuesta de Google.")
+                raise Exception("Google no devolvió imagen editada.")
         except Exception as e:
             logger.error(f"Error en editar_imagen: {e}")
             raise e
@@ -193,7 +198,7 @@ class AIProcessor:
                 )
                 
                 max_wait = 600
-                poll = 15
+                poll = 20
                 waited = 0
                 while not operation.done and waited < max_wait:
                     await asyncio.sleep(poll)
@@ -208,30 +213,11 @@ class AIProcessor:
                 else:
                     metadata['error'] = f"Error: {operation.error or 'Timeout'}"
             except Exception as e:
-                metadata['error'] = f"Error: {str(e)}"
+                metadata['error'] = f"Excepción: {str(e)}"
                 
             return metadata
         except Exception as e:
             logger.error(f"Error video: {e}")
-            raise
-
-    async def generar_guiones(self, tema: str, red_social: str = "tiktok") -> Dict:
-        """Genera guiones profesionales (ASÍNCRONO)"""
-        try:
-            prompt = f"Genera 3 guiones para {red_social} sobre: {tema}. Formato Markdown."
-            loop = asyncio.get_event_loop()
-            response = await loop.run_in_executor(
-                None,
-                lambda: self.client.models.generate_content(model=self.text_model_name, contents=prompt)
-            )
-            return {
-                "guiones": [{"titulo": "Estrategia AIR", "script": response.text, "duracion_estimada": "15-30s"}],
-                "hashtags": ["#Viral", f"#{red_social}"],
-                "red_social": red_social,
-                "horario_optimo": {"dias_semana": "18:00", "fin_semana": "11:00"}
-            }
-        except Exception as e:
-            logger.error(f"Error guiones: {e}")
             raise
 
     def _generar_metadata_completo(self, prompt: str, red_social: str) -> Dict:
