@@ -479,7 +479,9 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     # Si es más de una, variamos un poco el prompt para que no sean iguales
                     prompt_var = f"{prompt_ia}, variation {i+1}" if cantidad > 1 else prompt_ia
                     red_social = detectar_red_social(texto)
-                    imagen_bytes = await ai_processor.generar_imagen_free(prompt_var, red_social)
+                    # Forzar semillas diferentes para cada imagen de la secuencia
+                    seed = random.randint(1, 999999)
+                    imagen_bytes = await ai_processor.generar_imagen_free(prompt_var, red_social, seed=seed)
                     
                     await context.bot.send_photo(
                         chat_id=update.effective_chat.id,
