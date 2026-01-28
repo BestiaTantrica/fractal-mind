@@ -94,8 +94,9 @@ class AIProcessor:
         # Modelo validado: gemini-flash-latest (1.5 estable)
         self.text_model_name = os.getenv('TEXT_MODEL', 'gemini-flash-latest')
         # Video e Imagen estables
-        self.video_model_name = os.getenv('VIDEO_MODEL', 'veo-2.0-generate-preview-001')
-        self.image_model_name = os.getenv('IMAGE_MODEL', 'imagen-3.0-generate-001')
+        # Plan PRO - Modelos premium
+        self.video_model_name = os.getenv('VIDEO_MODEL', 'veo-3.1-generate-preview')
+        self.image_model_name = os.getenv('IMAGE_MODEL', 'imagen-4.0-generate-001')
         
         logger.info(f"AIProcessor inicializado. Texto: {self.text_model_name}")
 
@@ -139,7 +140,7 @@ class AIProcessor:
             
             imagen = Image.open(BytesIO(imagen_bytes))
             
-            # Intentar usar edit_image
+            # Intentar usar edit_image con configuración correcta
             try:
                 response = self.client.models.edit_image(
                     model=self.image_model_name,
@@ -147,7 +148,9 @@ class AIProcessor:
                     image=imagen,
                     config=types.EditImageConfig(
                         number_of_images=1,
-                        output_mime_type="image/jpeg"
+                        output_mime_type="image/jpeg",
+                        safety_filter_level="block_low_and_above",
+                        person_generation="allow_adult"
                     )
                 )
                 if response.generated_images:
@@ -156,14 +159,16 @@ class AIProcessor:
             except Exception as e:
                 logger.warning(f"Error en edit_image: {e}. Intentando generación desde cero...")
             
-            # Fallback: Generar imagen nueva basada en el prompt mejorado
+            # Fallback: Generar imagen nueva con configuración correcta
             prompt_completo = f"{instruccion_pro}. 8k, photorealistic, cinematic lighting, masterpiece."
             
             response = self.client.models.generate_images(
                 model=self.image_model_name,
                 prompt=prompt_completo,
                 config=types.GenerateImagesConfig(
-                    number_of_images=1
+                    number_of_images=1,
+                    safety_filter_level="block_low_and_above",
+                    person_generation="allow_adult"
                 )
             )
             
@@ -210,7 +215,7 @@ class AIProcessor:
                 if aspect_ratio not in ["16:9", "9:16"]:
                     aspect_ratio = "16:9"
 
-                response = self.client.models.generate_videos(
+                operation = self.client.models.generate_videos(
                     model=self.video_model_name,
                     prompt=prompt_optimizado,
                     config=types.GenerateVideosConfig(
@@ -220,33 +225,63 @@ class AIProcessor:
                     )
                 )
                 
-                # La respuesta suele contener el video generado o una operación
-                # SDK v1 simplifica esto y devuelve el objeto con generated_videos
+                # Veo 3.1 devuelve una OPERACIÓN ASÍNCRONA, no el video directamente
+                logger.info(f"Operación de video iniciada: {operation.name}")
+                logger.info("Esperando a que Veo complete la generación (puede tardar 3-5 minutos)...")
                 
-                if hasattr(response, 'generated_videos') and response.generated_videos:
-                     video = response.generated_videos[0]
-                     
-                     # EXTRACT URL ONLY - NO SERVER SIDE DOWNLOAD
-                     video_uri = None
-                     if hasattr(video.video, 'uri'):
-                         video_uri = video.video.uri
-                     elif hasattr(video, 'uri'):
-                         video_uri = video.uri
-                         
-                     logger.info(f"Video generado. URI: {video_uri}")
+                # Polling con timeout de 5 minutos
+                max_wait_seconds = 300
+                poll_interval = 10
+                waited = 0
+                
+                while not operation.done and waited < max_wait_seconds:
+                    time.sleep(poll_interval)
+                    waited += poll_interval
+                    logger.info(f"Esperando video... {waited}s/{max_wait_seconds}s")
+                    
+                    # Intentar refrescar estado
+                    try:
+                        operation = self.client.operations.get(name=operation.name)
+                    except Exception as e:
+                        logger.warning(f"Error al refrescar operación: {e}")
+                        pass # Continue polling even if refresh fails temporarily
+                
+                if not operation.done:
+                    logger.warning(f"Timeout esperando video después de {max_wait_seconds}s")
+                    metadata['error'] = f"⏱️ Video en progreso (tarda 3-5 min). Operación: {operation.name}"
+                    return metadata
+                
+                # Operación completada
+                if operation.error:
+                    logger.error(f"Error en operación de Veo: {operation.error}")
+                    raise Exception(f"Error de Veo: {operation.error}")
+                
+                # Obtener resultado
+                result = operation.result
+                if not result or not hasattr(result, 'generated_videos'):
+                    logger.error(f"Resultado inesperado: {result}")
+                    raise Exception("Veo no devolvió videos en el resultado")
+                
+                if result.generated_videos:
+                    video = result.generated_videos[0]
+                    
+                    # Extraer URI
+                    video_uri = None
+                    if hasattr(video.video, 'uri'):
+                        video_uri = video.video.uri
+                    elif hasattr(video, 'uri'):
+                        video_uri = video.uri
+                        
+                    logger.info(f"Video generado exitosamente. URI: {video_uri}")
 
-                     if video_uri:
-                         metadata['video_url'] = video_uri
-                         # Pass bytes only if they are magically already there (not downloading)
-                         if hasattr(video.video, 'video_bytes') and video.video.video_bytes:
-                             metadata['video_bytes'] = video.video.video_bytes
-                     else:
-                        # Log full object for debugging if no URI found
-                        logger.error(f"No URI found in video object: {dir(video)}")
-                        raise Exception("La IA no devolvió un enlace de video válido.")
+                    if video_uri:
+                        metadata['video_url'] = video_uri
+                    else:
+                        logger.error(f"No se encontró URI en el video: {dir(video)}")
+                        raise Exception("Video sin URI válido")
                 else:
-                    logger.error(f"Respuesta inesperada de Veo: {response}")
-                    raise Exception("Respuesta de video vacía o estructura desconocida")
+                    logger.error("Lista de videos generados está vacía")
+                    raise Exception("No se generó ningún video")
 
             except Exception as e:
                 logger.error(f"Error en llamada a Veo: {e}")
