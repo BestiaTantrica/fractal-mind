@@ -86,21 +86,22 @@ async def debug_middleware(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handler del comando /start"""
     mensaje_bienvenida = """
-🤖 ¡Hola! Soy **AIR-Bot** - tu Agente Integral para Redes Sociales
+🚀 **AIR-Bot v3.0 | MODO PRO-AHORRO ACTIVADO**
 
- 🎯 **¿Qué puedo hacer por ti?**
+🎯 **Opciones Disponibles:**
 
-🖼️ **1. EDITAR IMÁGENES**
-Envíame una imagen con lo que quieres cambiar.
+🖼️ **1. GENERAR IMÁGENES (100% GRATIS)**
+Escribe "imagen" + lo que quieras (Ej: "Imagen de un café").
+🚀 *Usa motor Pollinations (Sin costo)*.
 
-🎬 **2. GENERAR VIDEOS PREMIUM**
-Escribe "video" + descripción (Ej: "Video de zumba para TikTok").
-⏱️ *Espera:* ~10 minutos.
+🎬 **2. GENERAR VIDEOS (PREMIUM)**
+Escribe "video" + descripción.
+💰 *Costo: 1 crédito (Sujeto a cuota Google)*.
 
-✍️ **3. CREAR GUIONES**
-Escribe un tema y te daré ideas virales.
+✍️ **3. CREAR GUIONES Y POSTS**
+Escribe un tema y armaré el post completo con hashtags.
 
-¡Pruébame ahora! 🚀
+¡Empecemos! Dime qué necesitas.
 """
     await update.message.reply_text(mensaje_bienvenida, parse_mode='Markdown')
     logger.info(f"Usuario {update.effective_user.id} inició el bot")
@@ -247,6 +248,9 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         elif data == "confirm_imagen":
             await editar_imagen_confirmada(update, context)
             
+        elif data == "confirm_imagen_free":
+            await generar_imagen_free_confirmada(update, context)
+            
         elif data == "video_from_script":
             await generar_video_desde_guion(update, context)
             
@@ -387,6 +391,60 @@ async def editar_imagen_confirmada(update: Update, context: ContextTypes.DEFAULT
         logger.error(f"Error en edición confirmada: {e}")
         await query.message.reply_text(f"❌ Error: {e}")
 
+async def handle_imagen_free_request(update: Update, context: ContextTypes.DEFAULT_TYPE, texto: str):
+    """Procesa solicitud de generación de imagen GRATIS"""
+    try:
+        user_id = update.effective_user.id
+        context.user_data['pending_image_free_prompt'] = texto
+        
+        keyboard = [
+            [
+                InlineKeyboardButton("🎨 Generar Imagen (GRATIS)", callback_data="confirm_imagen_free"),
+                InlineKeyboardButton("❌ Cancelar", callback_data="cancel")
+            ]
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        
+        await update.message.reply_text(
+            f"🖼️ **GENERADOR DE IMÁGENES (FREE)**\n\n"
+            f"📝 **Prompt:** {texto}\n"
+            f"💰 **Costo:** 0 Créditos (Ilimitado)\n"
+            f"🚀 **Motor:** Ultra HD (Flux/Pollinations)\n\n"
+            f"¿Deseas generar esta imagen?",
+            reply_markup=reply_markup,
+            parse_mode='Markdown'
+        )
+    except Exception as e:
+        logger.error(f"Error en handle_imagen_free_request: {e}")
+
+async def generar_imagen_free_confirmada(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Ejecuta la generación de imagen gratuita"""
+    query = update.callback_query
+    try:
+        prompt = context.user_data.get('pending_image_free_prompt')
+        if not prompt:
+            await query.edit_message_text("⚠️ Sesión expirada.")
+            return
+
+        await query.edit_message_text("🎨 **Dibujando tu idea con IA...** (0 Créditos) ⏳")
+        
+        # Generar
+        red_social = detectar_red_social(prompt)
+        imagen_bytes = ai_processor.generar_imagen_free(prompt, red_social)
+        
+        # Enviar
+        await context.bot.send_photo(
+            chat_id=query.message.chat_id,
+            photo=BytesIO(imagen_bytes),
+            caption=f"✅ **Imagen Generativa (FREE)**\n\n"
+                    f"¿Te gusta? Puedes pedirme otra o usar esta para tu post. 🚀"
+        )
+        context.user_data.clear()
+        
+    except Exception as e:
+        logger.error(f"Error en imagen free confirmada: {e}")
+        await query.message.reply_text(f"❌ Error: {e}")
+
 
 async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handler para mensajes de texto"""
@@ -394,11 +452,15 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
         user_id = update.effective_user.id
         texto = update.message.text
         
-        # Detectar si es solicitud de video
-        es_video = any(palabra in texto.lower() for palabra in ['video', 'genera', 'crea un video', 'quiero un video'])
+        # Detectar solicitudes
+        texto_low = texto.lower()
+        es_video = any(p in texto_low for p in ['video', 'genera video', 'crea un video'])
+        es_imagen = any(p in texto_low for p in ['imagen', 'foto', 'genera imagen', 'quiero una imagen'])
         
         if es_video:
             await handle_video_request(update, context, texto)
+        elif es_imagen:
+            await handle_imagen_free_request(update, context, texto)
         else:
             await handle_guion_request(update, context, texto)
             
@@ -551,7 +613,7 @@ async def generar_video_confirmado(update: Update, context: ContextTypes.DEFAULT
         red_social = detectar_red_social(texto)
         
         # Generar video
-        resultado = ai_processor.generar_video(texto, red_social)
+        resultado = await ai_processor.generar_video(texto, red_social)
         
         # Incrementar cuota
         quota_manager.incrementar_cuota("video")
