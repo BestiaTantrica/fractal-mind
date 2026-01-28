@@ -201,12 +201,43 @@ async def update_server_command(update: Update, context: ContextTypes.DEFAULT_TY
     await update.message.reply_text("🚀 Iniciando actualización automática del servidor...")
     
     try:
-        # /home/ec2-user/fractal-mind/proyectos/air-bot/agente_air.py
+        import subprocess
+        # Get base directory
         base_dir = Path(__file__).parent.parent.parent
-        cmd = f"cd \"{base_dir}\" && git pull && sudo systemctl restart bot-fractal bot-air"
-        os.system(f"{cmd} &")
-        await update.message.reply_text("✅ Comando enviado. El servidor se reiniciará en breve.")
+        
+        # Script de actualización que se ejecuta en segundo plano
+        update_script = f"""#!/bin/bash
+cd "{base_dir}"
+git pull
+sudo systemctl restart bot-fractal bot-air
+"""
+        
+        # Crear archivo temporal con el script
+        script_path = base_dir / "update_temp.sh"
+        with open(script_path, 'w') as f:
+            f.write(update_script)
+        
+        # Dar permisos de ejecución
+        os.chmod(script_path, 0o755)
+        
+        # Ejecutar en segundo plano
+        subprocess.Popen(
+            ["/bin/bash", str(script_path)],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True
+        )
+        
+        await update.message.reply_text(
+            "✅ Actualización iniciada.\n\n"
+            "📥 Git pull ejecutándose...\n"
+            "🔄 Servicios reiniciándose...\n\n"
+            "El bot podría desconectarse brevemente."
+        )
+        logger.info(f"Update server iniciado por admin {user_id}")
+        
     except Exception as e:
+        logger.error(f"Error en update_server: {e}")
         await update.message.reply_text(f"❌ Error: {e}")
 
 

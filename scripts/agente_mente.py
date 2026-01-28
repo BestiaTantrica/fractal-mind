@@ -55,11 +55,41 @@ def update_server(m):
         return
     bot.reply_to(m, "🚀 Iniciando actualización del servidor...")
     try:
-        # Comando para actualizar y reiniciar
-        # Nota: requiere que el usuario tenga permisos de sudo sin pass para systemctl
-        cmd = f"cd \"{base_dir}\" && git pull && sudo systemctl restart bot-fractal bot-air"
-        os.system(f"{cmd} &")
-        bot.send_message(m.chat.id, "✅ Comando enviado. El servidor se reiniciará en unos segundos.")
+        import subprocess
+        from pathlib import Path
+        
+        # Script de actualización que se ejecuta en segundo plano
+        update_script = f"""#!/bin/bash
+cd "{base_dir}"
+git pull
+sudo systemctl restart bot-fractal bot-air
+"""
+        
+        # Crear archivo temporal con el script
+        script_path = Path(base_dir) / "update_temp.sh"
+        with open(script_path, 'w') as f:
+            f.write(update_script)
+        
+        # Dar permisos de ejecución
+        os.chmod(script_path, 0o755)
+        
+        # Ejecutar en segundo plano
+        subprocess.Popen(
+            ["/bin/bash", str(script_path)],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True
+        )
+        
+        bot.send_message(
+            m.chat.id,
+            "✅ Actualización iniciada.\n\n"
+            "📥 Git pull ejecutándose...\n"
+            "🔄 Servicios reiniciándose...\n\n"
+            "El bot podría desconectarse brevemente."
+        )
+        logger.info(f"Update server iniciado por admin {m.from_user.id}")
+        
     except Exception as e:
         bot.reply_to(m, f"❌ Error: {e}")
 
