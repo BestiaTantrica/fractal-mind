@@ -235,8 +235,8 @@ class AIProcessor:
                 logger.info(f"Operación de video iniciada: {operation.name}")
                 logger.info("Esperando a que Veo complete la generación (puede tardar 3-5 minutos)...")
                 
-                # Polling con timeout de 5 minutos
-                max_wait_seconds = 300
+                # Polling con timeout de 10 minutos (600s)
+                max_wait_seconds = 600
                 poll_interval = 10
                 waited = 0
                 
