@@ -55,8 +55,9 @@ ADMIN_USER_ID = os.getenv('MY_USER_ID') or os.getenv('ADMIN_USER_ID')
 
 # Inicializar procesador de IA
 try:
+    from core.ai_processor import AIProcessor
     if GOOGLE_API_KEY:
-        ai_processor = crear_ai_processor(GOOGLE_API_KEY)
+        ai_processor = AIProcessor(GOOGLE_API_KEY)
         logger.info("Procesador de IA inicializado correctamente")
     else:
         logger.error("GOOGLE_AI_API_KEY / GEMINI_API_KEY no configurado")
@@ -64,6 +65,8 @@ try:
 except Exception as e:
     logger.error(f"Error inicializando procesador de IA: {e}")
     ai_processor = None
+
+USER_HISTORY = {} # {user_id: [history]}
 
 # ========== MIDDLEWARE / FILTROS ==========
 
@@ -350,7 +353,7 @@ async def editar_imagen_confirmada(update: Update, context: ContextTypes.DEFAULT
         
         # Procesar con IA
         if ai_processor:
-            imagen_editada = ai_processor.editar_imagen(bytes(imagen_bytes), caption)
+            imagen_editada = await ai_processor.editar_imagen(bytes(imagen_bytes), caption)
         else:
             raise Exception("Procesador IA no disponible")
             
@@ -363,7 +366,7 @@ async def editar_imagen_confirmada(update: Update, context: ContextTypes.DEFAULT
         await context.bot.send_photo(
             chat_id=query.message.chat_id,
             photo=BytesIO(imagen_editada),
-            caption=f"✅ Imagen editada\n\n📊 Cuota: {nueva_cuota}/{QUOTA_LIMIT_IMAGES}"
+            caption=f"✅ Imagen editada con éxito\n\n📊 Cuota: {nueva_cuota}/{QUOTA_LIMIT_IMAGES}"
         )
 
         # Registrar en log y obtener path
@@ -430,14 +433,14 @@ async def generar_imagen_free_confirmada(update: Update, context: ContextTypes.D
         
         # Generar
         red_social = detectar_red_social(prompt)
-        imagen_bytes = ai_processor.generar_imagen_free(prompt, red_social)
+        imagen_bytes = await ai_processor.generar_imagen_free(prompt, red_social)
         
         # Enviar
         await context.bot.send_photo(
             chat_id=query.message.chat_id,
             photo=BytesIO(imagen_bytes),
             caption=f"✅ **Imagen Generativa (FREE)**\n\n"
-                    f"¿Te gusta? Puedes pedirme otra o usar esta para tu post. 🚀"
+                    f"¿Te gusta? Puedes pedirme otra o decirme qué quieres cambiar. 🚀"
         )
         context.user_data.clear()
         
@@ -447,26 +450,47 @@ async def generar_imagen_free_confirmada(update: Update, context: ContextTypes.D
 
 
 async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Handler para mensajes de texto"""
+    """Handler para mensajes de texto con memoria conversacional"""
     try:
         user_id = update.effective_user.id
         texto = update.message.text
         
-        # Detectar solicitudes
+        # 1. Gestionar Historial
+        if user_id not in USER_HISTORY:
+            USER_HISTORY[user_id] = []
+        
+        # Detectar solicitudes directas
         texto_low = texto.lower()
         es_video = any(p in texto_low for p in ['video', 'genera video', 'crea un video'])
         es_imagen = any(p in texto_low for p in ['imagen', 'foto', 'genera imagen', 'quiero una imagen'])
         
+        # 2. Si es una solicitud nueva, ignoramos historial para ser directos
         if es_video:
+            USER_HISTORY[user_id] = [] # Reset para nueva tarea
             await handle_video_request(update, context, texto)
         elif es_imagen:
+            USER_HISTORY[user_id] = [] # Reset para nueva tarea
             await handle_imagen_free_request(update, context, texto)
         else:
-            await handle_guion_request(update, context, texto)
+            # 3. CONVERSACIÓN LIBRE (Usa memoria)
+            # Si el texto es corto o parece una modificación, usamos chat_libre
+            msg_procesando = await update.message.reply_text("🤖 Pensando...")
+            
+            respuesta = await ai_processor.chat_libre(USER_HISTORY[user_id], texto)
+            
+            # Guardar en historial
+            USER_HISTORY[user_id].append({"role": "user", "content": texto})
+            USER_HISTORY[user_id].append({"role": "assistant", "content": respuesta})
+            
+            # Limitar historial a 6 mensajes para no saturar tokens
+            if len(USER_HISTORY[user_id]) > 6:
+                USER_HISTORY[user_id] = USER_HISTORY[user_id][-6:]
+                
+            await msg_procesando.edit_text(respuesta)
             
     except Exception as e:
         logger.error(f"Error procesando texto: {e}")
-        await update.message.reply_text("❌ Error procesando tu solicitud. Intenta de nuevo.")
+        await update.message.reply_text("❌ Lo siento, tuve un problema técnico. ¿Podemos intentar de nuevo?")
 
 async def handle_guion_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handler para el comando explícito /guion"""
@@ -756,7 +780,7 @@ async def handle_guion_request(update: Update, context: ContextTypes.DEFAULT_TYP
         
         # Generar guiones con IA
         if ai_processor:
-            resultado = ai_processor.generar_guiones(texto, red_social)
+            resultado = await ai_processor.generar_guiones(texto, red_social)
         else:
             raise Exception("Procesador de IA no disponible")
         
@@ -786,9 +810,6 @@ async def handle_guion_request(update: Update, context: ContextTypes.DEFAULT_TYP
 ✅ **GUIONES GENERADOS** - {red_social.upper()}
 
 {guiones_texto}
-
-🖼️ **Sugerencia de portada:**
-{resultado['sugerencia_portada']}
 
 🏷️ **Hashtags:**
 {' '.join(resultado['hashtags'])}
