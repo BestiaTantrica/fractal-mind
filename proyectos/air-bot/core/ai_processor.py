@@ -65,14 +65,20 @@ class AIProcessor:
     async def procesar_intencion(self, historial: List[Dict], mensaje_actual: str) -> Dict:
         """Usa Gemini para entender qué quiere hacer el usuario realmente"""
         try:
-            # Limpiar el mensaje de basura técnica previa
-            mensaje_limpio = re.sub(r'✅|❌|📊|🎨|🎬|Prompt:.*|Cuota:.*', '', mensaje_actual).strip()
+            # Limpiar el mensaje de basura técnica previa (Etiquetas del bot)
+            mensaje_limpio = re.sub(r'✅|❌|📊|🎨|🎬|Prompt:.*|Cuota:.*|Imagen \d/\d.*|¿Quieres cambiar algo.*', '', mensaje_actual, flags=re.IGNORECASE | re.DOTALL).strip()
 
-            shortcut_words = ["imagen", "foto", "crea", "genera", "dibuj", "secuencia"]
-            if any(w in mensaje_limpio.lower() for w in shortcut_words):
+            shortcut_words = ["imagen", "foto", "crea", "genera", "dibuj", "secuencia", "hace 3", "hace tres"]
+            low_text = mensaje_limpio.lower()
+            if any(w in low_text for w in shortcut_words):
                 # Extraer cantidad si existe
                 nums = re.findall(r'\d+', mensaje_limpio)
-                cantidad = int(nums[0]) if nums and int(nums[0]) <= 5 else (3 if "secuencia" in mensaje_limpio.lower() else 1)
+                cantidad = 1
+                if nums and int(nums[0]) <= 5:
+                    cantidad = int(nums[0])
+                elif "secuencia" in low_text or "tres" in low_text or " 3 " in low_text:
+                    cantidad = 3
+                
                 return {
                     "tipo": "imagen" if cantidad == 1 else "secuencia",
                     "respuesta": f"¡Entendido! Preparando {'esa secuencia de ' + str(cantidad) + ' imágenes' if cantidad > 1 else 'tu imagen'}. 🚀",
@@ -128,8 +134,8 @@ class AIProcessor:
     async def generar_imagen_free(self, prompt: str, red_social: str = "tiktok", seed: Optional[int] = None) -> bytes:
         """Genera imagen gratis via Pollinations.ai con Retries y mayor Timeout"""
         try:
-            # Limpiar prompt
-            prompt_clean = re.sub(r'✅|❌|📊|🎨|🎬', '', prompt).strip()
+            # Limpiar prompt de rastro de bot
+            prompt_clean = re.sub(r'✅|❌|📊|🎨|🎬|Imagen \d/\d.*', '', prompt).strip()
             
             if len(prompt_clean) < 15:
                 prompt_pro = await self.mejorar_prompt_marketing(prompt_clean, "imagen")
@@ -140,7 +146,7 @@ class AIProcessor:
             if red_social in ["tiktok", "instagram", "youtube"]:
                 width, height = 1080, 1920
                 
-            final_seed = seed if seed is not None else random.randint(1, 1000000)
+            final_seed = seed if seed is not None else random.randint(1, 999999)
             prompt_encoded = requests.utils.quote(prompt_pro)
             url = f"https://image.pollinations.ai/prompt/{prompt_encoded}?width={width}&height={height}&seed={final_seed}&nologo=true&model=flux"
             
@@ -148,16 +154,18 @@ class AIProcessor:
             
             for intento in range(2): # Reintento automático
                 try:
+                    logger.info(f"Intento {intento+1} para imagen: {url[:60]}...")
                     response = await loop.run_in_executor(None, lambda: requests.get(url, timeout=60)) # Timeout de 60s
                     if response.status_code == 200:
                         return response.content
                     logger.warning(f"Intento {intento+1} fallido ({response.status_code})")
                 except Exception as e:
-                    logger.warning(f"Intento {intento+1} error: {e}")
+                    logger.warning(f"Intento {intento+1} error de red: {e}")
                 
-                if intento == 0: await asyncio.sleepEx(2) # Esperar antes de reintentar
+                if intento == 0: 
+                    await asyncio.sleep(3) # Esperar un poco más antes de reintentar
             
-            raise Exception("El servidor de imágenes está muy lento ahora. Prueba en un minuto.")
+            raise Exception("El servidor de imágenes (Pollinations) está lento o caido. Intentalo de nuevo en unos segundos.")
         except Exception as e:
             logger.error(f"Error en generar_imagen_free: {e}")
             raise e
