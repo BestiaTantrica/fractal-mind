@@ -689,11 +689,19 @@ Fin de semana: {resultado['horario_optimo']['fin_semana']}
 💡 **Tip:** Usa estos guiones como base y personalízalos con tu estilo único
 """
         
-        # Enviar respuesta
-        await update.message.reply_text(mensaje_resultado, parse_mode='Markdown')
+        # Enviar respuesta - Quitamos Markdown para evitar errores de parseo con caracteres especiales
+        try:
+            await update.message.reply_text(mensaje_resultado)
+        except Exception as telegram_err:
+            logger.warning(f"Error con mensaje formateado, enviando crudo: {telegram_err}")
+            # Si falla el formateado, enviamos el script pelado
+            await update.message.reply_text(f"✅ GUIONES (Modo Simple):\n\n{guiones_texto[:3000]}")
         
         # Borrar mensaje de procesamiento
-        await msg_procesando.delete()
+        try:
+            await msg_procesando.delete()
+        except:
+            pass
         
         logger.info(f"Guiones generados para usuario {user_id}")
         
