@@ -77,15 +77,14 @@ class AIProcessor:
         self.client = genai.Client(api_key=api_key)
         
         # Configurar modelos
-        # Configuración de Modelos (Optimizado para Nivel Gratuito / Eficiencia)
-        # Forzamos 1.5-flash para todo lo que es texto/guiones para asegurar estabilidad y costo cero/bajo
-        self.text_model_name = "gemini-1.5-flash"
+        # NUNCA degradar a modelos gratuitos según protocolo /air
+        self.text_model_name = os.getenv('TEXT_MODEL', 'gemini-2.0-flash-exp')
         
         # Modelos Multimedia (Solo se activan bajo confirmación de usuario)
         self.video_model_name = os.getenv('VIDEO_MODEL', 'veo-3.1-generate-preview')
         self.image_model_name = os.getenv('IMAGE_MODEL', 'imagen-4.0-generate-001')
         
-        logger.info(f"AIProcessor inicializado en MODO EFICIENTE (Texto: {self.text_model_name})")
+        logger.info(f"AIProcessor inicializado con modelos PREMIUM (Texto: {self.text_model_name})")
 
     def obtener_cliente(self):
         return self.client
