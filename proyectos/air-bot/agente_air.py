@@ -261,6 +261,9 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         elif data == "confirm_imagen":
             await editar_imagen_confirmada(update, context)
             
+        elif data == "video_from_script":
+            await generar_video_desde_guion(update, context)
+            
     except Exception as e:
         logger.error(f"Error en callback: {e}")
         await query.edit_message_text(text=f"⚠️ Ocurrió un error: {e}")
@@ -612,17 +615,46 @@ Fin de semana: {resultado.get('horario_optimo', {}).get('fin_semana', 'N/A')}
                     caption="📂 Backup de Log (Inbox)"
                 )
         
-        if resultado.get('video_bytes'):
-            await context.bot.send_video(
-                chat_id=query.message.chat_id,
-                video=BytesIO(resultado['video_bytes']),
-                caption=f"🎬 {resultado.get('caption', 'Video generado')}"
-            )
-        elif resultado.get('video_url'):
-             await context.bot.send_message(chat_id=query.message.chat_id, text=f"🎬 Video generado: {resultado['video_url']}")
-        else:
-             msg_error = resultado.get('error', 'No se pudo generar el video.')
-             await context.bot.send_message(chat_id=query.message.chat_id, text=f"⚠️ {msg_error}")
+        # Intentar enviar por URL primero (Telegram soporta envío directo por URL)
+        video_url = resultado.get('video_url')
+        video_bytes = resultado.get('video_bytes')
+        caption_text = f"🎬 {resultado.get('caption', 'Video generado')}"
+
+        enviado = False
+        
+        if video_url:
+            try:
+                logger.info(f"Intentando enviar video por URL: {video_url}")
+                await context.bot.send_video(
+                    chat_id=query.message.chat_id,
+                    video=video_url,
+                    caption=caption_text
+                )
+                enviado = True
+            except Exception as e:
+                logger.warning(f"Fallo envío por URL: {e}. Intentando fallback...")
+        
+        if not enviado and video_bytes:
+            try:
+                await context.bot.send_video(
+                    chat_id=query.message.chat_id,
+                    video=BytesIO(video_bytes),
+                    caption=caption_text
+                )
+                enviado = True
+            except Exception as e:
+                logger.error(f"Fallo envío por bytes: {e}")
+
+        if not enviado:
+             if video_url:
+                 await context.bot.send_message(
+                     chat_id=query.message.chat_id, 
+                     text=f"🎬 **Video Listo**\n\nNo pude enviarlo directo, pero aquí tienes el enlace:\n{video_url}",
+                     parse_mode='Markdown'
+                 )
+             else:
+                 msg_error = resultado.get('error', 'No se pudo generar el video.')
+                 await context.bot.send_message(chat_id=query.message.chat_id, text=f"⚠️ {msg_error}")
 
         # Limpiar
         context.user_data.clear()
@@ -697,6 +729,18 @@ Fin de semana: {resultado['horario_optimo']['fin_semana']}
             # Si falla el formateado, enviamos el script pelado
             await update.message.reply_text(f"✅ GUIONES (Modo Simple):\n\n{guiones_texto[:3000]}")
         
+        # Guardar tema en contexto para el botón
+        context.user_data['last_script_topic'] = texto
+        
+        # Botón para generar video
+        keyboard = [[InlineKeyboardButton("🎬 Generar Video de esto", callback_data="video_from_script")]]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        
+        await update.message.reply_text(
+            "¿Quieres convertir este tema en un video ahora?",
+            reply_markup=reply_markup
+        )
+        
         # Borrar mensaje de procesamiento
         try:
             await msg_procesando.delete()
@@ -708,6 +752,23 @@ Fin de semana: {resultado['horario_optimo']['fin_semana']}
     except Exception as e:
         logger.error(f"Error generando guiones: {e}")
         await update.message.reply_text("❌ Error generando los guiones. Intenta de nuevo.")
+
+async def generar_video_desde_guion(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Callback para generar video desde un guion previo"""
+    query = update.callback_query
+    
+    # Recuperar tema del contexto
+    tema = context.user_data.get('last_script_topic')
+    if not tema:
+        await query.edit_message_text("⚠️ Sesión expirada. Por favor genera el guion de nuevo.")
+        return
+        
+    # Simular comando de video
+    # Guardamos el prompt como si el usuario lo hubiera escrito
+    context.user_data['pending_video_prompt'] = f"Video sobre {tema}"
+    
+    # Llamamos directamente a la confirmación
+    await generar_video_confirmado(update, context)
 
 
 # ========== FUNCIÓN PRINCIPAL ==========
