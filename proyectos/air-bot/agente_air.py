@@ -574,8 +574,18 @@ async def generar_video_confirmado(update: Update, context: ContextTypes.DEFAULT
         _, restante, _ = quota_manager.verificar_cuota("video", QUOTA_LIMIT_IMAGES, QUOTA_LIMIT_VIDEOS)
         nueva_cuota = QUOTA_LIMIT_VIDEOS - restante
 
-        # Enviar resultado
-        mensaje_resultado = f"""
+        # Verificar errores antes de cantar victoria
+        if resultado.get('error'):
+             await context.bot.send_message(
+                 chat_id=query.message.chat_id,
+                 text=f"⚠️ **Atención:** {resultado['error']}",
+                 parse_mode='Markdown'
+             )
+             # No retornamos aquí para permitir que se guarde el log, pero evitamos el mensaje de ÉXITO
+             mensaje_resultado = None
+        else:
+            # Enviar resultado solo si no hubo error
+            mensaje_resultado = f"""
 ✅ **VIDEO GENERADO** - {red_social.upper()}
 
 📝 **Caption:**
@@ -598,7 +608,7 @@ Fin de semana: {resultado.get('horario_optimo', {}).get('fin_semana', 'N/A')}
 
 📱 Formato: {resultado.get('formato', 'N/A')} • Duración: {resultado.get('duracion', 'N/A')}s
 """
-        await context.bot.send_message(chat_id=query.message.chat_id, text=mensaje_resultado, parse_mode='Markdown')
+            await context.bot.send_message(chat_id=query.message.chat_id, text=mensaje_resultado, parse_mode='Markdown')
         
         # Registrar en log
         saved_path = log_manager.registrar_interaccion(
@@ -655,7 +665,7 @@ Fin de semana: {resultado.get('horario_optimo', {}).get('fin_semana', 'N/A')}
                      text=f"🎬 **Video Listo**\n\nNo pude enviarlo directo, pero aquí tienes el enlace:\n{video_url}",
                      parse_mode='Markdown'
                  )
-             else:
+             elif not resultado.get('error'): # Solo si NO fue un error ya reportado
                  msg_error = resultado.get('error', 'No se pudo generar el video.')
                  await context.bot.send_message(chat_id=query.message.chat_id, text=f"⚠️ {msg_error}")
 
