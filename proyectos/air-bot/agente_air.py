@@ -12,6 +12,8 @@ import os
 import sys
 import logging
 import codecs
+import re
+import random
 from io import BytesIO
 from pathlib import Path
 
@@ -450,61 +452,124 @@ async def generar_imagen_free_confirmada(update: Update, context: ContextTypes.D
 
 
 async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Handler inteligente con procesamiento de intención"""
+    """Handler simplificado con detección directa de palabras clave"""
     try:
         user_id = update.effective_user.id
         texto = update.message.text
+        texto_lower = texto.lower()
         
+        # Inicializar historial si no existe
         if user_id not in USER_HISTORY:
             USER_HISTORY[user_id] = []
         
-        # 1. ANALIZAR INTENCIÓN CON GEMINI
-        msg_procesando = await update.message.reply_text("🤖 Analizando tu solicitud...")
-        intencion = await ai_processor.procesar_intencion(USER_HISTORY[user_id], texto)
+        # ========== DETECCIÓN DIRECTA (SIN JSON PARSING) ==========
         
-        tipo = intencion.get("tipo", "chat")
-        respuesta = intencion.get("respuesta", "Entendido, ¿qué más necesitas?")
-        prompt_ia = intencion.get("prompt_ia", texto)
-        cantidad = int(intencion.get("cantidad", 1))
-
-        # 2. ACTUAR SEGÚN INTENCIÓN
-        if tipo == "chat":
-            await msg_procesando.edit_text(respuesta)
+        # 1. DETECTAR SECUENCIA (3 imágenes)
+        patron_secuencia = r'\b(secuencia|tres|3|three)\s*(imagen|foto|image)'
+        if re.search(patron_secuencia, texto_lower) or "secuencia" in texto_lower:
+            cantidad = 3
+            tipo = "secuencia"
+            logger.info(f"🎯 Detectada SECUENCIA de {cantidad} imágenes")
+        
+        # 2. DETECTAR IMAGEN SIMPLE
+        elif any(palabra in texto_lower for palabra in ["imagen", "foto", "crea", "genera", "dibuj", "hace una"]):
+            cantidad = 1
+            tipo = "imagen"
+            logger.info("🎯 Detectada solicitud de IMAGEN única")
+        
+        # 3. DETECTAR VIDEO
+        elif "video" in texto_lower:
+            tipo = "video"
+            cantidad = 1
+            logger.info("🎯 Detectada solicitud de VIDEO")
+        
+        # 4. CHAT LIBRE
+        else:
+            tipo = "chat"
+            cantidad = 1
+            logger.info("🎯 Detectado CHAT libre")
+        
+        # ========== EJECUTAR ACCIÓN ==========
+        
+        if tipo == "secuencia" or tipo == "imagen":
+            msg_procesando = await update.message.reply_text(
+                f"🎨 Generando {cantidad} imagen(es) gratis... ⏳"
+            )
             
-        elif tipo == "imagen" or tipo == "secuencia":
-            await msg_procesando.edit_text(f"{respuesta}\n\n🎨 Generando {cantidad} imagen(es) gratis... ⏳")
-            
+            # Generar cada imagen de la secuencia
             for i in range(cantidad):
                 try:
-                    # Si es más de una, variamos un poco el prompt para que no sean iguales
-                    prompt_var = f"{prompt_ia}, variation {i+1}" if cantidad > 1 else prompt_ia
+                    # Variar ligeramente el prompt si es secuencia
+                    if cantidad > 1:
+                        prompt_variado = f"{texto}, variation {i+1}"
+                    else:
+                        prompt_variado = texto
+                    
+                    # Detectar red social
                     red_social = detectar_red_social(texto)
-                    # Forzar semillas diferentes para cada imagen de la secuencia
+                    
+                    # Semilla única para cada imagen
                     seed = random.randint(1, 999999)
-                    imagen_bytes = await ai_processor.generar_imagen_free(prompt_var, red_social, seed=seed)
+                    
+                    # Generar imagen
+                    imagen_bytes = await ai_processor.generar_imagen_free(
+                        prompt_variado,
+                        red_social,
+                        seed=seed
+                    )
+                    
+                    # Enviar imagen
+                    caption = (
+                        f"✅ Imagen {i+1}/{cantidad} (FREE)\n\n"
+                        f"¿Quieres cambiar algo de esta?"
+                        if cantidad > 1
+                        else "✅ Imagen Generada (FREE)"
+                    )
                     
                     await context.bot.send_photo(
                         chat_id=update.effective_chat.id,
                         photo=BytesIO(imagen_bytes),
-                        caption=f"✅ Imagen {i+1}/{cantidad} (FREE)\n\n¿Quieres cambiar algo de esta?" if cantidad > 1 else "✅ Imagen Generada (FREE)"
+                        caption=caption
                     )
+                    
+                    logger.info(f"✅ Imagen {i+1}/{cantidad} enviada correctamente")
+                    
                 except Exception as img_err:
-                    logger.error(f"Error en imagen {i+1}: {img_err}")
-                    await update.message.reply_text(f"❌ Error en la imagen {i+1}: {str(img_err)}")
-
-        elif tipo == "video":
-            await msg_procesando.delete()
-            await handle_video_request(update, context, texto)
-
-        # 3. ACTUALIZAR HISTORIAL
-        USER_HISTORY[user_id].append({"role": "user", "content": texto})
-        USER_HISTORY[user_id].append({"role": "model", "content": respuesta})
-        if len(USER_HISTORY[user_id]) > 8:
-            USER_HISTORY[user_id] = USER_HISTORY[user_id][-8:]
+                    logger.error(f"❌ Error en imagen {i+1}: {img_err}")
+                    await update.message.reply_text(
+                        f"❌ Error en imagen {i+1}: {str(img_err)[:100]}"
+                    )
             
+            # Borrar mensaje de procesamiento
+            try:
+                await msg_procesando.delete()
+            except:
+                pass
+        
+        elif tipo == "video":
+            await handle_video_request(update, context, texto)
+        
+        elif tipo == "chat":
+            # Chat simple sin complicaciones
+            respuesta = (
+                "¡Hola! Puedo ayudarte con:\n\n"
+                "🖼️ **Imágenes:** Escribe 'imagen de...'\n"
+                "🎬 **Videos:** Escribe 'video de...'\n"
+                "📸 **Secuencias:** Escribe 'secuencia de 3 imágenes de...'\n\n"
+                "¿Qué necesitas?"
+            )
+            await update.message.reply_text(respuesta)
+        
+        # Actualizar historial (simplificado)
+        USER_HISTORY[user_id].append({"role": "user", "content": texto})
+        if len(USER_HISTORY[user_id]) > 6:
+            USER_HISTORY[user_id] = USER_HISTORY[user_id][-6:]
+        
     except Exception as e:
-        logger.error(f"Error en handle_text inteligente: {e}")
-        await update.message.reply_text("❌ Tuve un problema al procesar tu mensaje. ¿Podemos intentarlo otra vez?")
+        logger.error(f"❌ Error crítico en handle_text: {e}")
+        await update.message.reply_text(
+            "❌ Hubo un error. Por favor intenta de nuevo con un mensaje más simple."
+        )
 
 async def handle_guion_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handler para el comando explícito /guion"""
