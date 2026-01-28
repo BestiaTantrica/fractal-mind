@@ -77,8 +77,8 @@ class AIProcessor:
         self.client = genai.Client(api_key=api_key)
         
         # Configurar modelos
-        # NUNCA degradar a modelos gratuitos según protocolo /air
-        self.text_model_name = os.getenv('TEXT_MODEL', 'gemini-2.0-flash-exp')
+        # NUNCA degradar a modelos gratuitos según protocolo /air -> ACTUALIZACIÓN: CAMBIO A PLAN GRATUITO
+        self.text_model_name = os.getenv('TEXT_MODEL', 'gemini-1.5-flash')
         
         # Modelos Multimedia (Solo se activan bajo confirmación de usuario)
         self.video_model_name = os.getenv('VIDEO_MODEL', 'veo-3.1-generate-preview')
