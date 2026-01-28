@@ -51,14 +51,11 @@ class AIProcessor:
         
         # Configurar modelos
         # Configurar modelos
-        # Usamos gemini-1.5-flash por estabilidad (el 2.0-exp dio error 404)
-        self.text_model_name = os.getenv('TEXT_MODEL', 'gemini-1.5-flash')
-        # Veo y Imagen se mantienen si están disponibles
-        self.video_model_name = os.getenv('VIDEO_MODEL', 'veo-2.0-generate-preview-001') # Fallback seguro
-        self.image_model_name = os.getenv('IMAGE_MODEL', 'imagen-3.0-generate-001') # Fallback seguro
-        
-        # Verificar disponibilidad de Veo 3.1 (si el usuario tiene acceso)
-        # Si no, usará el definido arriba
+        # Modelo validado: gemini-flash-latest (1.5 estable)
+        self.text_model_name = os.getenv('TEXT_MODEL', 'gemini-flash-latest')
+        # Video e Imagen estables
+        self.video_model_name = os.getenv('VIDEO_MODEL', 'veo-2.0-generate-preview-001')
+        self.image_model_name = os.getenv('IMAGE_MODEL', 'imagen-3.0-generate-001')
         
         logger.info(f"AIProcessor inicializado. Texto: {self.text_model_name}")
 
