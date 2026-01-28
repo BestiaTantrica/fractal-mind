@@ -176,6 +176,21 @@ Las cuotas se resetean diariamente a medianoche UTC.
         await update.message.reply_text("❌ Error al obtener información de cuotas.")
 
 
+async def sync_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Fuerza una sincronización con Git"""
+    user_id = str(update.effective_user.id)
+    if not ADMIN_USER_ID or user_id != str(ADMIN_USER_ID):
+        return
+        
+    msg = await update.message.reply_text("🔄 Sincronizando repositorio con Git...")
+    success, detail = log_manager.sync_manual()
+    
+    if success:
+        await msg.edit_text("✅ Sincronización completada con éxito.")
+    else:
+        await msg.edit_text(f"❌ Error en la sincronización: {detail}")
+
+
 async def update_server_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Admin-only command to update and restart the server"""
     user_id = str(update.effective_user.id)
@@ -588,13 +603,21 @@ async def handle_guion_request(update: Update, context: ContextTypes.DEFAULT_TYP
             raise Exception("Procesador de IA no disponible")
         
         # Registrar en log (NO gasta cuota)
-        log_manager.registrar_interaccion(
+        saved_path = log_manager.registrar_interaccion(
             user_id=user_id,
             tipo="GUION_GENERACION",
             input_texto=texto,
             output_info=resultado,
             cuota_actual=None
         )
+        
+        # FAILSAFE: Enviar archivo de log
+        if saved_path and os.path.exists(saved_path):
+            with open(saved_path, 'rb') as f:
+                 await update.message.reply_document(
+                    document=f,
+                    caption="📂 Guion Guardado (Inbox)"
+                )
         
         # Formatear guiones
         guiones_texto = "\n\n".join([
@@ -655,6 +678,7 @@ def main():
     application.add_handler(CommandHandler("start", start_command))
     application.add_handler(CommandHandler("ayuda", ayuda_command))
     application.add_handler(CommandHandler("cuota", cuota_command))
+    application.add_handler(CommandHandler("sync", sync_command))
     application.add_handler(CommandHandler("update_server", update_server_command))
     
     # Callback Query Handler

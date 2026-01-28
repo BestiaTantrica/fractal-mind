@@ -5,6 +5,7 @@ Gestión de cuotas y logging a fractal-mind
 
 import json
 import os
+import subprocess
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Optional, Tuple
@@ -182,9 +183,8 @@ class LogManager:
             
             logger.info(f"Log registrado para usuario {user_id}")
             
-            # Guardar también en inbox para sincronización (VERSIÓN LEAN)
-            resumen_inbox = f"### {timestamp}\n- User: {user_id}\n- Tipo: {tipo}\n- Input: {input_texto[:50]}...\n- Status: OK\n---"
-            saved_path = self.save_to_inbox(resumen_inbox)
+            # Guardar en inbox para sincronización (VERSIÓN COMPLETA)
+            saved_path = self.save_to_inbox(log_entry)
             return saved_path
             
         except Exception as e:
@@ -196,7 +196,7 @@ class LogManager:
         Guarda el contenido en la carpeta inbox del proyecto raíz
         """
         try:
-            # Aseguramos que fractal_path sea absoluto para el comando cd
+            # Aseguramos que fractal_path sea absoluto
             abs_path = self.fractal_path.absolute()
             inbox_dir = abs_path / "inbox"
             inbox_dir.mkdir(parents=True, exist_ok=True)
@@ -220,15 +220,49 @@ class LogManager:
             
             logger.info(f"Guardado en inbox: {file_name}")
             
-            # Sincronización automática (Git Push) - NO BLOQUEANTE y con rutas citadas
-            # Usamos abs_path para asegurar que el cd funcione siempre
-            os.system(f"cd \"{abs_path}\" && git add \"{file_path}\" && git commit -m 'Auto-save (AIR-Bot lean): {file_name}' && git push origin main &")
+            # Sincronización automática (Git Push) - Robusta
+            self._git_sync(abs_path, file_path, file_name)
             
             return file_path
             
         except Exception as e:
             logger.error(f"Error guardando en inbox: {e}")
             return None
+
+    def _git_sync(self, repo_path: Path, file_path: Path, file_name: str):
+        """Ejecuta la sincronización de git de forma segura"""
+        try:
+            # Comando de git
+            cmd = f'git add "{file_path}" && git commit -m "Auto-save (AIR-Bot): {file_name}" && git push origin main'
+            
+            # Ejecutar en segundo plano de forma robusta
+            if os.name == 'nt':
+                # Windows: usamos shell=True y quitamos el '&' que causaba problemas
+                subprocess.Popen(cmd, shell=True, cwd=repo_path)
+            else:
+                # Linux/Unix
+                subprocess.Popen(f"{cmd} &", shell=True, cwd=repo_path)
+                
+            logger.info(f"Git sync disparado para {file_name}")
+        except Exception as e:
+            logger.error(f"Error en git_sync: {e}")
+
+    def sync_manual(self):
+        """Fuerza un push manual del repositorio"""
+        try:
+            abs_path = self.fractal_path.absolute()
+            cmd = 'git add . && git commit -m "Manual sync from Bot" && git push origin main'
+            
+            result = subprocess.run(cmd, shell=True, cwd=abs_path, capture_output=True, text=True)
+            if result.returncode == 0:
+                logger.info("Sincronización manual exitosa")
+                return True, "Sincronización exitosa."
+            else:
+                logger.error(f"Error en sincronización manual: {result.stderr}")
+                return False, f"Error: {result.stderr}"
+        except Exception as e:
+            logger.error(f"Excepción en sync_manual: {e}")
+            return False, str(e)
 
     def _get_tipo_nombre(self, tipo: str) -> str:
         """Convierte el tipo a nombre legible"""
