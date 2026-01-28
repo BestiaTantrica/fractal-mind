@@ -1,6 +1,6 @@
 """
 AIR-Bot - Procesador de IA
-Integración con Google Generative AI (SDK v1), Pollinations y Pexels.
+Integración con Google Generative AI (SDK v1) y Pollinations.
 """
 
 import os
@@ -22,33 +22,31 @@ try:
     GOOGLE_AI_AVAILABLE = True
 except ImportError:
     GOOGLE_AI_AVAILABLE = False
-    logging.warning("google-genai no está instalado.")
 
 from .utils import detectar_red_social
 
 logger = logging.getLogger(__name__)
 
-# CONFIGURACIÓN DE EXPERTOS
+# CONFIGURACIÓN DE EXPERTOS - MÁS ESTRICTO
 PROMPT_SISTEMA_CREATIVO = """
-## AGENTE AIR v2.0
-Eres AIR, experto en marketing. 
+## AGENTE AIR v2.5 | EXPERTO EN MARKETING VIRAL
+Tu tarea es traducir y mejorar las ideas del usuario para transformarlas en PROMPTS TÉCNICOS DE IA (en inglés).
 
-Instrucciones:
-- Si el usuario quiere varias imágenes, usa "tipo": "secuencia" y fija "cantidad".
-- Genera prompts en inglés detallados en "prompt_ia".
+REGLAS:
+1. Si el usuario pide una imagen o secuencia, extrae el DETALLE visual (colores, acciones, estilo).
+2. Genera un prompt en INGLÉS detallado y profesional.
+3. NO ignores ningún detalle del usuario (ropa, clima, cantidad de gente).
 
 Responde SIEMPRE en este formato JSON:
 {
   "tipo": "chat" | "imagen" | "video" | "secuencia",
-  "respuesta": "Texto para el usuario",
-  "prompt_ia": "Detailed English prompt for AI",
+  "respuesta": "Texto corto y motivador para el usuario",
+  "prompt_ia": "THE DETAILED ENGLISH PROMPT HERE",
   "cantidad": 1-5
 }
 """
 
 class AIProcessor:
-    """Procesador principal de IA con inteligencia de intención"""
-    
     def __init__(self, api_key: str):
         self.api_key = api_key
         if GOOGLE_AI_AVAILABLE:
@@ -57,37 +55,19 @@ class AIProcessor:
             self.client = None
             
         self.text_model_name = os.getenv('TEXT_MODEL', 'gemini-1.5-flash')
-        self.video_model_name = os.getenv('VIDEO_MODEL', 'veo-3.1-generate-preview')
         self.image_model_name = os.getenv('IMAGE_MODEL', 'imagen-4.0-fast-generate-001')
         
-        logger.info(f"AIProcessor inicializado (Texto: {self.text_model_name})")
+        logger.info(f"AIProcessor v4.5 inicializado")
 
     async def procesar_intencion(self, historial: List[Dict], mensaje_actual: str) -> Dict:
-        """Usa Gemini para entender qué quiere hacer el usuario realmente"""
+        """Usa Gemini para entender y TRADUCIR la intención del usuario"""
         try:
-            # Limpiar el mensaje de basura técnica previa (Etiquetas del bot)
+            # Limpiar rastro de mensajes anteriores del bot para no confundir a Gemini
             mensaje_limpio = re.sub(r'✅|❌|📊|🎨|🎬|Prompt:.*|Cuota:.*|Imagen \d/\d.*|¿Quieres cambiar algo.*', '', mensaje_actual, flags=re.IGNORECASE | re.DOTALL).strip()
 
-            shortcut_words = ["imagen", "foto", "crea", "genera", "dibuj", "secuencia", "hace 3", "hace tres"]
-            low_text = mensaje_limpio.lower()
-            if any(w in low_text for w in shortcut_words):
-                # Extraer cantidad si existe
-                nums = re.findall(r'\d+', mensaje_limpio)
-                cantidad = 1
-                if nums and int(nums[0]) <= 5:
-                    cantidad = int(nums[0])
-                elif "secuencia" in low_text or "tres" in low_text or " 3 " in low_text:
-                    cantidad = 3
-                
-                return {
-                    "tipo": "imagen" if cantidad == 1 else "secuencia",
-                    "respuesta": f"¡Entendido! Preparando {'esa secuencia de ' + str(cantidad) + ' imágenes' if cantidad > 1 else 'tu imagen'}. 🚀",
-                    "prompt_ia": mensaje_limpio,
-                    "cantidad": cantidad
-                }
-
             contents = []
-            for h in historial:
+            # Solo pasar los últimos 4 mensajes del historial para no marear a la IA
+            for h in historial[-4:]:
                 role = "user" if h['role'] == "user" else "model"
                 contents.append({"role": role, "parts": [{"text": h['content']}]})
             
@@ -100,27 +80,24 @@ class AIProcessor:
                     model=self.text_model_name,
                     contents=contents,
                     config=types.GenerateContentConfig(
-                        system_instruction=PROMPT_SISTEMA_CREATIVO
+                        system_instruction=PROMPT_SISTEMA_CREATIVO,
+                        response_mime_type="application/json"
                     )
                 )
             )
             
-            raw_text = response.text.strip()
-            clean_text = re.sub(r'```json\s*|\s*```', '', raw_text)
-            
-            try:
-                return json.loads(clean_text)
-            except:
-                return {"tipo": "chat", "respuesta": raw_text, "prompt_ia": mensaje_limpio, "cantidad": 1}
+            return json.loads(response.text.strip())
                 
         except Exception as e:
             logger.error(f"Error procesando intención: {e}")
-            return {"tipo": "chat", "respuesta": "Sigo aquí, ¿qué quieres hacer?", "prompt_ia": mensaje_actual, "cantidad": 1}
+            # Fallback simple
+            tipo = "imagen" if any(x in mensaje_actual.lower() for x in ["imagen", "foto", "hace", "crea"]) else "chat"
+            return {"tipo": tipo, "respuesta": "¡Claro! Trabajando en eso.", "prompt_ia": mensaje_actual, "cantidad": 1}
 
-    async def mejorar_prompt_marketing(self, instruccion_basica: str, tipo: str = "imagen") -> str:
-        """Mejora prompts usando Gemini (ASÍNCRONO)"""
+    async def mejorar_prompt_marketing(self, instruccion: str, tipo: str = "imagen") -> str:
+        """Asegura que el prompt esté en inglés y sea profesional antes de ir a Pollinations"""
         try:
-            prompt_mejora = f"Transform this into a hyper-realistic, high-impact English prompt for {tipo}: {instruccion_basica}"
+            prompt_mejora = f"Act as a professional prompt engineer. Convert this description into a high-quality technical prompt in ENGLISH for AI {tipo} generation. Include lighting, composition and textures. Desc: {instruccion}"
             loop = asyncio.get_event_loop()
             response = await loop.run_in_executor(
                 None, 
@@ -128,20 +105,18 @@ class AIProcessor:
             )
             return response.text.strip()
         except Exception as e:
-            logger.error(f"Error mejorando prompt: {e}")
-            return instruccion_basica
+            logger.error(f"Error en mejora de prompt: {e}")
+            return instruccion
 
     async def generar_imagen_free(self, prompt: str, red_social: str = "tiktok", seed: Optional[int] = None) -> bytes:
-        """Genera imagen gratis via Pollinations.ai con Retries y mayor Timeout"""
+        """Genera imagen gratis via Pollinations.ai (FLUX) con validación de tipo de contenido"""
         try:
-            # Limpiar prompt de rastro de bot
-            prompt_clean = re.sub(r'✅|❌|📊|🎨|🎬|Imagen \d/\d.*', '', prompt).strip()
-            
-            if len(prompt_clean) < 15:
-                prompt_pro = await self.mejorar_prompt_marketing(prompt_clean, "imagen")
+            # SIEMPRE mejorar/traducir el prompt si no parece inglés técnico
+            if not prompt.lower().startswith(("a portrait", "cinematic", "high quality", "photo of")):
+                 prompt_pro = await self.mejorar_prompt_marketing(prompt, "image")
             else:
-                prompt_pro = prompt_clean
-                
+                 prompt_pro = prompt
+
             width, height = 1080, 1080
             if red_social in ["tiktok", "instagram", "youtube"]:
                 width, height = 1080, 1920
@@ -152,22 +127,21 @@ class AIProcessor:
             
             loop = asyncio.get_event_loop()
             
-            for intento in range(2): # Reintento automático
+            for intento in range(2):
                 try:
-                    logger.info(f"Intento {intento+1} para imagen: {url[:60]}...")
-                    response = await loop.run_in_executor(None, lambda: requests.get(url, timeout=60)) # Timeout de 60s
-                    if response.status_code == 200:
+                    response = await loop.run_in_executor(None, lambda: requests.get(url, timeout=45))
+                    # Verificar que recibimos una imagen y no un error JSON
+                    if response.status_code == 200 and 'image' in response.headers.get('Content-Type', ''):
                         return response.content
-                    logger.warning(f"Intento {intento+1} fallido ({response.status_code})")
+                    logger.warning(f"Intento {intento+1} fallido: {response.status_code} - {response.headers.get('Content-Type')}")
                 except Exception as e:
-                    logger.warning(f"Intento {intento+1} error de red: {e}")
+                    logger.warning(f"Error de red intento {intento+1}: {e}")
                 
-                if intento == 0: 
-                    await asyncio.sleep(3) # Esperar un poco más antes de reintentar
+                await asyncio.sleep(2)
             
-            raise Exception("El servidor de imágenes (Pollinations) está lento o caido. Intentalo de nuevo en unos segundos.")
+            raise Exception("El servidor de imágenes está saturado. Reintenta con un prompt más simple.")
         except Exception as e:
-            logger.error(f"Error en generar_imagen_free: {e}")
+            logger.error(f"Error grave en imagen free: {e}")
             raise e
 
     async def editar_imagen(self, imagen_bytes: bytes, instruccion: str) -> bytes:
@@ -182,78 +156,50 @@ class AIProcessor:
                 lambda: self.client.models.generate_images(
                     model=self.image_model_name,
                     prompt=prompt_pro,
-                    config=types.GenerateImagesConfig(
-                        reference_images=[img],
-                        number_of_images=1,
-                        safety_filter_level="block_low_and_above",
-                        person_generation="allow_adult"
-                    )
+                    config=types.GenerateImagesConfig(reference_images=[img], number_of_images=1)
                 )
             )
             
             if response.generated_images:
                 return response.generated_images[0].image.image_bytes
-            else:
-                raise Exception("Google no devolvió imagen editada.")
+            raise Exception("Google no respondió.")
         except Exception as e:
-            logger.error(f"Error en editar_imagen: {e}")
+            logger.error(f"Error editar: {e}")
             raise e
 
-    async def generar_video(self, prompt_usuario: str, red_social: str = "tiktok") -> Dict:
+    async def generar_video(self, prompt: str, red_social: str = "tiktok") -> Dict:
         """Genera video asíncrono via Veo 3.1"""
         try:
-            prompt_pro = await self.mejorar_prompt_marketing(prompt_usuario, "video")
-            metadata = self._generar_metadata_completo(prompt_pro, red_social)
+            prompt_pro = await self.mejorar_prompt_marketing(prompt, "video")
+            metadata = {"caption": f"Video: {prompt[:30]}...", "hashtags": ["#AI", f"#{red_social}"]}
             
-            try:
-                aspect_ratio = "9:16" if red_social in ["tiktok", "instagram", "youtube"] else "16:9"
-                loop = asyncio.get_event_loop()
-                operation = await loop.run_in_executor(
-                    None,
-                    lambda: self.client.models.generate_videos(
-                        model=self.video_model_name,
-                        prompt=prompt_pro,
-                        config=types.GenerateVideosConfig(
-                            number_of_videos=1,
-                            aspect_ratio=aspect_ratio,
-                            duration_seconds=8
-                        )
-                    )
+            # (Lógica de video simplificada para estabilidad)
+            aspect_ratio = "9:16" if red_social in ["tiktok", "instagram", "youtube"] else "16:9"
+            loop = asyncio.get_event_loop()
+            operation = await loop.run_in_executor(
+                None,
+                lambda: self.client.models.generate_videos(
+                    model="veo-3.1-generate-preview",
+                    prompt=prompt_pro,
+                    config=types.GenerateVideosConfig(aspect_ratio=aspect_ratio)
                 )
-                
-                max_wait = 600
-                poll = 20
-                waited = 0
-                while not operation.done and waited < max_wait:
-                    await asyncio.sleep(poll)
-                    waited += poll
-                    operation = await loop.run_in_executor(None, lambda: self.client.operations.get(name=operation.name))
-                
-                if operation.done and not operation.error:
-                    result = operation.result
-                    if result.generated_videos:
-                        video = result.generated_videos[0]
-                        metadata['video_url'] = video.video.uri if hasattr(video.video, 'uri') else video.uri
-                else:
-                    metadata['error'] = f"Error: {operation.error or 'Timeout'}"
-            except Exception as e:
-                metadata['error'] = f"Excepción: {str(e)}"
-                
+            )
+            
+            # Polling simplificado
+            waited = 0
+            while not operation.done and waited < 300:
+                await asyncio.sleep(15)
+                waited += 15
+                operation = await loop.run_in_executor(None, lambda: self.client.operations.get(name=operation.name))
+            
+            if operation.done and not operation.error:
+                metadata['video_url'] = operation.result.generated_videos[0].video.uri
+            else:
+                metadata['error'] = "Timeout en video."
             return metadata
         except Exception as e:
             logger.error(f"Error video: {e}")
             raise
-
-    def _generar_metadata_completo(self, prompt: str, red_social: str) -> Dict:
-        return {
-            "caption": f"Video sobre {prompt[:30]}...",
-            "descripcion": f"Contenido viral para {red_social}.",
-            "cta": "¡Síguenos!",
-            "hashtags": ["#AI", f"#{red_social}"],
-            "horario_optimo": {"dias_semana": "19:00", "fin_semana": "12:00"},
-            "formato": "9:16" if red_social != "facebook" else "1:1",
-            "duracion": 8
-        }
 
 def crear_ai_processor(api_key: str) -> AIProcessor:
     return AIProcessor(api_key)
