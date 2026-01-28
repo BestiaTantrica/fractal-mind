@@ -417,6 +417,22 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
         logger.error(f"Error procesando texto: {e}")
         await update.message.reply_text("❌ Error procesando tu solicitud. Intenta de nuevo.")
 
+async def handle_guion_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handler para el comando explícito /guion"""
+    texto = " ".join(context.args) if context.args else ""
+    if not texto:
+        await update.message.reply_text("💡 Uso: `/guion [tema del contenido]`\nEjemplo: `/guion Ideas para reels de café`", parse_mode='Markdown')
+        return
+    await handle_guion_request(update, context, texto)
+
+async def handle_video_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handler para el comando explícito /video"""
+    texto = " ".join(context.args) if context.args else ""
+    if not texto:
+        await update.message.reply_text("💡 Uso: `/video [descripción del video]`\nEjemplo: `/video Un atardecer cinemático en la playa`", parse_mode='Markdown')
+        return
+    await handle_video_request(update, context, texto)
+
 
 async def handle_video_request(update: Update, context: ContextTypes.DEFAULT_TYPE, texto: str):
     """Procesa solicitud de generación de video"""
@@ -711,6 +727,8 @@ def main():
     application.add_handler(CommandHandler("cuota", cuota_command))
     application.add_handler(CommandHandler("sync", sync_command))
     application.add_handler(CommandHandler("update_server", update_server_command))
+    application.add_handler(CommandHandler("guion", handle_guion_command))
+    application.add_handler(CommandHandler("video", handle_video_command))
     
     # Callback Query Handler
     application.add_handler(CallbackQueryHandler(button_callback))
