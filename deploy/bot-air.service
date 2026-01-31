@@ -4,10 +4,10 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
-User=ec2-user
-WorkingDirectory=/home/ec2-user/fractal-mind
-EnvironmentFile=/home/ec2-user/fractal-mind/.env
-ExecStart=/home/ec2-user/fractal-mind/venv/bin/python3 /home/ec2-user/fractal-mind/proyectos/air-bot/agente_air.py
+User=ubuntu
+WorkingDirectory=/home/ubuntu/fractal-mind
+EnvironmentFile=/home/ubuntu/fractal-mind/.env
+ExecStart=/home/ubuntu/bin/micromamba run -n bot-env python /home/ubuntu/fractal-mind/proyectos/air-bot/agente_air.py
 Restart=always
 RestartSec=10
 StartLimitInterval=0
