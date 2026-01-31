@@ -43,11 +43,24 @@ def save_to_inbox(content):
     
     # Sincronización automática (Git Push) - NO BLOQUEANTE
     try:
-        os.system(f"cd \"{base_dir}\" && git add \"{file_path}\" && git commit -m 'Auto-save (lean): {file_name}' && git push origin main &")
+        import subprocess
+        sync_script = os.path.join(base_dir, "auto_sync.sh")
+        if os.path.exists(sync_script):
+            subprocess.Popen(["/bin/bash", sync_script], 
+                           stdout=subprocess.DEVNULL, 
+                           stderr=subprocess.DEVNULL,
+                           start_new_session=True)
+        else:
+            # Fallback directo
+            subprocess.Popen(
+                f"cd '{base_dir}' && git add inbox/ && git commit -m 'Auto-sync' && git push origin main",
+                shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                start_new_session=True)
     except Exception as e:
         print(f"Error en sincronización Git: {e}")
         
     return file_path
+
 
 @bot.message_handler(commands=['update_server'])
 def update_server(m):
