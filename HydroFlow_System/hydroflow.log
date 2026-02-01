@@ -1,0 +1,223 @@
+2026-02-01 02:07:43,373 - INFO - --- Iniciando Cascada de Auditoría Completa ---
+2026-02-01 02:07:43,373 - INFO - Iniciando Stage: auditor_inbox
+2026-02-01 02:07:44,026 - INFO - Stage auditor_inbox completado con éxito.
+2026-02-01 02:07:44,026 - INFO - Cascada finalizada exitosamente.
+2026-02-01 02:08:04,332 - INFO - --- Iniciando Refinamiento para Bot AIR ---
+2026-02-01 02:08:04,333 - INFO - Iniciando Stage: agente_mente_refiner
+2026-02-01 02:08:04,419 - INFO - Stage agente_mente_refiner completado con éxito.
+2026-02-01 02:19:26,170 - INFO - --- Iniciando Producción de Contenido: Legado_Digital ---
+2026-02-01 02:19:26,171 - INFO - Iniciando Stage: voice_engine
+2026-02-01 02:19:28,093 - ERROR - Error en voice_engine. Código: 1
+STDOUT: Voice Engine: Generando audio para 'Este es un legado para mis hij...'
+
+STDERR: Traceback (most recent call last):
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\connector.py", line 1562, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\connector.py", line 1178, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\connector.py", line 1209, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\fractal-mind\HydroFlow_System\projects\voice_engine\main.py", line 24, in <module>
+    asyncio.run(text_to_speech(text_arg, out_arg))
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\fractal-mind\HydroFlow_System\projects\voice_engine\main.py", line 14, in text_to_speech
+    await communicate.save(output_path)
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\edge_tts\communicate.py", line 590, in save
+    async for message in self.stream():
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\edge_tts\communicate.py", line 566, in stream
+    async for message in self.__stream():
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\edge_tts\communicate.py", line 435, in __stream
+    ) as session, session.ws_connect(
+                  ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\client.py", line 1510, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\client.py", line 1076, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\client.py", line 779, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\client.py", line 734, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\connector.py", line 1239, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\connector.py", line 1568, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host speech.platform.bing.com:443 ssl:<ssl.SSLContext object at 0x0000018FBA3D5E50> [Could not contact DNS servers]
+
+2026-02-01 02:19:41,571 - INFO - --- Iniciando Producción de Contenido: Legado_Digital ---
+2026-02-01 02:19:41,571 - INFO - Iniciando Stage: voice_engine
+2026-02-01 02:19:42,744 - ERROR - Error en voice_engine. Código: 1
+STDOUT: Voice Engine: Generando audio para 'Este es un legado para mis hij...'
+
+STDERR: Traceback (most recent call last):
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\resolver.py", line 117, in resolve
+    resp = await self._resolver.getaddrinfo(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+aiodns.error.DNSError: (11, 'Could not contact DNS servers')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\connector.py", line 1562, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\connector.py", line 1178, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\connector.py", line 1209, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\resolver.py", line 126, in resolve
+    raise OSError(None, msg) from exc
+OSError: [Errno None] Could not contact DNS servers
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\fractal-mind\HydroFlow_System\projects\voice_engine\main.py", line 24, in <module>
+    asyncio.run(text_to_speech(text_arg, out_arg))
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\fractal-mind\HydroFlow_System\projects\voice_engine\main.py", line 14, in text_to_speech
+    await communicate.save(output_path)
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\edge_tts\communicate.py", line 590, in save
+    async for message in self.stream():
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\edge_tts\communicate.py", line 566, in stream
+    async for message in self.__stream():
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\edge_tts\communicate.py", line 435, in __stream
+    ) as session, session.ws_connect(
+                  ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\client.py", line 1510, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\client.py", line 1076, in _ws_connect
+    resp = await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\client.py", line 779, in _request
+    resp = await handler(req)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\client.py", line 734, in _connect_and_send_request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\connector.py", line 672, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\connector.py", line 1239, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lucar\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiohttp\connector.py", line 1568, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host speech.platform.bing.com:443 ssl:<ssl.SSLContext object at 0x000001594F429FD0> [Could not contact DNS servers]
+
+2026-02-01 02:20:00,343 - INFO - --- Iniciando Producción de Contenido: Legado_Digital ---
+2026-02-01 02:20:00,343 - INFO - Iniciando Stage: voice_engine
+2026-02-01 02:20:00,545 - ERROR - Error en voice_engine. Código: 1
+STDOUT: 
+STDERR: Traceback (most recent call last):
+  File "C:\fractal-mind\HydroFlow_System\projects\voice_engine\main.py", line 4, in <module>
+    from gtts import gTTS
+ModuleNotFoundError: No module named 'gtts'
+
+2026-02-01 02:21:55,618 - INFO - --- Iniciando Producción de Contenido: Legado_Digital ---
+2026-02-01 02:21:55,618 - INFO - Iniciando Stage: voice_engine
+2026-02-01 02:21:57,381 - INFO - Stage voice_engine completado con éxito.
+2026-02-01 02:21:57,381 - INFO - Iniciando Stage: air_bridge
+2026-02-01 02:22:01,118 - INFO - Stage air_bridge completado con éxito.
+2026-02-01 02:22:01,118 - INFO - Iniciando Stage: video_engine
+2026-02-01 02:22:03,326 - ERROR - Error en video_engine. Código: 1
+STDOUT: 
+STDERR: Traceback (most recent call last):
+  File "C:\fractal-mind\HydroFlow_System\projects\video_engine\main.py", line 3, in <module>
+    from moviepy.editor import ImageClip, AudioFileClip, TextClip, CompositeVideoClip
+ModuleNotFoundError: No module named 'moviepy.editor'
+
+2026-02-01 02:22:50,114 - INFO - --- Iniciando Producción de Contenido: Legado_Digital ---
+2026-02-01 02:22:50,114 - INFO - Iniciando Stage: voice_engine
+2026-02-01 02:22:51,613 - INFO - Stage voice_engine completado con éxito.
+2026-02-01 02:22:51,613 - INFO - Iniciando Stage: air_bridge
+2026-02-01 02:22:54,357 - INFO - Stage air_bridge completado con éxito.
+2026-02-01 02:22:54,357 - INFO - Iniciando Stage: video_engine
+2026-02-01 02:22:55,154 - ERROR - Error en video_engine. Código: 1
+STDOUT: Video Engine: Ensamblando video con data_hub\stage_1_output\Legado_Digital_image.jpg y data_hub\stage_1_output\Legado_Digital_audio.mp3
+Error en ensamblado: No such file: 'C:\fractal-mind\HydroFlow_System\data_hub\stage_1_output\Legado_Digital_image.jpg'
+
+STDERR: 
+2026-02-01 02:23:08,153 - INFO - --- Iniciando Producción de Contenido: Legado_Digital ---
+2026-02-01 02:23:08,154 - INFO - Iniciando Stage: voice_engine
+2026-02-01 02:23:09,988 - INFO - Stage voice_engine completado con éxito.
+2026-02-01 02:23:09,989 - INFO - Iniciando Stage: air_bridge
+2026-02-01 02:23:12,911 - INFO - Stage air_bridge completado con éxito.
+2026-02-01 02:23:12,911 - INFO - Iniciando Stage: video_engine
+2026-02-01 02:23:13,933 - ERROR - Error en video_engine. Código: 1
+STDOUT: Video Engine: Ensamblando video con c:/fractal-mind/HydroFlow_System\data_hub\stage_1_output\Legado_Digital_image.jpg y c:/fractal-mind/HydroFlow_System\data_hub\stage_1_output\Legado_Digital_audio.mp3
+Error en ensamblado: No such file: 'c:\fractal-mind\HydroFlow_System\data_hub\stage_1_output\Legado_Digital_image.jpg'
+
+STDERR: 
+2026-02-01 02:23:29,711 - INFO - --- Iniciando Producción de Contenido: Legado_Digital ---
+2026-02-01 02:23:29,712 - INFO - Iniciando Stage: voice_engine
+2026-02-01 02:23:31,418 - INFO - Stage voice_engine completado con éxito.
+2026-02-01 02:23:31,418 - INFO - Iniciando Stage: air_bridge
+2026-02-01 02:25:12,870 - ERROR - Error en air_bridge. Código: 1
+STDOUT: AIR Bridge: Solicitando imagen para 'A futuristic library with digital interfaces and children learning, cinematic style'
+Error en AIR Bridge execution: Servidor de imágenes saturado. Intenta de nuevo en unos segundos.
+
+STDERR: 2026-02-01 02:23:34,743 - core.ai_processor - INFO - AIProcessor SIMPLE v5.0 inicializado
+2026-02-01 02:23:34,745 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-02-01 02:23:38,357 - httpx - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent "HTTP/1.1 200 OK"
+2026-02-01 02:23:38,361 - core.ai_processor - INFO - Prompt mejorado: **Prompt:**
+
+A wide, cinematic shot of a highly detailed, futuristic library atrium. Young children ...
+2026-02-01 02:23:38,361 - core.ai_processor - INFO - Generando imagen (seed=153356): **Prompt:**
+
+A wide, cinematic shot of a highly detailed, fu...
+2026-02-01 02:24:23,974 - core.ai_processor - WARNING - Error en intento 1: HTTPSConnectionPool(host='image.pollinations.ai', port=443): Read timed out. (read timeout=45)
+2026-02-01 02:25:12,607 - core.ai_processor - WARNING - Error en intento 2: HTTPSConnectionPool(host='image.pollinations.ai', port=443): Read timed out. (read timeout=45)
+2026-02-01 02:25:12,607 - core.ai_processor - ERROR - Error crítico en generación de imagen: Servidor de imágenes saturado. Intenta de nuevo en unos segundos.
+Traceback (most recent call last):
+  File "C:\fractal-mind\HydroFlow_System\projects\air_bridge\main.py", line 26, in bridge_air_image
+    content = await p.generar_imagen_free(prompt, red_social=red_social)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\fractal-mind\proyectos\air-bot\core\ai_processor.py", line 115, in generar_imagen_free
+    raise Exception("Servidor de imágenes saturado. Intenta de nuevo en unos segundos.")
+Exception: Servidor de imágenes saturado. Intenta de nuevo en unos segundos.
+

@@ -1,0 +1,6 @@
+PROMPT REFINADO POR AGENTE_MENTE:
+---
+CONTEXTO: Una imagen de un bosque fractal con luces neon
+MEJORA: Agregando profundidad técnica, iluminación cinematográfica y estilo fractal.
+RESULTADO: Cinematic shot, fractal patterns blending with Una imagen de un bosque fractal con luces neon, hyper-realistic, 8k, golden hour lighting.
+---

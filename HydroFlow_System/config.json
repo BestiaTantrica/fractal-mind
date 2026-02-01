@@ -1,0 +1,10 @@
+{
+    "base_path": "c:/fractal-mind/HydroFlow_System",
+    "data_hub": "data_hub",
+    "projects_path": "projects",
+    "telegram": {
+        "enabled": false,
+        "bot_token": "",
+        "chat_id": ""
+    }
+}
