@@ -107,7 +107,7 @@ Luca, para que pueda responderte, necesitamos mi "cerebro" (la API Key). Sigue e
         if os.path.exists(audio_path):
             os.remove(audio_path)
 
-async def main():
+def main():
     if not TELEGRAM_TOKEN:
         logger.error("TELEGRAM_TOKEN no encontrado en .env")
         return
@@ -118,11 +118,11 @@ async def main():
     application.add_handler(MessageHandler((filters.TEXT | filters.VOICE) & ~filters.COMMAND, handle_message))
 
     logger.info("Mentor Chip Bot iniciado...")
-    await application.run_polling()
+    application.run_polling()
 
 if __name__ == "__main__":
     try:
-        asyncio.run(main())
+        main()
     except KeyboardInterrupt:
         pass
     except Exception as e:
