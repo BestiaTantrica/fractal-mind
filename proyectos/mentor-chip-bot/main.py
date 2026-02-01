@@ -62,61 +62,53 @@ Luca, para que pueda responderte, necesitamos mi "cerebro" (la API Key). Sigue e
 ¡Estaré aquí esperando para empezar a reparar cosas! 🛠️
 """
         await update.message.reply_text(instructions, parse_mode='Markdown')
-        return
-
+    
+    # Procesar texto o voz
     if update.message.voice:
-        await update.message.reply_text("🎤 Escuchando tu nota de voz...")
-        # Nota: Por ahora Luca debe escribir, pero ya detectamos el audio.
-        text = "He recibido un audio tuyo (Luca), pero mi procesador de audio está en mantenimiento. ¿Podrías escribirme lo mismo por texto? ¡Gracias!"
-        await update.message.reply_text(text)
+        # Nota: Aquí deberíamos transcribir, pero por ahora asumimos que no hay voz si no está configurada
+        message_text = " (Audio recibido, pero necesito que escribas por ahora)" 
+    else:
+        message_text = update.message.text
+
+    if not message_text:
         return
 
-    if not text:
-        return
+    logger.info(f"Mensaje de {user_id}: {message_text}")
+    await update.message.chat.send_action(action="typing")
 
-    if not mentor_logic:
-        await update.message.reply_text("❌ Error: Mentor Logic no inicializado.")
-        return
-
-    # Mostrar que el bot está "escribiendo"
-    await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
-
-    # Obtener historial
-    history = USER_HISTORY.get(user_id, [])[-10:] # Últimos 10 mensajes
-
-    # Obtener respuesta de la IA
-    response = await mentor_logic.get_response(user_id, text, history)
-
-    # Guardar en historial
+    # Historial (limitado)
     if user_id not in USER_HISTORY:
         USER_HISTORY[user_id] = []
     
-    USER_HISTORY[user_id].append({"role": "user", "content": text})
+    history = USER_HISTORY[user_id][-10:]
+    
+    # Obtener respuesta IA
+    response = await mentor_logic.get_response(user_id, message_text, history)
+    
+    # Guardar en historial
+    USER_HISTORY[user_id].append({"role": "user", "content": message_text})
     USER_HISTORY[user_id].append({"role": "assistant", "content": response})
 
-    # Enviar respuesta de texto
-    # Usamos parse_mode=None por seguridad si la IA no devuelve Markdown perfecto
-    try:
-        await update.message.reply_text(response, parse_mode='Markdown')
-    except Exception:
-        # Fallback si el Markdown falla
-        await update.message.reply_text(response, parse_mode=None)
+    # Enviar respuesta protegiendo longitud y formato
+    await send_chunked_response(update, response)
 
     # Enviar respuesta de voz (Audio)
     audio_path = os.path.join(TEMP_DIR, f"response_{user_id}.mp3")
-    await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="record_voice")
-    
-    if await mentor_logic.generate_voice(response, audio_path):
-        with open(audio_path, 'rb') as audio:
-            await update.message.reply_voice(voice=audio)
-        if os.path.exists(audio_path):
-            os.remove(audio_path)
+    if await mentor_logic.generate_voice(response[:500], audio_path): # Solo leer los primeros 500 chars para no hacer un audiolibro
+        try:
+            await update.message.reply_voice(voice=open(audio_path, 'rb'))
+        except Exception as e:
+            logger.error(f"Error enviando audio: {e}")
+        finally:
+            if os.path.exists(audio_path):
+                os.remove(audio_path)
 
 def main():
     if not TELEGRAM_TOKEN:
         logger.error("TELEGRAM_TOKEN no encontrado en .env")
         return
 
+    global application
     application = Application.builder().token(TELEGRAM_TOKEN).build()
 
     application.add_handler(CommandHandler("start", start))
