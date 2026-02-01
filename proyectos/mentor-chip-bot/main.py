@@ -1,6 +1,7 @@
 import os
 import logging
 import asyncio
+import datetime
 from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
@@ -125,6 +126,21 @@ Luca, para que pueda responderte, necesitamos mi "cerebro" (la API Key). Sigue e
 
     # Enviar respuesta protegiendo longitud y formato
     await send_chunked_response(update, response)
+
+    # Generar y enviar archivo MD (Estilo Mente Bestia)
+    try:
+        md_filename = f"Mentor_Respuesta_{datetime.datetime.now().strftime('%H%M%S')}.md"
+        md_path = os.path.join(TEMP_DIR, md_filename)
+        with open(md_path, 'w', encoding='utf-8') as f:
+            f.write(response)
+        
+        with open(md_path, 'rb') as doc:
+            await update.message.reply_document(document=doc, caption="📂 Aquí tienes la respuesta en archivo para guardar.")
+        
+        if os.path.exists(md_path):
+            os.remove(md_path)
+    except Exception as e:
+        logger.error(f"Error enviando MD: {e}")
 
     # Enviar respuesta de voz (Audio)
     audio_path = os.path.join(TEMP_DIR, f"response_{user_id}.mp3")
