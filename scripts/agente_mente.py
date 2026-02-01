@@ -15,6 +15,7 @@ bot = telebot.TeleBot(os.getenv("TELEGRAM_TOKEN_FRACTAL"))
 # Permitir múltiples usuarios (separados por coma)
 raw_ids = os.getenv("MY_USER_ID", "")
 ALLOWED_IDS = [int(x.strip()) for x in raw_ids.split(",") if x.strip().isdigit()]
+ADMIN_ID = ALLOWED_IDS[0] if ALLOWED_IDS else None
 
 # Usamos el nombre exacto de tu lista
 model = genai.GenerativeModel('gemini-flash-latest')
@@ -67,7 +68,7 @@ def save_to_inbox(content):
 
 @bot.message_handler(commands=['update_server'])
 def update_server(m):
-    if m.from_user.id != USER_ID:
+    if m.from_user.id != ADMIN_ID:
         return
     bot.reply_to(m, "🚀 Iniciando actualización del servidor...")
     try:
@@ -109,11 +110,20 @@ sudo systemctl restart bot-fractal bot-air
     except Exception as e:
         bot.reply_to(m, f"❌ Error: {e}")
 
-@bot.message_handler(func=lambda m: m.from_user.id in ALLOWED_IDS)
+# FIX CRÍTICO: Agregar content_types para aceptar archivos, fotos, etc.
+@bot.message_handler(func=lambda m: m.from_user.id in ALLOWED_IDS, content_types=['audio', 'photo', 'voice', 'video', 'document', 'text', 'location', 'contact', 'sticker'])
 def handle(m):
     try:
+        # Si es un archivo/foto, intentar usar el caption si existe
+        user_input = m.text or m.caption
+        
+        if not user_input:
+            # Si mandan un archivo sin caption, responder algo genérico o analizar la imagen (futuro)
+            bot.reply_to(m, "📂 Archivo recibido. Guardando referencia...")
+            user_input = f"[Archivo recibido: {m.document.file_name if m.document else 'Media'}]"
+
         # Generación directa
-        res = model.generate_content(m.text)
+        res = model.generate_content(user_input)
         txt = res.text
         
         # Guardar en inbox
@@ -133,5 +143,5 @@ def handle(m):
     except Exception as e:
         bot.reply_to(m, f"Error: {e}")
 
-print("Bot activo con gemini-flash-latest y guardado en inbox...")
+print("Bot activo con gemini-flash-latest y guardado en inbox...", flush=True)
 bot.polling()
