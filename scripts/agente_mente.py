@@ -13,8 +13,11 @@ genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 bot = telebot.TeleBot(os.getenv("TELEGRAM_TOKEN_FRACTAL"))
 
 # Permitir múltiples usuarios (separados por coma)
+# Permitir múltiples usuarios (separados por coma)
 raw_ids = os.getenv("MY_USER_ID", "")
-ALLOWED_IDS = [int(x.strip()) for x in raw_ids.split(",") if x.strip().isdigit()]
+# EMERGENCY HARDCODE: Force Luca's ID to be accepted
+ALLOWED_IDS = [6527908321, 8224826198]
+print(f"DEBUG RAW: '{raw_ids}' -> ALLOWED: {ALLOWED_IDS}", flush=True)
 ADMIN_ID = ALLOWED_IDS[0] if ALLOWED_IDS else None
 
 # Usamos el nombre exacto de tu lista
