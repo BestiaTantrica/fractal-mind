@@ -95,7 +95,12 @@ Luca, para que pueda responderte, necesitamos mi "cerebro" (la API Key). Sigue e
     USER_HISTORY[user_id].append({"role": "assistant", "content": response})
 
     # Enviar respuesta de texto
-    await update.message.reply_text(response, parse_mode='Markdown')
+    # Usamos parse_mode=None por seguridad si la IA no devuelve Markdown perfecto
+    try:
+        await update.message.reply_text(response, parse_mode='Markdown')
+    except Exception:
+        # Fallback si el Markdown falla
+        await update.message.reply_text(response, parse_mode=None)
 
     # Enviar respuesta de voz (Audio)
     audio_path = os.path.join(TEMP_DIR, f"response_{user_id}.mp3")
