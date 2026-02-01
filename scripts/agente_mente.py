@@ -143,5 +143,12 @@ def handle(m):
     except Exception as e:
         bot.reply_to(m, f"Error: {e}")
 
+# DEBUG: Handler para usuarios NO autorizados
+@bot.message_handler(func=lambda m: True, content_types=['audio', 'photo', 'voice', 'video', 'document', 'text', 'location', 'contact', 'sticker'])
+def handle_unauthorized(m):
+    print(f"⚠️ Acceso denegado o ID no reconocido: {m.from_user.id} (Mensaje: {m.text or m.content_type})", flush=True)
+    # Opcional: Responder para confirmar que el bot está vivo pero bloqueando
+    # bot.reply_to(m, f"⛔ Acceso denegado. Tu ID {m.from_user.id} no está en la lista blanca.")
+
 print("Bot activo con gemini-flash-latest y guardado en inbox...", flush=True)
 bot.polling()

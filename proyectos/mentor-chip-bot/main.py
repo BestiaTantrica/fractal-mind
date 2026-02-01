@@ -144,7 +144,7 @@ Luca, para que pueda responderte, necesitamos mi "cerebro" (la API Key). Sigue e
 
     # Enviar respuesta de voz (Audio)
     audio_path = os.path.join(TEMP_DIR, f"response_{user_id}.mp3")
-    if await mentor_logic.generate_voice(response[:500], audio_path): # Solo leer los primeros 500 chars para no hacer un audiolibro
+    if await mentor_logic.generate_voice(response, audio_path): # Audio completo
         try:
             await update.message.reply_voice(voice=open(audio_path, 'rb'))
         except Exception as e:
