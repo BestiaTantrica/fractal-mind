@@ -4,9 +4,9 @@ import telebot
 import google.generativeai as genai
 from dotenv import load_dotenv
 
-# Carga limpia
+# Carga limpia usando override=True para garantizar que se lean cambios en .env
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-load_dotenv(os.path.join(base_dir, ".env"))
+load_dotenv(os.path.join(base_dir, ".env"), override=True)
 
 # Configuración
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
