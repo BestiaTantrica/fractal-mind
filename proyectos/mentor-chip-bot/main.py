@@ -44,6 +44,29 @@ Mi enfoque es: **Diagnóstico primero, inversión después.**
 """
     await update.message.reply_text(welcome_msg, parse_mode='Markdown')
 
+MAX_MESSAGE_LENGTH = 4000
+
+async def send_chunked_response(update: Update, text: str):
+    """Envía mensajes largos dividiéndolos en fragmentos."""
+    if len(text) <= MAX_MESSAGE_LENGTH:
+        # Intento 1: Markdown
+        try:
+            await update.message.reply_text(text, parse_mode='Markdown')
+        except Exception:
+            # Intento 2: Texto plano (si falla Markdown)
+            try:
+                await update.message.reply_text(text, parse_mode=None)
+            except Exception as e:
+                logger.error(f"Error enviando mensaje simple: {e}")
+    else:
+        # Si es muy largo, dividir por partes
+        parts = [text[i:i+MAX_MESSAGE_LENGTH] for i in range(0, len(text), MAX_MESSAGE_LENGTH)]
+        for part in parts:
+            try:
+                await update.message.reply_text(part, parse_mode='Markdown')
+            except Exception:
+                await update.message.reply_text(part, parse_mode=None)
+
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = str(update.effective_user.id)
     text = update.message.text

@@ -11,7 +11,10 @@ load_dotenv(os.path.join(base_dir, ".env"))
 # Configuración
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 bot = telebot.TeleBot(os.getenv("TELEGRAM_TOKEN_FRACTAL"))
-USER_ID = int(os.getenv("MY_USER_ID"))
+
+# Permitir múltiples usuarios (separados por coma)
+raw_ids = os.getenv("MY_USER_ID", "")
+ALLOWED_IDS = [int(x.strip()) for x in raw_ids.split(",") if x.strip().isdigit()]
 
 # Usamos el nombre exacto de tu lista
 model = genai.GenerativeModel('gemini-flash-latest')
@@ -106,7 +109,7 @@ sudo systemctl restart bot-fractal bot-air
     except Exception as e:
         bot.reply_to(m, f"❌ Error: {e}")
 
-@bot.message_handler(func=lambda m: m.from_user.id == USER_ID)
+@bot.message_handler(func=lambda m: m.from_user.id in ALLOWED_IDS)
 def handle(m):
     try:
         # Generación directa
