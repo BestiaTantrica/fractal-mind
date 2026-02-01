@@ -4,6 +4,8 @@ import asyncio
 import edge_tts
 from google import genai
 from google.genai import types
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+from google.api_core.exceptions import ResourceExhausted, ServiceUnavailable, InternalServerError
 
 # --- PROJECT DEPENDENCIES (Conceptual List) ---
 # google-genai
@@ -11,6 +13,7 @@ from google.genai import types
 # requests
 # Pillow
 # edge-tts
+# tenacity
 # ---------------------------------------------
 
 logger = logging.getLogger(__name__)
@@ -46,6 +49,23 @@ ESTILO DE RESPUESTA:
 - Siempre una "Tarea de Ahorro" o "Reto de Diagnóstico" opcional.
 """
 
+    @retry(
+        retry=retry_if_exception_type((ResourceExhausted, ServiceUnavailable, InternalServerError)),
+        wait=wait_exponential(multiplier=1, min=2, max=10),
+        stop=stop_after_attempt(3),
+        reraise=True
+    )
+    def _call_gemini_api(self, contents):
+        """Llamada a la API separada para poder decorarla con reintentos"""
+        return self.client.models.generate_content(
+            model=self.model_id,
+            contents=contents,
+            config=types.GenerateContentConfig(
+                system_instruction=self.system_instruction,
+                temperature=0.7,
+            )
+        )
+
     async def get_response(self, user_id: str, message: str, history: list = None) -> str:
         try:
             # Convertir historial al formato de Gemini si existe
@@ -59,18 +79,16 @@ ESTILO DE RESPUESTA:
             contents.append(types.Content(parts=[types.Part(text=message)], role="user"))
 
             loop = asyncio.get_event_loop()
+            
+            # Ejecutar la llamada con reintentos dentro del executor
             response = await loop.run_in_executor(
                 None,
-                lambda: self.client.models.generate_content(
-                    model=self.model_id,
-                    contents=contents,
-                    config=types.GenerateContentConfig(
-                        system_instruction=self.system_instruction,
-                        temperature=0.7,
-                    )
-                )
+                lambda: self._call_gemini_api(contents)
             )
             return response.text
+        except ResourceExhausted:
+            logger.error("Error 429: Cuota excedida incluso tras reintentos.")
+            return "🔋 Mi batería cerebral necesita un descanso. (Límite de API alcanzado, probá en un ratito)."
         except Exception as e:
             logger.error(f"Error en MentorChipLogic: {e}")
             return f"Lo siento, tuve un pequeño corto circuito. Revisa mi cableado (error: {str(e)[:50]}...)"
