@@ -162,7 +162,9 @@ def main():
     application = Application.builder().token(TELEGRAM_TOKEN).build()
 
     application.add_handler(CommandHandler("start", start))
-    application.add_handler(MessageHandler((filters.TEXT | filters.VOICE) & ~filters.COMMAND, handle_message))
+    # CAMBIO CRÍTICO: Usar filters.ALL para aceptar fotos, docs, audios, etc.
+    # Excluimos los comandos para no procesar /start como un mensaje de chat
+    application.add_handler(MessageHandler(filters.ALL & ~filters.COMMAND, handle_message))
 
     logger.info("Mentor Chip Bot iniciado...")
     application.run_polling()
