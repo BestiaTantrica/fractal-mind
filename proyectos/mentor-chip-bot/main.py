@@ -63,14 +63,25 @@ Luca, para que pueda responderte, necesitamos mi "cerebro" (la API Key). Sigue e
 """
         await update.message.reply_text(instructions, parse_mode='Markdown')
     
-    # Procesar texto o voz
+    # Procesar texto, voz o caption (archivos/fotos)
+    message_text = update.message.text or update.message.caption
+    
     if update.message.voice:
-        # Nota: Aquí deberíamos transcribir, pero por ahora asumimos que no hay voz si no está configurada
-        message_text = " (Audio recibido, pero necesito que escribas por ahora)" 
-    else:
-        message_text = update.message.text
-
+        message_text = " (Audio recibido, pero necesito que escribas por ahora)"
+    
+    # Si comparten un contacto o algo sin texto/caption
     if not message_text:
+        if update.message.contact:
+            message_text = f" (Contacto recibido: {update.message.contact.first_name})"
+        elif update.message.document:
+            message_text = f" (Archivo recibido: {update.message.document.file_name})"
+        else:
+            # Fallback para que no se quede mudo
+            message_text = " (Adjunto multimedia recibido)"
+
+    # Asegurarnos de que no sea None antes de procesar
+    if not message_text:
+        await update.message.reply_text("🤔 Veo que me mandaste algo, pero no logro leerlo. ¿Me lo escribes o explicas?")
         return
 
     logger.info(f"Mensaje de {user_id}: {message_text}")
