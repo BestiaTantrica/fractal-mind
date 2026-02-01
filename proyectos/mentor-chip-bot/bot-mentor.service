@@ -1,0 +1,17 @@
+[Unit]
+Description=Mentor Chip Bot (Luca)
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/fractal-mind/proyectos/mentor-chip-bot
+ExecStart=/home/ubuntu/micromamba/envs/fractal-env/bin/python main.py
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=bot-mentor
+
+[Install]
+WantedBy=multi-user.target
