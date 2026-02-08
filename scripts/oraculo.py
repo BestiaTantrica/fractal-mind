@@ -76,18 +76,8 @@ def chat_oraculo():
             print(f"❌ Error inesperado: {e}")
             break
 
+    # Al salir, guardamos TODO
     if full_transcript:
-        print("💾 Guardando charla en la mente fractal...")
-        # Guardado manual simplificado
-        if not os.path.exists(THREADS_DIR): os.makedirs(THREADS_DIR)
-        safe_date = datetime.date.today()
-        filename = f"{safe_date}_Charla_Oraculo.md"
-        filepath = os.path.join(THREADS_DIR, filename)
-        
-        with open(filepath, "w", encoding="utf-8") as f:
-            f.write(f"# Charla con Oraculo\nFecha: {datetime.datetime.now()}\n\n## RESUMEN DE LA CHARLA\n{full_transcript}")
-        
-        # Sincronizamos con Git
         repo_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         os.system(f'git -C "{repo_dir}" add memory/*')
         os.system(f'git -C "{repo_dir}" commit -m "Pegaso: Charla del Oraculo guardada"')
