@@ -34,8 +34,8 @@ def diagnostico_modelos():
         return False
 
 def chat_oraculo():
-    # Volvemos al 1.5 que es el mas estable para Free Tier
-    model_to_use = "gemini-1.5-flash-latest" 
+    # Usamos el nombre EXACTO que aparecio en tu lista de diagnostico
+    model_to_use = "gemini-pro-latest" 
 
     print(f"--- 🦅 ORACULO PEGASO (Modelo: {model_to_use}) ---")
     print("Escribe 'salir' para terminar.")
