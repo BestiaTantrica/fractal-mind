@@ -3,7 +3,10 @@
 REPO_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 echo "Buscando actualizaciones en la nube..."
-git -C "$REPO_DIR" pull
+# Sincronizacion forzada silenciosa
+git -C "$REPO_DIR" fetch origin >/dev/null 2>&1
+BRANCH=$(git -C "$REPO_DIR" rev-parse --abbrev-ref HEAD)
+git -C "$REPO_DIR" reset --hard origin/$BRANCH >/dev/null 2>&1
 
 PROMPT_FILE="$REPO_DIR/memory/PROMPT_LLAVE.md"
 
