@@ -103,10 +103,11 @@ class PegasoMemory:
         try:
             print("Sincronizando con la nube (Git Push)...")
             repo_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            # Usar comillas dobles para rutas con espacios y asegurar compatibilidad
             os.system(f'git -C "{repo_dir}" add memory/*')
-            os.system(f'git -C "{repo_dir}" commit -m "Pegaso: Actualizacion de Memoria"')
-            os.system(f'git -C "{repo_dir}" push') # <--- EMPUJA A LA NUBE
-            print("Memoria enviada a la nube con éxito.")
+            os.system(f'git -C "{repo_dir}" commit -m "Pegaso: Actualizacion de Memoria (Mobile/PC)"')
+            os.system(f'git -C "{repo_dir}" push origin main') 
+            print(">>> Memoria SINCRONIZADA con la nube.")
         except Exception as e:
             print(f"Error en Git: {e}")
 
