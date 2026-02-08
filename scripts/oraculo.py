@@ -27,8 +27,8 @@ def chat_oraculo():
         if user_input.lower() in ['salir', 'exit', 'quit']:
             break
         
-        # URL corregida para Gemini 1.5 Flash
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={API_KEY}"
+        # URL Estable Version 1
+        url = f"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={API_KEY}"
         headers = {'Content-Type': 'application/json'}
         
         # Estructura JSON estándar de Gemini
