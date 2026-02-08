@@ -4,7 +4,9 @@ import json
 import datetime
 import re
 
-MEMORY_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "memory")
+# El motor ahora busca 'memory' en la carpeta donde estas parado
+current_dir = os.getcwd()
+MEMORY_DIR = os.path.join(current_dir, "memory")
 THREADS_DIR = os.path.join(MEMORY_DIR, "threads")
 ARCHIVE_DIR = os.path.join(MEMORY_DIR, "archive")
 MANIFEST_PATH = os.path.join(MEMORY_DIR, "MANIFEST.md")
