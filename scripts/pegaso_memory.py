@@ -100,21 +100,31 @@ class PegasoMemory:
         print(f"PROMPT_LLAVE.md actualizado. Listo para copiar.")
         self.sync_git()
 
-    def sync_git(self):
-        """Sincronizacion total: Add, Commit y Push."""
+    def check_capacity(self):
+        """Verifica la cantidad de archivos y alerta si hay saturacion."""
         try:
-            print("Sincronizando con la nube (Git Push)...")
-            repo_dir = os.getcwd()
-            # Detectar la rama actual (master o main)
-            import subprocess
-            branch = subprocess.check_output(['git', '-C', repo_dir, 'rev-parse', '--abbrev-ref', 'HEAD']).decode().strip()
+            files = [f for f in os.listdir(self.THREADS_DIR) if f.endswith(".md")]
+            count = len(files)
             
-            os.system(f'git -C "{repo_dir}" add memory/*')
-            os.system(f'git -C "{repo_dir}" commit -m "Pegaso: Actualizacion de Memoria (Mobile/PC)"')
-            os.system(f'git -C "{repo_dir}" push origin {branch}') 
-            print(f">>> Memoria SINCRONIZADA con la nube (Rama: {branch}).")
-        except Exception as e:
-            print(f"Error en Git: {e}")
+            if count > 30:
+                print(f"\n⚠️ ALERTA DE CAPACIDAD: Tenés {count} hilos de memoria.")
+                print("💡 Sugerencia: Ejecutá 'python scripts/pegaso_memory.py archive' para limpiar la mente activa.")
+            return count
+        except Exception:
+            return 0
+
+    def archive_old_threads(self, limit=20):
+        """Mueve los hilos mas viejos a la carpeta de archivo."""
+        if not os.path.exists(self.ARCHIVE_DIR):
+            os.makedirs(self.ARCHIVE_DIR)
+            
+        files = sorted([f for f in os.listdir(self.THREADS_DIR) if f.endswith(".md")])
+        if len(files) > limit:
+            to_archive = files[:-limit] # Dejamos los ultimos 'limit'
+            for f in to_archive:
+                os.rename(os.path.join(self.THREADS_DIR, f), os.path.join(self.ARCHIVE_DIR, f))
+            print(f"📦 Se han archivado {len(to_archive)} hilos antiguos.")
+            self.sync_git()
 
     def prune(self, keep_latest=10):
         """Mueve hilos viejos a archive/ para mantener ligero el contexto."""
