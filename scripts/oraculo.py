@@ -34,8 +34,8 @@ def diagnostico_modelos():
         return False
 
 def chat_oraculo():
-    # Usamos el nombre EXACTO que aparecio en tu lista de diagnostico
-    model_to_use = "gemini-pro-latest" 
+    # Este es el nombre exacto que aparecio en tu lista y suele tener cuota libre
+    model_to_use = "gemini-flash-latest" 
 
     print(f"--- 🦅 ORACULO PEGASO (Modelo: {model_to_use}) ---")
     print("Escribe 'salir' para terminar.")
@@ -47,7 +47,7 @@ def chat_oraculo():
         if user_input.lower() in ['salir', 'exit', 'quit']:
             break
         
-        # URL corregida con el path completo del modelo
+        # Usamos v1beta que es donde vimos la lista
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_to_use}:generateContent?key={API_KEY}"
         headers = {'Content-Type': 'application/json'}
         payload = {"contents": [{"parts": [{"text": user_input}]}]}
