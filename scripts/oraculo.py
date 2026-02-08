@@ -15,11 +15,35 @@ if not API_KEY:
     print("❌ Error: No se encontro GOOGLE_API_KEY.")
     sys.exit(1)
 
+def diagnostico_modelos():
+    print("🔍 Diagnosticando modelos disponibles...")
+    url = f"https://generativelanguage.googleapis.com/v1beta/models?key={API_KEY}"
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            models = response.json().get('models', [])
+            print("✅ Modelos encontrados:")
+            for m in models:
+                print(f"  - {m['name']}")
+            return True
+        else:
+            print(f"❌ Error de Diagnostico ({response.status_code}): {response.text}")
+            return False
+    except Exception as e:
+        print(f"❌ Error de conexion: {e}")
+        return False
+
 def chat_oraculo():
-    print("--- 🦅 ORACULO PEGASO (VERSION LIGERA) ---")
-    print("Escribe 'salir' para terminar y guardar memoria.")
+    if not diagnostico_modelos():
+        print("⚠️ No se pudo verificar la llave. Revisa tu GOOGLE_API_KEY.")
+        # Intentaremos seguir igual con un modelo estandar por si falla el listado
+        model_to_use = "gemini-1.5-flash"
+    else:
+        model_to_use = "gemini-1.5-flash" # Seleccionamos el estandar
+
+    print(f"--- 🦅 ORACULO PEGASO (Modelo: {model_to_use}) ---")
+    print("Escribe 'salir' para terminar.")
     
-    chat_history = []
     full_transcript = ""
 
     while True:
@@ -27,27 +51,22 @@ def chat_oraculo():
         if user_input.lower() in ['salir', 'exit', 'quit']:
             break
         
-        # Modelo ultra-compatible
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={API_KEY}"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_to_use}:generateContent?key={API_KEY}"
         headers = {'Content-Type': 'application/json'}
-        
-        # Estructura JSON estándar de Gemini
-        payload = {
-            "contents": [{
-                "parts": [{"text": user_input}]
-            }]
-        }
+        payload = {"contents": [{"parts": [{"text": user_input}]}]}
         
         try:
             response = requests.post(url, headers=headers, json=payload)
-            response.raise_for_status()
+            if response.status_code != 200:
+                print(f"❌ Error {response.status_code}: {response.text}")
+                continue
+            
             data = response.json()
             answer = data['candidates'][0]['content']['parts'][0]['text']
-            
             print(f"\n>> Gemini: {answer}\n")
             full_transcript += f"Operador: {user_input}\nGemini: {answer}\n\n"
         except Exception as e:
-            print(f"❌ Error en la API: {e}")
+            print(f"❌ Error inesperado: {e}")
             break
 
     if full_transcript:
