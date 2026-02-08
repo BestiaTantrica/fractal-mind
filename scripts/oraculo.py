@@ -76,13 +76,23 @@ def chat_oraculo():
             print(f"❌ Error inesperado: {e}")
             break
 
-    # Al salir, guardamos TODO
+    # Al salir, guardamos la charla INTEGRAL
     if full_transcript:
-        repo_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        os.system(f'git -C "{repo_dir}" add memory/*')
-        os.system(f'git -C "{repo_dir}" commit -m "Pegaso: Charla del Oraculo guardada"')
-        os.system(f'git -C "{repo_dir}" push origin main')
-        print("✅ Sincronizado con la nube.")
+        print("💾 Sincronizando memoria activa...")
+        
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        filename = os.path.join(THREADS_DIR, f"{timestamp}_Charla.md")
+        
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(f"# Registro de Charla - {timestamp}\n\n")
+            f.write(full_transcript)
+        
+        # GESTION AUTOMATICA: Si hay mas de 20, archivamos lo viejo solo
+        memory.archive_old_threads(limit=20)
+        
+        # Sincronizamos con Git
+        memory.sync_git()
+        print(f"✅ Memoria actualizada y archivada.")
 
 if __name__ == "__main__":
     chat_oraculo()
