@@ -27,11 +27,15 @@ def chat_oraculo():
         if user_input.lower() in ['salir', 'exit', 'quit']:
             break
         
-        # Llamada directa a la API vía REST (Sin librerías pesadas)
+        # URL corregida para Gemini 1.5 Flash
         url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={API_KEY}"
         headers = {'Content-Type': 'application/json'}
+        
+        # Estructura JSON estándar de Gemini
         payload = {
-            "contents": [{"parts": [{"text": user_input}]}]
+            "contents": [{
+                "parts": [{"text": user_input}]
+            }]
         }
         
         try:
