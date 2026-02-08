@@ -1,0 +1,6 @@
+# El Telar de las Almas - Requerimientos
+supabase
+flatlib
+pydantic
+python-dotenv
+requests
