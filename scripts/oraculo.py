@@ -27,8 +27,8 @@ def chat_oraculo():
         if user_input.lower() in ['salir', 'exit', 'quit']:
             break
         
-        # URL de Compatibilidad v1beta
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={API_KEY}"
+        # Modelo ultra-compatible
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={API_KEY}"
         headers = {'Content-Type': 'application/json'}
         
         # Estructura JSON estándar de Gemini
