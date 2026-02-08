@@ -6,9 +6,10 @@ import sys
 import datetime
 import re
 
-# Cargamos la llave desde el entorno
+# El Oraculo detecta donde estas parado para usar la memoria local
 API_KEY = os.getenv("GOOGLE_API_KEY")
-MEMORY_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "memory")
+current_dir = os.getcwd()
+MEMORY_DIR = os.path.join(current_dir, "memory")
 THREADS_DIR = os.path.join(MEMORY_DIR, "threads")
 
 if not API_KEY:
