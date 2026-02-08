@@ -44,10 +44,14 @@ def chat_oraculo():
     full_transcript = ""
 
     while True:
-        user_input = input(">> Operador: ")
+        raw_input = input(">> Operador: ")
+        user_input = raw_input.strip()
+        
+        # Volvemos a los comandos simples
         if user_input.lower() in ['salir', 'exit', 'quit']:
             break
         
+        if not user_input: continue
         # Usamos v1beta que es donde vimos la lista
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_to_use}:generateContent?key={API_KEY}"
         headers = {'Content-Type': 'application/json'}
