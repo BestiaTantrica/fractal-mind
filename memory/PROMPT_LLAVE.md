@@ -25,6 +25,9 @@
 
 ---
 ## ULTIMOS HILOS DE CONOCIMIENTO
+### 2026-02-08_Manual_Paso_A_Paso.md
+
+
 ### 2026-02-08_Activacion_Memoria_Autonoma.md
 
 
