@@ -9,8 +9,13 @@ import re
 # El Oraculo detecta donde estas parado para usar la memoria local
 API_KEY = os.getenv("GOOGLE_API_KEY")
 current_dir = os.getcwd()
-MEMORY_DIR = os.path.join(current_dir, "memory")
-THREADS_DIR = os.path.join(MEMORY_DIR, "threads")
+
+# Aseguramos que PegasoMemory use el DIR actual
+from pegaso_memory import PegasoMemory
+memory = PegasoMemory() 
+
+MEMORY_DIR = memory.MEMORY_DIR
+THREADS_DIR = memory.THREADS_DIR
 
 if not API_KEY:
     print("❌ Error: No se encontro GOOGLE_API_KEY.")
