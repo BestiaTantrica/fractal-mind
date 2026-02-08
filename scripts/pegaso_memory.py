@@ -104,12 +104,15 @@ class PegasoMemory:
         """Sincronizacion total: Add, Commit y Push."""
         try:
             print("Sincronizando con la nube (Git Push)...")
-            repo_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-            # Usar comillas dobles para rutas con espacios y asegurar compatibilidad
+            repo_dir = os.getcwd()
+            # Detectar la rama actual (master o main)
+            import subprocess
+            branch = subprocess.check_output(['git', '-C', repo_dir, 'rev-parse', '--abbrev-ref', 'HEAD']).decode().strip()
+            
             os.system(f'git -C "{repo_dir}" add memory/*')
             os.system(f'git -C "{repo_dir}" commit -m "Pegaso: Actualizacion de Memoria (Mobile/PC)"')
-            os.system(f'git -C "{repo_dir}" push origin main') 
-            print(">>> Memoria SINCRONIZADA con la nube.")
+            os.system(f'git -C "{repo_dir}" push origin {branch}') 
+            print(f">>> Memoria SINCRONIZADA con la nube (Rama: {branch}).")
         except Exception as e:
             print(f"Error en Git: {e}")
 
