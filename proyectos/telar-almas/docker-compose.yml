@@ -1,0 +1,9 @@
+services:
+  telar-engine:
+    build: .
+    container_name: telar-almas-engine
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    restart: unless-stopped
