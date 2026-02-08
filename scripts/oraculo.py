@@ -34,12 +34,8 @@ def diagnostico_modelos():
         return False
 
 def chat_oraculo():
-    if not diagnostico_modelos():
-        print("⚠️ No se pudo verificar la llave. Revisa tu GOOGLE_API_KEY.")
-        # Intentaremos seguir igual con un modelo estandar por si falla el listado
-        model_to_use = "gemini-1.5-flash"
-    else:
-        model_to_use = "gemini-1.5-flash" # Seleccionamos el estandar
+    # Usamos uno de los modelos que SI aparecio en tu lista
+    model_to_use = "gemini-2.0-flash" 
 
     print(f"--- 🦅 ORACULO PEGASO (Modelo: {model_to_use}) ---")
     print("Escribe 'salir' para terminar.")
@@ -51,6 +47,7 @@ def chat_oraculo():
         if user_input.lower() in ['salir', 'exit', 'quit']:
             break
         
+        # URL corregida con el path completo del modelo
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_to_use}:generateContent?key={API_KEY}"
         headers = {'Content-Type': 'application/json'}
         payload = {"contents": [{"parts": [{"text": user_input}]}]}
