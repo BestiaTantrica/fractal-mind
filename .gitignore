@@ -1,4 +1,7 @@
-**/.env
+.env
 venv/
 __pycache__/
 *.pyc
+final.key
+agente_mente_final.py
+memory/
