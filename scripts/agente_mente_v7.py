@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import subprocess
 import telebot
 from google import genai
 from google.genai import types as genai_types
@@ -56,7 +57,22 @@ def handle_text(m):
     user_input = m.text
     
     if user_input.upper() in ["📊 MONITOR", "/MONITOR"]:
-        bot.reply_to(m, "📊 Torre Maestra: Online | Mente V7: Activa")
+        bot.reply_to(m, "🛰️ Conectando con Torre Cazadora (129.80.32.115)...")
+        try:
+            # Comando SSH para obtener estado de contenedores y uptime
+            ssh_cmd = "ssh -i /home/ubuntu/final.key -o StrictHostKeyChecking=no -o ConnectTimeout=10 ubuntu@129.80.32.115 \"docker ps --format '{{.Names}}: {{.Status}}' && echo '' && uptime -p\""
+            
+            result = subprocess.run(ssh_cmd, shell=True, capture_output=True, text=True)
+            
+            if result.returncode == 0:
+                output = result.stdout.strip()
+                if not output: output = "✅ Online (Sin contenedores en ejecución)"
+                bot.reply_to(m, f"📊 **ESTADO TORRE CAZADORA**\n\n```\n{output}\n```", parse_mode="Markdown")
+            else:
+                err = result.stderr.strip() or "Error de conexión SSH"
+                bot.reply_to(m, f"⚠️ **ERROR DE ENLACE**\n\nNo pude contactar a la Torre Cazadora.\n`{err}`", parse_mode="Markdown")
+        except Exception as e:
+             bot.reply_to(m, f"❌ Error interno: {str(e)}")
         return
     
     if user_input.upper() in ["🧠 MENTE", "/MENTE"]:
