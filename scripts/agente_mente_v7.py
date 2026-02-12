@@ -57,20 +57,21 @@ def handle_text(m):
     user_input = m.text
     
     if user_input.upper() in ["📊 MONITOR", "/MONITOR"]:
-        bot.reply_to(m, "🛰️ Conectando con Torre Cazadora (129.80.32.115)...")
+        bot.reply_to(m, "🛰️ Radar activo. Escaneando Torre Cazadora...")
         try:
-            # Comando SSH para obtener estado de contenedores y uptime
-            ssh_cmd = "ssh -i /home/ubuntu/final.key -o StrictHostKeyChecking=no -o ConnectTimeout=10 ubuntu@129.80.32.115 \"docker ps --format '{{.Names}}: {{.Status}}' && echo '' && uptime -p\""
+            # Comando SSH para leer log de caceria
+            # Usamos la llave en /home/ubuntu/fractal-mind/final.key
+            ssh_cmd = "ssh -i /home/ubuntu/fractal-mind/final.key -o StrictHostKeyChecking=no -o ConnectTimeout=10 ubuntu@129.80.32.115 \"tail -n 12 caceria.log\""
             
             result = subprocess.run(ssh_cmd, shell=True, capture_output=True, text=True)
             
             if result.returncode == 0:
                 output = result.stdout.strip()
-                if not output: output = "✅ Online (Sin contenedores en ejecución)"
-                bot.reply_to(m, f"📊 **ESTADO TORRE CAZADORA**\n\n```\n{output}\n```", parse_mode="Markdown")
+                if not output: output = "✅ Sin actividad reciente en log."
+                bot.reply_to(m, f"RADAR CAZADOR (129.80...)\n🟢 ENLACE ACTIVO - ÚLTIMA ACTIVIDAD:\n\n```\n{output}\n```", parse_mode="Markdown")
             else:
                 err = result.stderr.strip() or "Error de conexión SSH"
-                bot.reply_to(m, f"⚠️ **ERROR DE ENLACE**\n\nNo pude contactar a la Torre Cazadora.\n`{err}`", parse_mode="Markdown")
+                bot.reply_to(m, f"⚠️ **ERROR DE RADAR**\n\nNo pude leer los logs de caza.\n`{err}`", parse_mode="Markdown")
         except Exception as e:
              bot.reply_to(m, f"❌ Error interno: {str(e)}")
         return
