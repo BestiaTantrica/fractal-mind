@@ -8,8 +8,17 @@ Este es tu panel central. Yo me encargo de la basura técnica (Git, SSH, Sync) p
 
 | INSTANCIA | IP | FUNCIÓN | ESTADO | ACCESO |
 | :--- | :--- | :--- | :--- | :--- |
-| TORRE MAESTRA | `158.101.117.130` | Core, Sync, Logs | ✅ OPERATIVA | maestra |
-| TORRE CAZADORA | `129.80.32.115` | Búsqueda (ARM 24GB) | ⚠️ PENDIENTE | caza |
+| TORRE MAESTRA | `158.101.117.130` | Core, MENTE V7, Sync | ✅ OPERATIVA (V7) | maestra |
+| TORRE CAZADORA | `129.80.32.115` | Búsqueda (ARM 24GB) | ✅ OPERATIVA | caza |
+
+---
+
+## 🦅 AGENTES ACTIVOS (PEGASO OPS)
+
+| AGENTE | VERSIÓN | MODELO | ESTADO | FUNCIÓN |
+| :--- | :--- | :--- | :--- | :--- |
+| **MENTE** | V7 (Core) | `gemini-flash-latest` | ✅ ONLINE | Arquitecto de Realidades |
+| **AIR** | V1 | `llama-3` | ✅ OPERATIVO | Monitoreo de Redes |
 
 ---
 
