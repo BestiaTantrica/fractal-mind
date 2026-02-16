@@ -2,11 +2,15 @@ import telebot
 import json
 import os
 from datetime import datetime
+from dotenv import load_dotenv
 
-BOT_TOKEN = "8509893705:AAF6ycIJ4TswQkiguZWzTOa6knHmB5hgnIU"
-AUTHORIZED_CHAT_ID = 6527908321  # Solo el usuario puede consultar
-STATUS_FILE = "/home/ubuntu/cazador_status.json"
-LOG_FILE = "/home/ubuntu/cazador.log"
+# Cargar variables de entorno
+load_dotenv()
+
+BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+AUTHORIZED_CHAT_ID = int(os.getenv("AUTHORIZED_CHAT_ID", "0"))
+STATUS_FILE = os.getenv("STATUS_FILE", "cazador_status.json")
+LOG_FILE = os.getenv("LOG_FILE", "cazador.log")
 
 bot = telebot.TeleBot(BOT_TOKEN)
 

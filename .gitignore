@@ -1,0 +1,11 @@
+.env
+*.pem
+ssh_for_arm
+ssh_for_arm.pub
+ssh-key-2026-02-16.key
+ssh-key-2026-02-16.key.pub
+cazador_status.json
+cazador.log
+__pycache__/
+*.pyc
+.agent/

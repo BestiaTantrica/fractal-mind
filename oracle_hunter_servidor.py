@@ -2,19 +2,25 @@ import oci
 import time
 import random
 import json
+import os
 from datetime import datetime
+from dotenv import load_dotenv
+
+# Cargar variables de entorno
+load_dotenv()
 
 # === CONFIGURACIÓN ===
 CONFIG = {
-    'user': 'ocid1.user.oc1..aaaaaaaac7efxpfvk7pfry4667eeujkujjnprfndnqvjhxy4voi6f7jt2kka',
-    'key_file': '/home/ubuntu/oci_api_key.pem',
-    'tenancy': 'ocid1.tenancy.oc1..aaaaaaaa7xczcsz7xf3qa22n3c6zmn2iy76xkfnqe45yix532hlgyovi3c3a',
-    'region': 'us-ashburn-1',
-    'fingerprint': '18:1b:6d:cd:e1:b6:c7:a5:d9:19:a8:f4:93:4e:df:11'
+    'user': os.getenv('OCI_USER_OCID'),
+    'key_file': os.getenv('OCI_KEY_FILE'),
+    'tenancy': os.getenv('OCI_TENANCY_OCID'),
+    'region': os.getenv('OCI_REGION'),
+    'fingerprint': os.getenv('OCI_FINGERPRINT')
 }
 
-STATUS_FILE = '/home/ubuntu/cazador_status.json'
-LOG_FILE = '/home/ubuntu/cazador.log'
+STATUS_FILE = os.getenv('STATUS_FILE', 'cazador_status.json')
+LOG_FILE = os.getenv('LOG_FILE', 'cazador.log')
+SSH_PUB_KEY_FILE = os.getenv('SSH_PUB_KEY_FILE', 'ssh_for_arm.pub')
 
 def log(mensaje):
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -82,7 +88,7 @@ def hunt():
                 image_id=image_id,
                 create_vnic_details=oci.core.models.CreateVnicDetails(subnet_id=subnet_id),
                 metadata={
-                    'ssh_authorized_keys': open('/home/ubuntu/ssh_key_for_arm.pub').read()
+                    'ssh_authorized_keys': open(SSH_PUB_KEY_FILE).read()
                 }
             )
             
