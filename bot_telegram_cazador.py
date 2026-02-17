@@ -1,16 +1,27 @@
 import telebot
 import json
+import sys
 import os
 from datetime import datetime
 from dotenv import load_dotenv
+
+# Forzar UTF-8 en la consola para evitar errores en Windows
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
 
 # Cargar variables de entorno
 load_dotenv()
 
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 AUTHORIZED_CHAT_ID = int(os.getenv("AUTHORIZED_CHAT_ID", "0"))
-STATUS_FILE = os.getenv("STATUS_FILE", "cazador_status.json")
-LOG_FILE = os.getenv("LOG_FILE", "cazador.log")
+# Configuración de archivos basada en el directorio del script
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATUS_FILE = os.path.join(BASE_DIR, "cazador_status.json")
+LOG_FILE = os.path.join(BASE_DIR, "cazador.log")
+
+if not BOT_TOKEN:
+    print("❌ ERROR: No se encontró TELEGRAM_BOT_TOKEN en el entorno.")
+    sys.exit(1)
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
@@ -27,7 +38,7 @@ def cazador_status(message):
             bot.reply_to(message, "⚠️ El cazador aún no ha iniciado o no está corriendo.")
             return
         
-        with open(STATUS_FILE, "r") as f:
+        with open(STATUS_FILE, "r", encoding="utf-8") as f:
             data = json.load(f)
         
         timestamp = data.get("timestamp", "N/A")
@@ -83,7 +94,7 @@ def ver_logs(message):
             return
         
         # Leer últimas 15 líneas
-        with open(LOG_FILE, "r") as f:
+        with open(LOG_FILE, "r", encoding="utf-8") as f:
             lines = f.readlines()
         
         ultimas = lines[-15:] if len(lines) > 15 else lines
