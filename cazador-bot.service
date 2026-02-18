@@ -1,0 +1,15 @@
+[Unit]
+Description=Bot Telegram para Monitoreo de Cazador
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu
+ExecStart=/usr/bin/python3 -u bot_telegram_cazador.py
+Restart=always
+RestartSec=30
+StandardOutput=append:/home/ubuntu/out_bot.log
+StandardError=append:/home/ubuntu/out_bot.log
+
+[Install]
+WantedBy=multi-user.target

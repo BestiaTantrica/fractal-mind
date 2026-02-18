@@ -1,0 +1,15 @@
+[Unit]
+Description=Cazador de Instancias Oracle ARM
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu
+ExecStart=/usr/bin/python3 -u oracle_hunter_servidor.py
+Restart=always
+RestartSec=60
+StandardOutput=append:/home/ubuntu/out_servidor.log
+StandardError=append:/home/ubuntu/out_servidor.log
+
+[Install]
+WantedBy=multi-user.target

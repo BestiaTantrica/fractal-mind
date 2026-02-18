@@ -128,5 +128,14 @@ def hunt():
         log(f'CRASH CRITICO: {str(ex)}')
         actualizar_estado(0, 'N/A', 'CRASH', str(ex))
 
+def main_loop():
+    """Mantiene al cazador vivo infinitamente, incluso tras errores graves"""
+    while True:
+        try:
+            hunt()
+        except Exception as e:
+            log(f"⚠️ REINICIANDO CAZADOR tras error fatal: {str(e)}")
+            time.sleep(60) # Esperar un minuto antes de reintentar todo
+
 if __name__ == "__main__":
-    hunt()
+    main_loop()
